@@ -34,6 +34,8 @@ private:
 
     QAction * openAct;
 
+    QAction * exitAct;
+
     QTableView * tableView;
 
     QAbstractItemModel * indiModel;

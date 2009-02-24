@@ -49,4 +49,10 @@ void MainWindow::createMenus() {
     openAct->setStatusTip(tr("Open a GEDCOM file for processing"));
     connect(openAct, SIGNAL(triggered()), this, SLOT(openFile()));
     fileMenu->addAction(openAct);
+    // Exit
+    exitAct = new QAction(tr("&Quit"), this);
+    exitAct->setShortcut(tr("Ctrl+Q"));
+    exitAct->setStatusTip(tr("Quit the application"));
+    connect(exitAct, SIGNAL(triggered()), this, SLOT(close()));
+    fileMenu->addAction(exitAct);
 }
