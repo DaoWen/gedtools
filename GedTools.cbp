@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="GedTools" />
+		<Option makefile_is_custom="1" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<MakeCommands>
+			<Build command="$make -f $makefile.$target" />
+			<CompileFile command="$make -f $makefile $file" />
+			<Clean command="$make -f $makefile.$target clean" />
+			<DistClean command="$make -f $makefile.$target distclean" />
+		</MakeCommands>
+		<Build>
+			<Target title="Debug">
+				<Option output="bin\GedTools" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Debug\" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<MakeCommands>
+					<Build command="$make -f $makefile.$target" />
+					<CompileFile command="$make -f $makefile $file" />
+					<Clean command="$make -f $makefile.$target clean" />
+					<DistClean command="$make -f $makefile.$target distclean" />
+				</MakeCommands>
+			</Target>
+			<Target title="Release">
+				<Option output="bin\GedTools" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Release\" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+				<MakeCommands>
+					<Build command="$make -f $makefile.$target" />
+					<CompileFile command="$make -f $makefile $file" />
+					<Clean command="$make -f $makefile.$target clean" />
+					<DistClean command="$make -f $makefile.$target distclean" />
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="inc\GFile.h" />
+		<Unit filename="inc\GIndiEntry.h" />
+		<Unit filename="inc\GIndiMap.h" />
+		<Unit filename="inc\GIndiModel.h" />
+		<Unit filename="inc\GNode.h" />
+		<Unit filename="inc\MainWindow.h" />
+		<Unit filename="src\GFile.cpp" />
+		<Unit filename="src\GIndiEntry.cpp" />
+		<Unit filename="src\GIndiMap.cpp" />
+		<Unit filename="src\GIndiModel.cpp" />
+		<Unit filename="src\GNode.cpp" />
+		<Unit filename="src\Main.cpp" />
+		<Unit filename="src\MainWindow.cpp" />
+		<Extensions>
+			<code_completion>
+				<search_path add="$(#qt4)/include" />
+				<search_path add="$(#qt4)/include/QtCore" />
+				<search_path add="$(#qt4)/include/QtGui" />
+			</code_completion>
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
