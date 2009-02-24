@@ -40,7 +40,7 @@ void MainWindow::openFile() {
 
 //=== Private Helper Methods ===//
 
-void createMenus() {
+void MainWindow::createMenus() {
 // File Menu
     fileMenu = menuBar()->addMenu(tr("&File"));
     // Open
