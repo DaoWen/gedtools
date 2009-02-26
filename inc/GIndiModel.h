@@ -5,6 +5,11 @@
 #include <QAbstractTableModel>
 #include "GIndiMap.h"
 
+/* GIndiModel: Model of individuals' data for display in a table
+ * This is an interface for the QTableView to access all of the
+ * data on the individuals in the GEDCOM file for display to the
+ * user in a table format.
+ */
 class GIndiModel : public QAbstractTableModel {
 
 Q_OBJECT // Qt Library Macro

@@ -27,7 +27,7 @@ GNode::GNode(const QString & dataStr) : _firstChild(0), _next(0) {
 
 /* Destructor
  * Deletes this node's children
- * and the next node in the list
+ * and the next node in the tree
  */
 GNode::~GNode() {
     delete _firstChild;
@@ -37,14 +37,14 @@ GNode::~GNode() {
 //=== Accessors ===//
 
 /* Gets the next node in
- * this level of the file.
+ * this level of the tree
  */
 GNode * GNode::next() const {
     return _next;
 }
 
 /* Gets the first node in the
- * next level of the file.
+ * next level of the tree
  */
 GNode * GNode::firstChild() const {
     return _firstChild;
@@ -71,14 +71,14 @@ QString GNode::data() const {
 //=== Mutators ===//
 
 /* Sets the next node in
- * this level of the file.
+ * this level of the tree
  */
 void GNode::setNext(GNode * n) {
     _next = n;
 }
 
 /* Sets the first node in the
- * next level of the file.
+ * next level of the tree
  */
 void GNode::setFirstChild(GNode * n) {
     _firstChild = n;

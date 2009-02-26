@@ -1,58 +1,69 @@
 
 #include "MainWindow.h"
+#include "MainMenuBar.h"
 
 //=== Constructor/Destructor ===//
 
 /* Constructor
  * Creates the window, menus, data display, etc.
  */
-MainWindow::MainWindow() {
+MainWindow::MainWindow() : _gedFile(0), _indiModel(0) {
     setWindowTitle("GedTools Beta");
-    gedFile = new GFile("chen.ged");
-    GIndiMap & indiMap = gedFile->indiMap();
-    //GIndiMap indiMap;
-    indiModel = new GIndiModel(indiMap);
     // Menu Creation
-    createMenus();
+    _menuBar = new MainMenuBar(this);
+    setMenuBar(_menuBar);
     // Table View
-    tableView = new QTableView();
-    tableView->setModel(indiModel);
+    _tableView = new QTableView();
     // Tell the table to expand to the size of the window
     // (do this after adding it to the layout or it'll be the wrong size)
-    setCentralWidget(tableView);
-    tableView->horizontalHeader()->setStretchLastSection(true);
-    tableView->verticalHeader()->setStretchLastSection(true);
+    setCentralWidget(_tableView);
+    _tableView->horizontalHeader()->setStretchLastSection(true);
+    //_tableView->verticalHeader()->setStretchLastSection(true);
     // Create the status bar
     statusBar()->showMessage(tr("Open a GEDCOM file to begin."));
 }
 
 /* Destructor
  * Frees all of the memory allocated for GUI components
+ * and data structures such as the GFile
  */
 MainWindow::~MainWindow() {
+    delete _tableView;
+    delete _indiModel;
+    delete _gedFile;
+    delete _menuBar;
 }
 
 //=== Menu Action Methods ===//
 
 void MainWindow::openFile() {
-    statusBar()->showMessage(tr("File Opened."));
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open GEDCOM File"), "", tr("GEDCOM Files (*.ged)"));
+    if (!fileName.isEmpty()) {
+        GFile * gedFile = new GFile(fileName);
+        GIndiMap & indiMap = gedFile->indiMap();
+        QAbstractItemModel * indiModel = new GIndiModel(indiMap);
+        _tableView->setModel(indiModel);
+        delete _indiModel;
+        delete _gedFile;
+        _indiModel = indiModel;
+        _gedFile = gedFile;
+        statusBar()->showMessage(tr("File opened."));
+    }
 }
 
-//=== Private Helper Methods ===//
-
-void MainWindow::createMenus() {
-// File Menu
-    fileMenu = menuBar()->addMenu(tr("&File"));
-    // Open
-    openAct = new QAction(tr("&Open"), this);
-    openAct->setShortcut(tr("Ctrl+O"));
-    openAct->setStatusTip(tr("Open a GEDCOM file for processing"));
-    connect(openAct, SIGNAL(triggered()), this, SLOT(openFile()));
-    fileMenu->addAction(openAct);
-    // Exit
-    exitAct = new QAction(tr("&Quit"), this);
-    exitAct->setShortcut(tr("Ctrl+Q"));
-    exitAct->setStatusTip(tr("Quit the application"));
-    connect(exitAct, SIGNAL(triggered()), this, SLOT(close()));
-    fileMenu->addAction(exitAct);
+void MainWindow::saveFile() {
+    if (!_gedFile) {
+        statusBar()->showMessage(tr("No data to save."));
+    }
+    else {
+        QString fileName = QFileDialog::getOpenFileName(this, tr("Save GEDCOM File"), "", tr("GEDCOM Files (*.ged)"));
+        if (!fileName.isEmpty()) {
+            if (_gedFile->saveFile(fileName)) {
+                statusBar()->showMessage(tr("File saved."));
+            }
+            else {
+                statusBar()->showMessage(tr("Save failed."));
+            }
+        }
+    }
 }

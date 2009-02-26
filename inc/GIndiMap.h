@@ -8,13 +8,18 @@
 
 typedef QMap<QString,GIndiEntry*> QGMap;
 
+/* GIndiMap: Mapping of individual's xref_id onto that individual's GNode
+ * Each individual in a GEDCOM file has a unique xref_id, similar to a pointer
+ * or a label. This ID is used to link the individual to spouses and other
+ * family members in the FAMILY construct. This data structure provides a fast
+ * lookup for the individual based on their xref_id.
+ */
 class GIndiMap : public QGMap {
 public:
 
     //=== Destructor ===//
 
     /* Destructor
-     * Frees all map entries
      */
     ~GIndiMap();
 

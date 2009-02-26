@@ -4,6 +4,13 @@
 #include "GNode.h"
 #include "GIndiMap.h"
 
+/* GFile: GEDCOM File Parser
+ * This class reads a GEDCOM file and builds a tree of
+ * GNodes based on the internal structure of the file.
+ *
+ * The GEDCOM Standard Release 5.5 can be found at:
+ * http://homepages.rootsweb.ancestry.com/~pmcbride/gedcom/
+ */
 class GFile {
 public:
 
@@ -11,20 +18,20 @@ public:
 
     /* Constructor
      * Pass in a GEDCOM file name to be read and parsed
-     * The result is a linked-list/tree combo (a linked-
-     * list with subtrees of linked-lists)
+     * The result is a linked list-tree combo (a linked
+     * list with subtrees of linked lists)
      */
-    GFile(const char * fileName);
+    GFile(const QString & fileName);
 
     /* Destructor
-     * Deletes the GNode tree and map
+     * Deletes the maps and GNode tree
      */
     ~GFile();
 
     //=== Accessors ===//
 
     /* Returns the pointer to the
-     * root of the parsed list/tree.
+     * root of the parsed list-tree.
      */
     GNode * parsedTree() const;
 
@@ -33,6 +40,14 @@ public:
      * corresponding GIndiEntry objects
      */
     GIndiMap & indiMap();
+
+    //=== Utility Functions ===//
+
+    /* Attempts to write the data stored in the
+     * GNode tree to the specified file. If the
+     * save fails then the method returns false.
+     */
+    bool saveFile(const QString & fileName) const;
 
 private:
 
@@ -46,10 +61,11 @@ private:
 
     //=== Private Helper Methods ===//
 
-    /* Checks if the current node is an INDI node,
-     * and if it is it's added to the IndiMap
+    /* Recursively prints the contents of the GNode
+     * list-tree as they would have appeared in the
+     * original GEDCOM file.
      */
-    void checkNode(GNode * n);
+    void printGedcomFile(QTextStream & s, GNode * n) const;
 
 };
 

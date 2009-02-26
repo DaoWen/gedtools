@@ -55,6 +55,7 @@
 		<Unit filename="inc\GIndiMap.h" />
 		<Unit filename="inc\GIndiModel.h" />
 		<Unit filename="inc\GNode.h" />
+		<Unit filename="inc\MainMenuBar.h" />
 		<Unit filename="inc\MainWindow.h" />
 		<Unit filename="src\GFile.cpp" />
 		<Unit filename="src\GIndiEntry.cpp" />
@@ -62,6 +63,7 @@
 		<Unit filename="src\GIndiModel.cpp" />
 		<Unit filename="src\GNode.cpp" />
 		<Unit filename="src\Main.cpp" />
+		<Unit filename="src\MainMenuBar.cpp" />
 		<Unit filename="src\MainWindow.cpp" />
 		<Extensions>
 			<code_completion>

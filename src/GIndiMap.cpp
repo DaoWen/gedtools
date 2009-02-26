@@ -4,17 +4,8 @@
 //=== Destructor ===//
 
 /* Destructor
- * Frees all map entries
  */
-GIndiMap::~GIndiMap() {
-    // Free all of the GIndiEntry memory
-    QGMap::iterator i = QGMap::begin();
-    QGMap::iterator end = QGMap::end();
-    while (i != end) {
-        delete i.value();
-        ++i;
-    }
-}
+GIndiMap::~GIndiMap() { }
 
 //=== Mutators ===//
 

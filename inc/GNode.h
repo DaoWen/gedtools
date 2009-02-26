@@ -3,6 +3,14 @@
 
 #include <QString>
 
+/* GNode: Single node in the GEDCOM list-tree
+ * GEDCOM files have a complex structure resembling
+ * a tree of linked lists. Each line in the file
+ * corresponds to a single node in our list-tree.
+ *
+ * The GEDCOM Standard Release 5.5 can be found at:
+ * http://homepages.rootsweb.ancestry.com/~pmcbride/gedcom/
+ */
 class GNode {
 public:
 
@@ -16,19 +24,19 @@ public:
 
     /* Destructor
      * Deletes this node, its children,
-     * and the next node in the list
+     * and the next node in the tree
      */
     ~GNode();
 
     //=== Accessors ===//
 
     /* Gets the next node in
-     * this level of the file.
+     * this level of the tree
      */
     GNode * next() const;
 
     /* Gets the first node in the
-     * next level of the file.
+     * next deepest level of the tree
      */
     GNode * firstChild() const;
 
@@ -47,12 +55,12 @@ public:
     //=== Mutators ===//
 
     /* Sets the next node in
-     * this level of the file.
+     * this level of the tree
      */
     void setNext(GNode * n);
 
     /* Sets the first node in the
-     * next level of the file.
+     * next level of the tree
      */
     void setFirstChild(GNode * n);
 

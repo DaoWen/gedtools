@@ -3,6 +3,13 @@
 
 #include "GNode.h"
 
+/* GIndiEntry: Representation of an individual in a GEDCOM file
+ * This class contains all relevant data found in a GEDCOM entry
+ * for an individual (INDI). Not only does it hold local copies
+ * of the relevant data strings (for convenience when editing),
+ * but it also holds references to the GNodes containing the
+ * relevant data for alteration of the actual data file.
+ */
 class GIndiEntry {
 public:
 
