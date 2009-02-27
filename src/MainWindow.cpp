@@ -56,7 +56,8 @@ void MainWindow::saveFile() {
         statusBar()->showMessage(tr("No data to save."));
     }
     else {
-        QString fileName = QFileDialog::getOpenFileName(this, tr("Save GEDCOM File"), "", tr("GEDCOM Files (*.ged)"));
+        //QString fileName = QFileDialog::getOpenFileName(this, tr("Save GEDCOM File"), "", tr("GEDCOM Files (*.ged)"));
+        QString fileName = QFileDialog::getSaveFileName(this, tr("Save GEDCOM File"), "", tr("GEDCOM Files (*.ged)"));
         if (!fileName.isEmpty()) {
             if (_gedFile->saveFile(fileName)) {
                 statusBar()->showMessage(tr("File saved."));

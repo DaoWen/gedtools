@@ -61,6 +61,7 @@ GFile::GFile(const QString & fileName) : _root(0), _indiMap(new GIndiMap()) {
         }
     }
     file.close();
+    // Create GIndiEntries for each of the nodes in the nodes in indiNodes
     QList<GNode*>::const_iterator i = indiNodes.begin();
     QList<GNode*>::const_iterator end = indiNodes.end();
     for (;i!=end;++i) {
@@ -105,6 +106,7 @@ bool GFile::saveFile(const QString & fileName) const {
     file.open(QIODevice::WriteOnly);
     QTextStream output(&file);
     output.setCodec("UTF-8");
+    output.setGenerateByteOrderMark(true); // Write the BOM
     // todo: write the utf-8 bom to the beginning of the file
     // Write the data out
     printGedcomFile(output,_root);
@@ -118,7 +120,7 @@ void GFile::printGedcomFile(QTextStream & s, GNode * n) const {
     if (n) {
         // First stream out the contents of this node in the proper format:
         // LEVEL# TYPE DATA
-        s << QString::number(n->level()).append(' ').append(n->type()).append(n->data()).append('\n');
+        s << QString::number(n->level()).append(' ').append(n->type()).append(' ').append(n->data()).append('\n');
         // Print out this node's children
         printGedcomFile(s, n->firstChild());
         // Print out this node's next sibling
