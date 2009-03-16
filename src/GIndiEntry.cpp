@@ -27,14 +27,13 @@ const char TYPE_DATE[] = "DATE";
 GIndiEntry::GIndiEntry(GNode * n) : _indiNode(0), _nameNode(0), _romanNode(0) {
     // Validate that this is an individual record
     if (!n) {
-        throw "Null Pointer to Individual";
+        throw QString("Null Pointer to Individual");
     }
     else if (n->level() != 0 || n->data() != DATA_INDI) {
-        throw "Bad Individual";
+        throw QString("Bad Individual");
     }
     // Save this individual's data
     _indiNode = n; // Save a link to this individual's GNode
-    _id = n->type(); // ID is stored in the type slot for some reason
     n = n->firstChild();
     // Get Name Data
     parseNames(n);
@@ -49,35 +48,68 @@ GIndiEntry::GIndiEntry(GNode * n) : _indiNode(0), _nameNode(0), _romanNode(0) {
  * value in the GNode data tree
  */
 QString GIndiEntry::id() const {
-    return _id;
+    // ID is stored in the type slot for some reason
+    return _indiNode->type();
 }
 
 /* Get a pointer to the name string
  * value in the GNode data tree
  */
 QString GIndiEntry::name() const {
-    return _name;
+    return _nameNode->data();
 }
 
 /* Get a pointer to the romanized name
  * string value in the GNode data tree
  */
 QString GIndiEntry::romanizedName() const {
-    return _romanName;
+    // This node might not exist...
+    return _romanNode ? _romanNode->data() : QString();
 }
 
 /* Get a pointer to the birth date string
  * value in the GNode data tree
  */
 QString GIndiEntry::birthDate() const {
-    return _birthDate;
+    // This node might not exist...
+    return _birthNode ? _birthNode->data() : QString();
 }
 
 /* Get a pointer to the death date string
  * value in the GNode data tree
  */
 QString GIndiEntry::deathDate() const {
-    return _deathDate;
+    // This node might not exist...
+    return _deathNode ? _deathNode->data() : QString();
+}
+
+//=== Mutators ===//
+
+/* Set a new value for the romanized name
+ * string value in the GNode data tree, and
+ * create a node in the tree if needed.
+ */
+void GIndiEntry:: setRomanizedName(const QString & romanName) {
+    // Append a new node to the tree if needed
+    if (!_romanNode) {
+        // Create the new node
+        _romanNode = new GNode("2 ROMN " + romanName);
+        // Append it to the end of _nameNode's children
+        GNode * n = _nameNode->firstChild();
+        if (!n) { // No existing first child
+            _nameNode->setFirstChild(_romanNode);
+        }
+        else { // Pre-existing sub-list
+            // Go to the end of the sub-list
+            while (n->next()) n = n->next();
+            // Append the new node there
+            n->setNext(_romanNode);
+        }
+    }
+    // Alter the existing node if needed
+    else {
+        _romanNode->setData(romanName);
+    }
 }
 
 //=== Private Helper Methods ===//
@@ -88,19 +120,18 @@ void GIndiEntry::parseNames(GNode * n) {
     while (n && n->type() != TYPE_NAME) {
         n = n->next();
     }
+    if (!n) {
+        throw QString("Bad Individual: No Name");
+    }
     // Extract Name Data
     _nameNode = n;
-    if (n) {
-        _name = n->data();
-        // Check for Romanized Name Data
-        n = n->firstChild();
-        while (n && n->type() != TYPE_ROMANIZED_NAME) {
-            n = n->next();
-        }
+    // Check for Romanized Name Data
+    n = n->firstChild();
+    while (n && n->type() != TYPE_ROMANIZED_NAME) {
+        n = n->next();
     }
     // Extract Romanized Name Data
     _romanNode = n;
-    if (n) _romanName = n->data();
 }
 
 /* Parses the birth data from the GNode tree */
@@ -118,7 +149,6 @@ void GIndiEntry::parseBirth(GNode * n) {
     }
     // Extract birth date
     _birthNode = n;
-    if (n) _birthDate = n->data();
 }
 
 /* Parses the death data from the GNode tree */
@@ -136,5 +166,4 @@ void GIndiEntry::parseDeath(GNode * n) {
     }
     // Extract death date
     _deathNode = n;
-    if (n) _deathDate = n->data();
 }

@@ -50,14 +50,20 @@ public:
      */
     QString deathDate() const;
 
+    //=== Mutators ===//
+
+    /* Set a new value for the romanized name
+     * string value in the GNode data tree, and
+     * create a node in the tree if needed.
+     */
+    void setRomanizedName(const QString & romanName);
+
 private:
 
     //=== Private Data Members ===//
 
     // Links to GNode entries to corresponding data
     GNode * _indiNode, * _nameNode, * _romanNode, * _birthNode, * _deathNode;
-    // Actual data for this individual
-    QString _id, _name, _romanName, _birthDate, _deathDate;
 
     //=== Private Helper Methods ===//
 

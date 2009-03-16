@@ -21,7 +21,7 @@ GNode::GNode(const QString & dataStr) : _firstChild(0), _next(0) {
         _data = LINE_EXP.cap(3).trimmed();
     }
     else {
-        throw "Invalid Line!";
+        throw QString("Invalid Line!");
     }
 }
 

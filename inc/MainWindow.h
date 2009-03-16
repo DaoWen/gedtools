@@ -59,6 +59,8 @@ public slots:
 
     void saveFile();
 
+    void appendPinyin();
+
 };
 
 #endif

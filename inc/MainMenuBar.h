@@ -28,13 +28,15 @@ private:
 
     //=== Private Data Members ===//
 
+    // File Menu
     QMenu * _fileMenu;
-
     QAction * _openAct;
-
     QAction * _saveAct;
-
     QAction * _exitAct;
+
+    // Pinyin Menu
+    QMenu * _pinyinMenu;
+    QAction * _appendPinyinAct;
 
 };
 

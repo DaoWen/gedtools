@@ -26,6 +26,13 @@ MainMenuBar::MainMenuBar(MainWindow * mainWin) : QMenuBar(mainWin) {
     _exitAct->setStatusTip(tr("Quit the application"));
     connect(_exitAct, SIGNAL(triggered()), mainWin, SLOT(close()));
     _fileMenu->addAction(_exitAct);
+// Pinyin Menu
+    _pinyinMenu = addMenu(tr("&Pinyin"));
+    // Append Pinyin
+    _appendPinyinAct = new QAction(tr("&Append Pinyin"), this);
+    _appendPinyinAct->setStatusTip(tr("Append Pinyin phonetic data to all entries in this GEDCOM file"));
+    connect(_appendPinyinAct, SIGNAL(triggered()), mainWin, SLOT(appendPinyin()));
+    _pinyinMenu->addAction(_appendPinyinAct);
 }
 
 MainMenuBar::~MainMenuBar() {

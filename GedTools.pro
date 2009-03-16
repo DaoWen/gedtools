@@ -13,6 +13,7 @@ HEADERS = GFile.h \
           GIndiMap.h \
           GIndiModel.h \
           GNode.h \
+          PinyinMap.h \
           MainWindow.h \
           MainMenuBar.h
 SOURCES = GFile.cpp \
@@ -20,6 +21,7 @@ SOURCES = GFile.cpp \
           GIndiMap.cpp \
           GIndiModel.cpp \
           GNode.cpp \
+          PinyinMap.cpp \
           MainWindow.cpp \
           MainMenuBar.cpp \
           Main.cpp
