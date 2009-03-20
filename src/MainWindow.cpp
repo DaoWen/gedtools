@@ -93,6 +93,8 @@ void MainWindow::appendPinyin() {
             GIndiMap::Iterator i, end = indiMap.end();
             QString name, romanName, pinyin;
             bool needSpace;
+            // If there are no hanzi then we don't need a romanized name
+            bool hasHanzi = false;
             // Loop through every GIndiEntry in the GIndiMap
             for (i=indiMap.begin();i!=end;++i) {
                 name = i.value()->name();
@@ -102,6 +104,7 @@ void MainWindow::appendPinyin() {
                 for (int j=0;j<name.length();++j) {
                     // If it's a Hanzi then append pinyin for it
                     if (name[j] >= CJK_CODEPOINT) {
+                        hasHanzi = true;
                         // Find the pinyin entry for this hanzi
                         pinyin = pinyinMap.lookup(name[j]);
                         // If pinyin data is found then append it
@@ -124,8 +127,10 @@ void MainWindow::appendPinyin() {
                         needSpace = false;
                     }
                 }
-                // Update the romanized name entry
-                i.value()->setRomanizedName(romanName);
+                // Update the romanized name entry if needed
+                if (hasHanzi) {
+                    i.value()->setRomanizedName(romanName);
+                }
 
             }
             // TODO: Find a better way to do this
