@@ -107,7 +107,6 @@ bool GFile::saveFile(const QString & fileName) const {
     QTextStream output(&file);
     output.setCodec("UTF-8");
     output.setGenerateByteOrderMark(true); // Write the BOM
-    // todo: write the utf-8 bom to the beginning of the file
     // Write the data out
     printGedcomFile(output,_root);
     file.close();

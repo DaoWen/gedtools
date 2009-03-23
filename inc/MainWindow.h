@@ -5,6 +5,7 @@
 #include <QtCore>
 #include "GFile.h"
 #include "GIndiModel.h"
+#include "MainMenuBar.h"
 
 /* MainWindow: Main Window for the GedTools GUI
  * This window is the heart of the GedTools GUI,
@@ -37,19 +38,30 @@ private:
 
     //=== Private Data Members ===//
 
+    // Translator for the application
+    QTranslator * _translator;
+
     // Data from GEDCOM file opened by the user
     GFile * _gedFile;
 
     // Model for displaying individual's data in _tableView
     QAbstractItemModel * _indiModel;
 
+    // Filtered display model
+    QSortFilterProxyModel * _filteredModel;
+
     //=== GUI Components ===//
 
-    QMenuBar * _menuBar;
+    MainMenuBar * _menuBar;
 
     QTableView * _tableView;
 
     //=== Private Helper Methods ===//
+
+    /* Resets the table view and related objects
+     * Uses indiModel as the new display model
+     */
+    void resetDisplayModel(QAbstractItemModel * model);
 
 public slots:
 
@@ -60,6 +72,18 @@ public slots:
     void saveFile();
 
     void appendPinyin();
+
+    /* Toggles display between the full set
+      * of names, and the filtered set containg
+      * only entries with incomplete pinyin.
+      */
+    void filterIncomplete(bool checked);
+
+    void switchLanguage(QAction * source);
+
+    void launchWebsite();
+
+    void displayAbout();
 
 };
 

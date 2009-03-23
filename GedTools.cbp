@@ -50,7 +50,6 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="inc\BSArray.h" />
 		<Unit filename="inc\GFile.h" />
 		<Unit filename="inc\GIndiEntry.h" />
 		<Unit filename="inc\GIndiMap.h" />
@@ -59,7 +58,6 @@
 		<Unit filename="inc\MainMenuBar.h" />
 		<Unit filename="inc\MainWindow.h" />
 		<Unit filename="inc\PinyinMap.h" />
-		<Unit filename="src\BSArray.cpp" />
 		<Unit filename="src\GFile.cpp" />
 		<Unit filename="src\GIndiEntry.cpp" />
 		<Unit filename="src\GIndiMap.cpp" />

@@ -2,7 +2,9 @@
 #define V_MAINMENUBAR_H
 
 #include <QtGui>
-#include "MainWindow.h"
+
+// Forward declaration to avoid circular definition
+class MainWindow;
 
 /* MainMenuBar: Primary Menu Bar for the GedTools GUI
  */
@@ -24,6 +26,16 @@ public:
      */
     ~MainMenuBar();
 
+    /* Enables certain menu items that are only useful
+     * after a GEDCOM file has been opened for editing
+     */
+    void enableLockedItems();
+
+    /* Used to clear the checkmark on the
+     * "Display Missing Pinyin" item
+     */
+    void clearFilterToggle();
+
 private:
 
     //=== Private Data Members ===//
@@ -37,6 +49,16 @@ private:
     // Pinyin Menu
     QMenu * _pinyinMenu;
     QAction * _appendPinyinAct;
+    QAction * _filterIncompleteAct;
+
+    // Language Menu
+    QMenu * _languageMenu;
+    QActionGroup * _languageActionGroup;
+
+    // Help Menu
+    QMenu * _helpMenu;
+    QAction * _websiteAct;
+    QAction * _aboutAct;
 
 };
 

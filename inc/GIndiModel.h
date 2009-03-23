@@ -16,6 +16,13 @@ Q_OBJECT // Qt Library Macro
 
 public:
 
+    //=== Constants ===//
+
+    // Column Indecies
+    static const int NAME_COL = 0;
+    static const int ROMAN_COL = 1;
+    static const int BIRTH_COL = 2;
+
     //=== Constructor/Destructor ===//
 
     /* Constructor

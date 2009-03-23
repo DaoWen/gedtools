@@ -56,8 +56,22 @@ QVariant GIndiModel::data(const QModelIndex &index, int role) const {
 
 /* Provides descriptions of the data rows/columns */
 QVariant GIndiModel::headerData(int section, Qt::Orientation orientation, int role) const {
-    // Todo
-    return QVariant();
+    QVariant data;
+    // Verify this data is to be displayed in the horizontal header
+    if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
+        switch (section) {
+            case NAME_COL:
+                data = tr("Name");
+                break;
+            case ROMAN_COL:
+                data = tr("Romanized Name");
+                break;
+            case BIRTH_COL:
+                data = tr("Birth Date");
+                break;
+        }
+    }
+    return data;
 }
 
 //=== Private Helper Methods ===//
@@ -69,17 +83,15 @@ QVariant GIndiModel::getColData(int row, int col) const {
     QVariant data;
     // Todo: Change the cases to constants instead of literals
     switch (col) {
-        case 0:
+        case NAME_COL:
             data = _indiList->at(row)->name();
             break;
-        case 1:
+        case ROMAN_COL:
             data = _indiList->at(row)->romanizedName();
             break;
-        case 2:
+        case BIRTH_COL:
             data = _indiList->at(row)->birthDate();
             break;
-        default:
-            data = QVariant();
     }
     return data;
 }

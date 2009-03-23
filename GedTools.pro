@@ -8,24 +8,26 @@ TARGET = GedTools
 ###############################
 # Project Files & Directories #
 ###############################
-HEADERS = GFile.h \
-          GIndiEntry.h \
-          GIndiMap.h \
-          GIndiModel.h \
-          GNode.h \
-          PinyinMap.h \
-          MainWindow.h \
-          MainMenuBar.h
-SOURCES = GFile.cpp \
-          GIndiEntry.cpp \
-          GIndiMap.cpp \
-          GIndiModel.cpp \
-          GNode.cpp \
-          PinyinMap.cpp \
-          MainWindow.cpp \
-          MainMenuBar.cpp \
-          Main.cpp
-DEPENDPATH = inc/ src/
+HEADERS = inc/GFile.h \
+          inc/GIndiEntry.h \
+          inc/GIndiMap.h \
+          inc/GIndiModel.h \
+          inc/GNode.h \
+          inc/PinyinMap.h \
+          inc/MainWindow.h \
+          inc/MainMenuBar.h
+SOURCES = src/GFile.cpp \
+          src/GIndiEntry.cpp \
+          src/GIndiMap.cpp \
+          src/GIndiModel.cpp \
+          src/GNode.cpp \
+          src/PinyinMap.cpp \
+          src/MainWindow.cpp \
+          src/MainMenuBar.cpp \
+          src/Main.cpp
+TRANSLATIONS = lang/GedTools_en.ts \
+               lang/GedTools_zh.ts
+#DEPENDPATH = inc/ src/
 INCLUDEPATH += inc/
 OBJECTS_DIR = obj/
 DESTDIR = bin/
