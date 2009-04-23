@@ -42,7 +42,7 @@ QVariant GIndiModel::data(const QModelIndex &index, int role) const {
     // Return a "null" value if this isn't a valid index
     if (index.isValid()) {
         // Return a "null" value if this isn't being displayed as text
-        if (role == Qt::DisplayRole) {
+        if (role == Qt::DisplayRole || role == Qt::EditRole) {
             // Return a "null" value if this entry is outside the bounds
             // of our list of individuals (this GIndiEntry doesn't exist)
             if (index.row() < _indiList->size()) {
@@ -73,6 +73,39 @@ QVariant GIndiModel::headerData(int section, Qt::Orientation orientation, int ro
     }
     return data;
 }
+
+//=== Mutators ===//
+
+/* Retrieve flags for a table cell
+ * (selectable, editable, etc.)
+ */
+Qt::ItemFlags GIndiModel::flags(const QModelIndex &index) const {
+    Qt::ItemFlags flag = Qt::ItemIsEnabled; // Default return value
+    if (index.isValid()) {
+        // Only "Romanized Name" cell is editable
+        if (index.column() == ROMAN_COL) {
+            flag = QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
+        }
+        // All other columns are selectable
+        else {
+            flag = QAbstractItemModel::flags(index) | Qt::ItemIsSelectable;
+        }
+    }
+    return flag;
+}
+
+bool GIndiModel::setData(const QModelIndex &index, const QVariant &value, int role) {
+    bool success = false; // Default return value
+    // Only change data on editable cells with a valid index
+    if (index.isValid() && role == Qt::EditRole) {
+        // Update the data in the GIndiEntry
+        _indiList->at(index.row())->setRomanizedName(value.toString());
+        emit dataChanged(index, index);
+        success = true;
+    }
+    return success;
+ }
+
 
 //=== Private Helper Methods ===//
 

@@ -51,6 +51,15 @@ public:
     /* Provides descriptions of the data rows/columns */
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
+    //=== Mutators ===//
+
+    /* Retrieve flags for a table cell
+     * (selectable, editable, etc.)
+     */
+    Qt::ItemFlags flags(const QModelIndex &index) const;
+
+    bool setData(const QModelIndex &index, const QVariant &value, int role);
+
 private:
 
     //=== Private Data Members ===//
