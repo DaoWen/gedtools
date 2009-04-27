@@ -12,6 +12,8 @@ HEADERS = inc/GFile.h \
           inc/GIndiEntry.h \
           inc/GIndiMap.h \
           inc/GIndiModel.h \
+          inc/GFamily.h \
+          inc/GFamilyMap.h\
           inc/GNode.h \
           inc/PinyinMap.h \
           inc/MainWindow.h \
@@ -20,6 +22,8 @@ SOURCES = src/GFile.cpp \
           src/GIndiEntry.cpp \
           src/GIndiMap.cpp \
           src/GIndiModel.cpp \
+          src/GFamily.cpp \
+          src/GFamilyMap.cpp\
           src/GNode.cpp \
           src/PinyinMap.cpp \
           src/MainWindow.cpp \

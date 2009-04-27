@@ -12,7 +12,8 @@
  * The result is a linked list-tree combo (a linked
  * list with subtrees of linked lists)
  */
-GFile::GFile(const QString & fileName) : _root(0), _indiMap(new GIndiMap()) {
+GFile::GFile(const QString & fileName) : _root(0),
+  _indiMap(new GIndiMap()), _familyMap(new GFamilyMap()) {
     // Create an input stream for Unicode
     QFile file(fileName);
     file.open(QIODevice::ReadOnly);
@@ -20,6 +21,8 @@ GFile::GFile(const QString & fileName) : _root(0), _indiMap(new GIndiMap()) {
     input.setCodec("UTF-8");
     // List of all the individuals to parse
     QList<GNode*> indiNodes;
+    // List all of the families to parse
+    QList<GNode*> familyNodes;
     // Variables used for input loop
     QString line; // Stores the current line
     GNode * n;    // Stores the node made from line
@@ -58,14 +61,23 @@ GFile::GFile(const QString & fileName) : _root(0), _indiMap(new GIndiMap()) {
             if (n->data() == "INDI") {
                 indiNodes.append(n);
             }
+            else if (n->data() == "FAM") {
+                familyNodes.append(n);
+            }
         }
     }
     file.close();
-    // Create GIndiEntries for each of the nodes in the nodes in indiNodes
+    // Create GIndiEntry objects for each of the nodes in the nodes in indiNodes
     QList<GNode*>::const_iterator i = indiNodes.begin();
     QList<GNode*>::const_iterator end = indiNodes.end();
     for (;i!=end;++i) {
         _indiMap->insert(*i);
+    }
+    // Create GFamily objects for each of the nodes in the nodes in familyNodes
+    i = familyNodes.begin();
+    end = familyNodes.end();
+    for (;i!=end;++i) {
+        _familyMap->insert(*i);
     }
 }
 
@@ -92,6 +104,14 @@ GNode * GFile::parsedTree() const {
  */
 GIndiMap & GFile::indiMap() {
     return *_indiMap;
+}
+
+/* Returns a reference to the
+ * map of families' IDs to the
+ * corresponding GFamily objects
+ */
+GFamilyMap & GFile::familyMap() {
+    return *_familyMap;
 }
 
 //=== Utility Functions ===//

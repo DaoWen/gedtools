@@ -22,7 +22,7 @@ bool GIndiMap::insert(GNode * person) {
     try { // GIndiEntry might throw an exception
         entry = new GIndiEntry(person);
         // Returns false if this key already exists
-        success = QGMap::insert(person->type(),entry).value();
+        success = QGIMap::insert(person->type(),entry).value();
     }
     catch (...) {
         // Return false if the entry creation failed

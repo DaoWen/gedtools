@@ -3,6 +3,7 @@
 
 #include "GNode.h"
 #include "GIndiMap.h"
+#include "GFamilyMap.h"
 
 /* GFile: GEDCOM File Parser
  * This class reads a GEDCOM file and builds a tree of
@@ -41,6 +42,12 @@ public:
      */
     GIndiMap & indiMap();
 
+    /* Returns a reference to the
+     * map of families' IDs to the
+     * corresponding GFamily objects
+     */
+    GFamilyMap & familyMap();
+
     //=== Utility Functions ===//
 
     /* Attempts to write the data stored in the
@@ -56,8 +63,11 @@ private:
     // Root node of the parsed file
     GNode * _root;
 
-    // Map of individual's IDs to their node pointer
+    // Map of individual's IDs to the corresponding GIndiEntry
     GIndiMap * _indiMap;
+
+    // Map of family's IDs to the corresponding GFamily
+    GFamilyMap * _familyMap;
 
     //=== Private Helper Methods ===//
 

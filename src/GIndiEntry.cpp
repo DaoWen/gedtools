@@ -149,6 +149,8 @@ void GIndiEntry::parseBirth(GNode * n) {
     }
     // Extract birth date
     _birthNode = n;
+    // Convert date string to an object for calculation purposes
+    _birthYear = _birthNode ? QDate::fromString(_birthNode->data().right(4),"yyyy") : QDate();
 }
 
 /* Parses the death data from the GNode tree */
@@ -166,4 +168,6 @@ void GIndiEntry::parseDeath(GNode * n) {
     }
     // Extract death date
     _deathNode = n;
+    // Convert date string to an object for calculation purposes
+    _deathYear = _deathNode ? QDate::fromString(_deathNode->data().right(4),"yyyy") : QDate();
 }

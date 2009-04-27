@@ -2,6 +2,7 @@
 #define V_GINDI_ENTRY_H
 
 #include "GNode.h"
+#include <QDate>
 
 /* GIndiEntry: Representation of an individual in a GEDCOM file
  * This class contains all relevant data found in a GEDCOM entry
@@ -62,8 +63,11 @@ private:
 
     //=== Private Data Members ===//
 
-    // Links to GNode entries to corresponding data
+    // Links GNode entries to corresponding data
     GNode * _indiNode, * _nameNode, * _romanNode, * _birthNode, * _deathNode;
+
+    // Date objects for performing missing date estimates
+    QDate _birthYear, _deathYear;
 
     //=== Private Helper Methods ===//
 

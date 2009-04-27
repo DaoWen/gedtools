@@ -6,7 +6,7 @@
 #include "GNode.h"
 #include "GIndiEntry.h"
 
-typedef QMap<QString,GIndiEntry*> QGMap;
+typedef QMap<QString,GIndiEntry*> QGIMap;
 
 /* GIndiMap: Mapping of individual's xref_id onto that individual's GNode
  * Each individual in a GEDCOM file has a unique xref_id, similar to a pointer
@@ -14,7 +14,7 @@ typedef QMap<QString,GIndiEntry*> QGMap;
  * family members in the FAMILY construct. This data structure provides a fast
  * lookup for the individual based on their xref_id.
  */
-class GIndiMap : public QGMap {
+class GIndiMap : public QGIMap {
 public:
 
     //=== Destructor ===//
