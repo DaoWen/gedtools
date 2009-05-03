@@ -1,8 +1,9 @@
 
-
 #include "MainWindow.h"
 #include "MainMenuBar.h"
 #include "PinyinMap.h"
+#include "GFamilyTreeModel.h"
+#include "TreeWindow.h"
 
 //=== Constants ===//
 
@@ -52,7 +53,7 @@ MainWindow::~MainWindow() {
 /* Resets the table model and related objects
  * Uses indiModel as the new display model
  */
-void MainWindow::resetDisplayModel(QAbstractItemModel * model) {
+void MainWindow::resetDisplayModel(GIndiModel * model) {
     if (_indiModel != model) {
         delete _filteredModel;
         delete _indiModel;
@@ -73,7 +74,7 @@ void MainWindow::openFile() {
         try { // GFile may throw an exception on bad GEDCOM files
             GFile * gedFile = new GFile(fileName);
             GIndiMap & indiMap = gedFile->indiMap();
-            QAbstractItemModel * indiModel = new GIndiModel(indiMap);
+            GIndiModel * indiModel = new GIndiModel(indiMap);
             _tableView->setModel(indiModel);
             delete _gedFile;
             resetDisplayModel(indiModel);
@@ -102,6 +103,7 @@ void MainWindow::saveFile() {
 
 void MainWindow::appendPinyin() {
     // Todo: Separate this from the GUI
+    // Todo: Don't include "FU REN" or "XIAN SHENG"
     int incompleteCount = 0;
     try { // PinyinMap may throw an exception if there's an IO problem
         PinyinMap pinyinMap;
@@ -160,13 +162,9 @@ void MainWindow::appendPinyin() {
             }
 
         }
-        // TODO: Find a better way to do update the display
-        // Maybe using setData on the indiModel instead?
-        // Update the View
-        //_tableView->setModel(0);
-        QAbstractItemModel * indiModel = new GIndiModel(indiMap);
-        resetDisplayModel(indiModel);
-        // TODO: Display "?" count (number of hanzi without pinyin)
+        // Update the Model/View now that data has been changed
+        _indiModel->resetViews();
+        // Display "?" count (number of hanzi without pinyin)
         QString statusMsg = tr("Pinyin added successfully!");
         if (incompleteCount == 0) {
             statusBar()->showMessage(statusMsg);
@@ -208,6 +206,23 @@ void MainWindow::filterIncomplete(bool checked) {
     }
 }
 
+void MainWindow::viewTree() {
+    QList<GFamilyTree *> trees;
+    GIndiMap & indiMap = _gedFile->indiMap();
+    GFamilyMap & famMap = _gedFile->familyMap();
+    GFamily * f;
+    foreach (f, famMap) {
+        if (f->isTreeRoot(indiMap)) {
+            trees.append(new GFamilyTree(f,famMap,indiMap));
+        }
+    }
+    GFamilyTreeModel * treeModel = new GFamilyTreeModel(trees);
+    TreeWindow tw(treeModel, this);
+    tw.exec();
+    delete treeModel;
+    qDeleteAll(trees);
+}
+
 void MainWindow::switchLanguage(QAction * source) {
     _translator->load("lang/GedTools_" + source->data().toString());
     _menuBar = new MainMenuBar(this);
@@ -224,7 +239,7 @@ void MainWindow::launchWebsite() {
 
 void MainWindow::displayAbout() {
     QMessageBox::about(this, tr("About GedTools"), tr(
-        "GedTools\n"
+        "GedTools v1.0.5\n"
         "Copyright \xA9 2009 Nick Vrvilo\n"
         "http://ouuuuch.phoenixteam.org/\n\n"
         "GedTools is distributed under the GNU General Public License version 3\n"

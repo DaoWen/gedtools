@@ -19,10 +19,8 @@ GFile::GFile(const QString & fileName) : _root(0),
     file.open(QIODevice::ReadOnly);
     QTextStream input(&file);
     input.setCodec("UTF-8");
-    // List of all the individuals to parse
-    QList<GNode*> indiNodes;
-    // List all of the families to parse
-    QList<GNode*> familyNodes;
+    // Lists of all the individuals & families to parse
+    QList<GNode*> indiNodes, familyNodes;
     // Variables used for input loop
     QString line; // Stores the current line
     GNode * n;    // Stores the node made from line
@@ -61,6 +59,7 @@ GFile::GFile(const QString & fileName) : _root(0),
             if (n->data() == "INDI") {
                 indiNodes.append(n);
             }
+            // Add this node to the list of families to parse
             else if (n->data() == "FAM") {
                 familyNodes.append(n);
             }
@@ -74,6 +73,7 @@ GFile::GFile(const QString & fileName) : _root(0),
         _indiMap->insert(*i);
     }
     // Create GFamily objects for each of the nodes in the nodes in familyNodes
+    GFamilyMap::iterator fam;
     i = familyNodes.begin();
     end = familyNodes.end();
     for (;i!=end;++i) {

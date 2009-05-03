@@ -39,26 +39,30 @@ public:
 
     //=== Accessors ===//
 
-    /* Returns the number of data entries in the model */
-    int rowCount(const QModelIndex &parent = QModelIndex()) const;
-
     /* Returns the number fields per data entry in the model */
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
 
     /* Returns the data at the specified index */
     QVariant data(const QModelIndex &index, int role) const;
 
-    /* Provides descriptions of the data rows/columns */
-    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
-
-    //=== Mutators ===//
-
     /* Retrieve flags for a table cell
      * (selectable, editable, etc.)
      */
     Qt::ItemFlags flags(const QModelIndex &index) const;
 
+    /* Provides descriptions of the data rows/columns */
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+
+    /* Returns the number of data entries in the model */
+    int rowCount(const QModelIndex &parent = QModelIndex()) const;
+
+    //=== Mutators ===//
+
+    /* Provides an interface to update the internal data behind the model */
     bool setData(const QModelIndex &index, const QVariant &value, int role);
+
+    /* Notify all views that internal data has been changed */
+    void resetViews();
 
 private:
 

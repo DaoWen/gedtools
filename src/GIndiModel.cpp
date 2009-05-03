@@ -26,11 +26,6 @@ GIndiModel::~GIndiModel() {
 
 //=== Accessors ===//
 
-/* Returns the number of data entries in the model */
-int GIndiModel::rowCount(const QModelIndex &parent) const {
-    return _indiList->size();
-}
-
 /* Returns the number fields per data entry in the model */
 int GIndiModel::columnCount(const QModelIndex &parent) const {
     return COL_COUNT;
@@ -54,6 +49,24 @@ QVariant GIndiModel::data(const QModelIndex &index, int role) const {
     return data;
 }
 
+/* Retrieve flags for a table cell
+ * (selectable, editable, etc.)
+ */
+Qt::ItemFlags GIndiModel::flags(const QModelIndex &index) const {
+    Qt::ItemFlags flag = Qt::ItemIsEnabled; // Default return value
+    if (index.isValid()) {
+        // Only "Romanized Name" cell is editable
+        if (index.column() == ROMAN_COL) {
+            flag = QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
+        }
+        // All other columns are selectable
+        else {
+            flag = QAbstractItemModel::flags(index) | Qt::ItemIsSelectable;
+        }
+    }
+    return flag;
+}
+
 /* Provides descriptions of the data rows/columns */
 QVariant GIndiModel::headerData(int section, Qt::Orientation orientation, int role) const {
     QVariant data;
@@ -74,26 +87,14 @@ QVariant GIndiModel::headerData(int section, Qt::Orientation orientation, int ro
     return data;
 }
 
-//=== Mutators ===//
-
-/* Retrieve flags for a table cell
- * (selectable, editable, etc.)
- */
-Qt::ItemFlags GIndiModel::flags(const QModelIndex &index) const {
-    Qt::ItemFlags flag = Qt::ItemIsEnabled; // Default return value
-    if (index.isValid()) {
-        // Only "Romanized Name" cell is editable
-        if (index.column() == ROMAN_COL) {
-            flag = QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
-        }
-        // All other columns are selectable
-        else {
-            flag = QAbstractItemModel::flags(index) | Qt::ItemIsSelectable;
-        }
-    }
-    return flag;
+/* Returns the number of data entries in the model */
+int GIndiModel::rowCount(const QModelIndex &parent) const {
+    return _indiList->size();
 }
 
+//=== Mutators ===//
+
+/* Provides an interface to update the internal data behind the model */
 bool GIndiModel::setData(const QModelIndex &index, const QVariant &value, int role) {
     bool success = false; // Default return value
     // Only change data on editable cells with a valid index
@@ -106,6 +107,10 @@ bool GIndiModel::setData(const QModelIndex &index, const QVariant &value, int ro
     return success;
  }
 
+/* Notify all views that internal data has been changed */
+void GIndiModel::resetViews() {
+    reset();
+}
 
 //=== Private Helper Methods ===//
 

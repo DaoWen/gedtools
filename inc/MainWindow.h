@@ -45,7 +45,7 @@ private:
     GFile * _gedFile;
 
     // Model for displaying individual's data in _tableView
-    QAbstractItemModel * _indiModel;
+    GIndiModel * _indiModel;
 
     // Filtered display model
     QSortFilterProxyModel * _filteredModel;
@@ -61,7 +61,7 @@ private:
     /* Resets the table view and related objects
      * Uses indiModel as the new display model
      */
-    void resetDisplayModel(QAbstractItemModel * model);
+    void resetDisplayModel(GIndiModel * model);
 
 public slots:
 
@@ -78,6 +78,8 @@ public slots:
       * only entries with incomplete pinyin.
       */
     void filterIncomplete(bool checked);
+
+    void viewTree();
 
     void switchLanguage(QAction * source);
 

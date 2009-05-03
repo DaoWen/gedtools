@@ -13,8 +13,13 @@ const char TYPE_ROMANIZED_NAME[] = "ROMN";
 const char TYPE_BIRTH[] = "BIRT";
 // Level-1 death attributes have this type
 const char TYPE_DEATH[] = "DEAT";
-// Level-2 name attributes have this type
+// Level-2 date attributes have this type
 const char TYPE_DATE[] = "DATE";
+// Level-1 family (spouse) attributes have this type
+const char TYPE_FAMS[] = "FAMS";
+// Level-1 family (child) attributes have this type
+const char TYPE_FAMC[] = "FAMC";
+
 
 //=== Constructors ===//
 
@@ -24,7 +29,8 @@ const char TYPE_DATE[] = "DATE";
  * to the proper GNodes, starting with the GNode
  * pointing to this individual's 0-level record.
  */
-GIndiEntry::GIndiEntry(GNode * n) : _indiNode(0), _nameNode(0), _romanNode(0) {
+GIndiEntry::GIndiEntry(GNode * n)
+ : _indiNode(0), _nameNode(0), _romanNode(0), _birthNode(0), _deathNode(0), _famsNode(0), _famcNode(0) {
     // Validate that this is an individual record
     if (!n) {
         throw QString("Null Pointer to Individual");
@@ -34,12 +40,12 @@ GIndiEntry::GIndiEntry(GNode * n) : _indiNode(0), _nameNode(0), _romanNode(0) {
     }
     // Save this individual's data
     _indiNode = n; // Save a link to this individual's GNode
-    n = n->firstChild();
-    // Get Name Data
-    parseNames(n);
-    // Get Birth & Death Dates
-    parseBirth(n);
-    parseDeath(n);
+    // Find important data in this individual's tree
+    parseIndiData(n->firstChild());
+    // Individuals must have a name
+    if (!_nameNode) {
+        throw QString("Bad Individual: No Name");
+    }
 }
 
 //=== Accessors ===//
@@ -83,6 +89,20 @@ QString GIndiEntry::deathDate() const {
     return _deathNode ? _deathNode->data() : QString();
 }
 
+/* Get a copy of the family (child) ID
+ *  string value in the GNode data tree
+ */
+QString GIndiEntry::familyChild() const {
+    return _famcNode ? _famcNode->data() : QString();
+}
+
+/* Get a copy of the family (parent) ID
+ *  string value in the GNode data tree
+ */
+QString GIndiEntry::familyParent() const {
+    return _famsNode ? _famsNode->data() : QString();
+}
+
 //=== Mutators ===//
 
 /* Set a new value for the romanized name
@@ -114,15 +134,40 @@ void GIndiEntry:: setRomanizedName(const QString & romanName) {
 
 //=== Private Helper Methods ===//
 
-/* Parses the name data from the GNode tree */
-void GIndiEntry::parseNames(GNode * n) {
-    // Find Name Data Entry
-    while (n && n->type() != TYPE_NAME) {
+/* Find all important data nodes in
+ * this individual's GEDCOM sub-tree
+ * @n = Individual's first child node
+ */
+void GIndiEntry::parseIndiData(GNode * n) {
+    while (n) {
+        // Name
+        if (!_nameNode && n->type() == TYPE_NAME) {
+            parseNames(n);
+        }
+        // Birth
+        else if (!_birthNode && n->type() == TYPE_BIRTH) {
+            parseBirth(n);
+        }
+        // Death
+        else if (!_deathNode && n->type() == TYPE_DEATH) {
+            parseDeath(n);
+        }
+        // Family (Child)
+        else if (!_famcNode && n->type() == TYPE_FAMC) {
+            _famcNode = n;
+        }
+        // Family (Parent)
+        else if (!_famsNode && n->type() == TYPE_FAMS) {
+            _famsNode = n;
+        }
         n = n->next();
     }
-    if (!n) {
-        throw QString("Bad Individual: No Name");
-    }
+}
+
+/* Parses the name data from the GNode tree
+ * @n = Individual's the "1 NAME" node
+ */
+void GIndiEntry::parseNames(GNode * n) {
     // Extract Name Data
     _nameNode = n;
     // Check for Romanized Name Data
@@ -134,12 +179,10 @@ void GIndiEntry::parseNames(GNode * n) {
     _romanNode = n;
 }
 
-/* Parses the birth data from the GNode tree */
+/* Parses the birth data from the GNode tree
+ * @n = Individual's the "1 BIRT" node
+ */
 void GIndiEntry::parseBirth(GNode * n) {
-    // Find birth data entry
-    while (n && n->type() != TYPE_BIRTH) {
-        n = n->next();
-    }
     // Find birth date
     if (n) {
         n = n->firstChild();
@@ -153,12 +196,10 @@ void GIndiEntry::parseBirth(GNode * n) {
     _birthYear = _birthNode ? QDate::fromString(_birthNode->data().right(4),"yyyy") : QDate();
 }
 
-/* Parses the death data from the GNode tree */
+/* Parses the death data from the GNode tree
+ * @n = Individual's the "1 DEAT" node
+ */
 void GIndiEntry::parseDeath(GNode * n) {
-    // Find death data entry
-    while (n && n->type() != TYPE_DEATH) {
-        n = n->next();
-    }
     // Find death date
     if (n) {
         n = n->firstChild();

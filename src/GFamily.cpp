@@ -1,12 +1,17 @@
 
 #include "GFamily.h"
+#include "GIndiEntry.h"
 
 //=== Constants ===//
 
 // Level-0 family records have this data entry
 const char DATA_FAM[] = "FAM";
+// Level-1 parent and children attribute types
+const char TYPE_HUSBAND[] = "HUSB";
+const char TYPE_WIFE[] = "WIFE";
+const char TYPE_CHILD[] = "CHIL";
 
-//=== Constructors ===//
+//=== Constructor/Destructor ===//
 
 /* Constructor
  * Builds a family based on the data
@@ -14,7 +19,7 @@ const char DATA_FAM[] = "FAM";
  * to the proper GNodes, starting with the GNode
  * pointing to this family's 0-level record.
  */
-GFamily::GFamily(GNode * n) : _familyNode(0), _husbandID(0), _wifeID(0) {
+GFamily::GFamily(GNode * n) : _familyNode(0) {
     // Validate that this is a family record
     if (!n) {
         throw QString("Null Pointer to Family");
@@ -29,6 +34,9 @@ GFamily::GFamily(GNode * n) : _familyNode(0), _husbandID(0), _wifeID(0) {
     parseMembers(n);
 }
 
+/* Destructor */
+GFamily::~GFamily() {}
+
 //=== Accessors ===//
 
 /* Get a copy of the ID string
@@ -39,12 +47,78 @@ QString GFamily::id() const {
     return _familyNode->type();
 }
 
+/* Get a copy of the ID string
+ * value of the husband
+ */
+QString GFamily::husband() const {
+    return _husbandID;
+}
+
+/* Get a copy of the ID string
+ * value of the wife
+ */
+QString GFamily::wife() const {
+    return _wifeID;
+}
+
+/* Get the list of ID strings
+ * for all of the children
+ */
+const QStringList & GFamily::children() const {
+    return _childrenIDs;
+}
+
 //=== Private Helper Methods ===//
 
 /* Parses the family member
  * references for the parents and
- * children from the GNode tree
+ * children from this level of
+ * the GNode tree
  */
 void GFamily::parseMembers(GNode * n) {
+    while (n) {
+        if (n->type() == TYPE_HUSBAND) {
+            _husbandID = n->data();
+        }
+        else if (n->type() == TYPE_WIFE) {
+            _wifeID = n->data();
+        }
+        else if (n->type() == TYPE_CHILD) {
+            // Children should all be clumped together,
+            // so just loop through all of them here
+            while (n && n->type() == TYPE_CHILD) {
+                _childrenIDs.append(n->data());
+                n = n->next();
+            }
+            // Children are the last item we need to
+            // parse (they're specified as being after
+            // the parents in the GEDCOM standard), so
+            // break out of the loop now.
+            break;
+        }
+        n = n->next();
+    }
+}
 
+/* If neither parent in this family is a child
+ * in another family then this family is the root
+ */
+bool GFamily::isTreeRoot(GIndiMap & indiMap) const {
+    GIndiMap::iterator i;
+    return !(
+      // Husband or Wife is the child of another family
+      (!_husbandID.isNull() && // This family contains a husband
+      ((i = indiMap.find(_husbandID)) != indiMap.end()) && // Husband is found in the map
+      !i.value()->familyChild().isNull()) || // Husband is the child of another family
+      (!_wifeID.isNull() && // This family contains a wife
+      ((i = indiMap.find(_wifeID)) != indiMap.end()) && // Wife is found in the map
+      !i.value()->familyChild().isNull()) // Wife is the child of another family
+    );
+}
+
+/* If this family contains no children then
+ * it must be a leaf in the family tree
+ */
+bool GFamily::isTreeLeaf(GIndiMap & indiMap) const {
+    return _childrenIDs.size() == 0;
 }

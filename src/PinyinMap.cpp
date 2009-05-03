@@ -1,8 +1,6 @@
 
 #include "PinyinMap.h"
 
-using namespace std;
-
 //=== Constructor/Destructor ===//
 
 /* Default Constructor

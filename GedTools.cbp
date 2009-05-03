@@ -52,6 +52,8 @@
 		</Compiler>
 		<Unit filename="inc\GFamily.h" />
 		<Unit filename="inc\GFamilyMap.h" />
+		<Unit filename="inc\GFamilyTree.h" />
+		<Unit filename="inc\GFamilyTreeModel.h" />
 		<Unit filename="inc\GFile.h" />
 		<Unit filename="inc\GIndiEntry.h" />
 		<Unit filename="inc\GIndiMap.h" />
@@ -60,8 +62,11 @@
 		<Unit filename="inc\MainMenuBar.h" />
 		<Unit filename="inc\MainWindow.h" />
 		<Unit filename="inc\PinyinMap.h" />
+		<Unit filename="inc\TreeWindow.h" />
 		<Unit filename="src\GFamily.cpp" />
 		<Unit filename="src\GFamilyMap.cpp" />
+		<Unit filename="src\GFamilyTree.cpp" />
+		<Unit filename="src\GFamilyTreeModel.cpp" />
 		<Unit filename="src\GFile.cpp" />
 		<Unit filename="src\GIndiEntry.cpp" />
 		<Unit filename="src\GIndiMap.cpp" />
@@ -71,6 +76,7 @@
 		<Unit filename="src\MainMenuBar.cpp" />
 		<Unit filename="src\MainWindow.cpp" />
 		<Unit filename="src\PinyinMap.cpp" />
+		<Unit filename="src\TreeWindow.cpp" />
 		<Extensions>
 			<code_completion>
 				<search_path add="$(#qt4)/include" />
