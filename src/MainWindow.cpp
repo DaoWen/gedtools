@@ -103,7 +103,6 @@ void MainWindow::saveFile() {
 
 void MainWindow::appendPinyin() {
     // Todo: Separate this from the GUI
-    // Todo: Don't include "FU REN" or "XIAN SHENG"
     int incompleteCount = 0;
     try { // PinyinMap may throw an exception if there's an IO problem
         PinyinMap pinyinMap;

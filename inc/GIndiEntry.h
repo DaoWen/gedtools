@@ -14,6 +14,12 @@
 class GIndiEntry {
 public:
 
+    //=== Static Constants ===//
+
+    // Male and Female values corresponding to sex
+    static const char * MALE;
+    static const char * FEMALE;
+
     //=== Constructors ===//
 
     /* Constructor
@@ -40,6 +46,11 @@ public:
      * string value in the GNode data tree
      */
     QString romanizedName() const;
+
+    /* Get a copy of the sex string
+     * value in the GNode data tree
+     */
+    QString sex() const;
 
     /* Get a copy of the birth date string
      * value in the GNode data tree
@@ -69,13 +80,18 @@ public:
      */
     void setRomanizedName(const QString & romanName);
 
+    /* Sets an individual as being dead
+     * (Inserts 'Y' as the DEAT value)
+     */
+    void setDead();
+
 private:
 
     //=== Private Data Members ===//
 
     // Links GNode entries to corresponding data
-    GNode * _indiNode, * _nameNode, * _romanNode, * _birthNode;
-    GNode * _deathNode, * _famsNode, * _famcNode;
+    GNode * _indiNode, * _nameNode, * _romanNode, * _sexNode;
+    GNode * _birthNode, * _deathNode, * _famsNode, * _famcNode;
 
     // Date objects for performing missing date estimates
     QDate _birthYear, _deathYear;
@@ -92,6 +108,11 @@ private:
      * @n = Individual's the "1 NAME" node
      */
     void parseNames(GNode * n);
+
+    /* Parses the sex data from the GNode tree
+     * @n = Individual's the "1 SEX" node
+     */
+    void GIndiEntry::parseSex(GNode * n);
 
     /* Parses the birth data from the GNode tree
      * @n = Individual's the "1 BIRT" node

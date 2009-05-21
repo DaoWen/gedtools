@@ -9,6 +9,8 @@ const char DATA_INDI[] = "INDI";
 const char TYPE_NAME[] = "NAME";
 // Level-2 romanized name attributes have this type
 const char TYPE_ROMANIZED_NAME[] = "ROMN";
+// Level-1 sex attributes have this type
+const char TYPE_SEX[] = "SEX";
 // Level-1 birth attributes have this type
 const char TYPE_BIRTH[] = "BIRT";
 // Level-1 death attributes have this type
@@ -20,6 +22,11 @@ const char TYPE_FAMS[] = "FAMS";
 // Level-1 family (child) attributes have this type
 const char TYPE_FAMC[] = "FAMC";
 
+//=== Static Constants ===//
+
+// Male and Female values corresponding to sex
+const char * GIndiEntry::MALE = "M";
+const char * GIndiEntry::FEMALE = "F";
 
 //=== Constructors ===//
 
@@ -50,7 +57,7 @@ GIndiEntry::GIndiEntry(GNode * n)
 
 //=== Accessors ===//
 
-/* Get a pointer to the ID string
+/* Get a copy of the ID string
  * value in the GNode data tree
  */
 QString GIndiEntry::id() const {
@@ -58,14 +65,14 @@ QString GIndiEntry::id() const {
     return _indiNode->type();
 }
 
-/* Get a pointer to the name string
+/* Get a copy of the name string
  * value in the GNode data tree
  */
 QString GIndiEntry::name() const {
     return _nameNode->data();
 }
 
-/* Get a pointer to the romanized name
+/* Get a copy of the romanized name
  * string value in the GNode data tree
  */
 QString GIndiEntry::romanizedName() const {
@@ -73,7 +80,14 @@ QString GIndiEntry::romanizedName() const {
     return _romanNode ? _romanNode->data() : QString();
 }
 
-/* Get a pointer to the birth date string
+/* Get a copy of the sex string
+ * value in the GNode data tree
+ */
+QString GIndiEntry::sex() const {
+    return _sexNode->data();
+}
+
+/* Get a copy of the birth date string
  * value in the GNode data tree
  */
 QString GIndiEntry::birthDate() const {
@@ -81,7 +95,7 @@ QString GIndiEntry::birthDate() const {
     return _birthNode ? _birthNode->data() : QString();
 }
 
-/* Get a pointer to the death date string
+/* Get a copy of the death date string
  * value in the GNode data tree
  */
 QString GIndiEntry::deathDate() const {
@@ -144,6 +158,10 @@ void GIndiEntry::parseIndiData(GNode * n) {
         if (!_nameNode && n->type() == TYPE_NAME) {
             parseNames(n);
         }
+        // Sex
+        else if (!_sexNode && n->type() == TYPE_SEX) {
+            parseSex(n);
+        }
         // Birth
         else if (!_birthNode && n->type() == TYPE_BIRTH) {
             parseBirth(n);
@@ -177,6 +195,14 @@ void GIndiEntry::parseNames(GNode * n) {
     }
     // Extract Romanized Name Data
     _romanNode = n;
+}
+
+/* Parses the sex data from the GNode tree
+ * @n = Individual's the "1 SEX" node
+ */
+void GIndiEntry::parseSex(GNode * n) {
+    // Extract sex node
+    _sexNode = n;
 }
 
 /* Parses the birth data from the GNode tree

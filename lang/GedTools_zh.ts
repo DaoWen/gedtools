@@ -162,7 +162,7 @@
     <message>
         <location filename="../src/MainMenuBar.cpp" line="51"/>
         <source>View Family Tree</source>
-        <translation>檢視家族樹</translation>
+        <translation>檢視家族樹狀表</translation>
     </message>
     <message>
         <location filename="../src/MainMenuBar.cpp" line="52"/>
@@ -291,7 +291,7 @@ http://www.gnu.org/copyleft/gpl.html</translation>
     <message>
         <location filename="../src/TreeWindow.cpp" line="24"/>
         <source>Family Tree</source>
-        <translation>家族樹</translation>
+        <translation>家族樹狀表</translation>
     </message>
 </context>
 </TS>
