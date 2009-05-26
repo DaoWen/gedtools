@@ -3,20 +3,35 @@
 
 //=== Constants ===//
 
+// Todo: Move all of these into a separate header file
+// (move the ones in GFamily.cpp too)
+
 // Level-0 individual records have this data entry
 const char DATA_INDI[] = "INDI";
+// Level-2 death dates sometimes have this data entry
+const char DATA_DECEASED[] = "DECEASED";
 // Level-1 name attributes have this type
 const char TYPE_NAME[] = "NAME";
 // Level-2 romanized name attributes have this type
 const char TYPE_ROMANIZED_NAME[] = "ROMN";
 // Level-1 sex attributes have this type
 const char TYPE_SEX[] = "SEX";
+// Level-1 birth entry (empty)
+const char ENTRY_BIRTH[] = "1 BIRT";
 // Level-1 birth attributes have this type
 const char TYPE_BIRTH[] = "BIRT";
+// Level-1 death entry (empty)
+const char ENTRY_DEATH[] = "1 DEAT";
 // Level-1 death attributes have this type
 const char TYPE_DEATH[] = "DEAT";
+// Level-2 date entry
+const char ENTRY_DATE[] = "2 DATE";
+// Level-2 place entry
+const char ENTRY_PLACE[] = "2 PLAC";
 // Level-2 date attributes have this type
 const char TYPE_DATE[] = "DATE";
+// Level-2 place attributes have this type
+const char TYPE_PLACE[] = "PLACE";
 // Level-1 family (spouse) attributes have this type
 const char TYPE_FAMS[] = "FAMS";
 // Level-1 family (child) attributes have this type
@@ -37,7 +52,8 @@ const char * GIndiEntry::FEMALE = "F";
  * pointing to this individual's 0-level record.
  */
 GIndiEntry::GIndiEntry(GNode * n)
- : _indiNode(0), _nameNode(0), _romanNode(0), _birthNode(0), _deathNode(0), _famsNode(0), _famcNode(0) {
+ : _indiNode(0), _nameNode(0), _romanNode(0), _birthDateNode(0), _birthPlaceNode(0),
+   _deathDateNode(0), _deathPlaceNode(0), _famsNode(0), _famcNode(0) {
     // Validate that this is an individual record
     if (!n) {
         throw QString("Null Pointer to Individual");
@@ -92,7 +108,22 @@ QString GIndiEntry::sex() const {
  */
 QString GIndiEntry::birthDate() const {
     // This node might not exist...
-    return _birthNode ? _birthNode->data() : QString();
+    return _birthDateNode ? _birthDateNode->data() : QString();
+}
+
+/* Get the year in which this individual was born
+ * (helpful for doing date calculations)
+ */
+QDate GIndiEntry::birthYear() {
+    return _birthYear;
+}
+
+/* Get a copy of the birth place string
+ * value in the GNode data tree
+ */
+QString GIndiEntry::birthPlace() const {
+    // This node might not exist...
+    return _birthPlaceNode ? _birthPlaceNode->data() : QString();
 }
 
 /* Get a copy of the death date string
@@ -100,7 +131,29 @@ QString GIndiEntry::birthDate() const {
  */
 QString GIndiEntry::deathDate() const {
     // This node might not exist...
-    return _deathNode ? _deathNode->data() : QString();
+    return _deathDateNode ? _deathDateNode->data() : QString();
+}
+
+/* Get the year in which this individual died
+ * (helpful for doing date calculations)
+ */
+QDate GIndiEntry::deathYear() {
+    return _deathYear;
+}
+
+/* Get a copy of the death place string
+ * value in the GNode data tree
+ */
+QString GIndiEntry::deathPlace() const {
+    // This node might not exist...
+    return _deathPlaceNode ? _deathPlaceNode->data() : QString();
+}
+
+/* Returns true if the individual's
+ * death date is set to "DECEASED"
+ */
+bool GIndiEntry::deceased() {
+    return _deathDateNode && _deathDateNode->data() == DATA_DECEASED;
 }
 
 /* Get a copy of the family (child) ID
@@ -123,7 +176,7 @@ QString GIndiEntry::familyParent() const {
  * string value in the GNode data tree, and
  * create a node in the tree if needed.
  */
-void GIndiEntry:: setRomanizedName(const QString & romanName) {
+void GIndiEntry::setRomanizedName(const QString & romanName) {
     // Append a new node to the tree if needed
     if (!_romanNode) {
         // Create the new node
@@ -146,6 +199,86 @@ void GIndiEntry:: setRomanizedName(const QString & romanName) {
     }
 }
 
+/* Sets an individual's estimated birth
+ * year and updates the BIRT node value
+ */
+void GIndiEntry::setBirthYear(const QDate & year, const QString & place) {
+    if (!year.isValid()) {
+        throw QString("Attempted to set an invalid birth date.");
+    }
+    if (!_birthDateNode || !_birthPlaceNode) {
+        GNode * birthNode = _nameNode->next();
+        // Create BIRT node if needed
+        if (birthNode->type() != TYPE_BIRTH) {
+            birthNode = new GNode(ENTRY_BIRTH);
+            _nameNode->insertNext(birthNode);
+        }
+        // Create the DATE node if needed
+        if (!_birthDateNode) {
+            _birthDateNode = new GNode(ENTRY_DATE);
+        }
+        // Build the date entry string
+        QString dateString("EST ");
+        dateString.append(year.toString("yyyy"));
+        // Update nodes
+        _birthDateNode->setData(dateString);
+        birthNode->setFirstChild(_birthDateNode);
+        // Build the place string
+        QString placeString(" ");
+        placeString.append(place);
+        // Append the birth place if specified
+        if (!place.isNull()) {
+            // Create the place node if needed
+            if (!_birthPlaceNode) {
+                _birthPlaceNode = new GNode(placeString);
+            }
+        }
+        _birthDateNode->setNext(_birthPlaceNode);
+    }
+}
+
+/* Sets an individual's death
+ * date value to "DECEASED"
+ */
+void GIndiEntry::setDeceased(const QString & place) {
+    if (!_deathDateNode || !_deathPlaceNode) {
+        GNode * deathNode = _nameNode->next();
+        GNode * prevNode = _nameNode;
+        // Create DEAT node if needed
+        // Check in the first and second slot after NAME
+        if (deathNode->type() != TYPE_DEATH) {
+            // Insert death node after the birth node if it exists
+            if (deathNode->type() == TYPE_BIRTH) {
+                prevNode = deathNode;
+            }
+            // Check the second slot
+            deathNode = deathNode->next();
+            if (deathNode->type() != TYPE_DEATH) {
+                deathNode = new GNode(ENTRY_DEATH);
+                prevNode->insertNext(deathNode);
+            }
+        }
+        // Create the DATE node if needed
+        if (!_deathDateNode) {
+            _deathDateNode = new GNode(ENTRY_DATE);
+        }
+        _deathDateNode->setData(DATA_DECEASED);
+        deathNode->setFirstChild(_deathDateNode);
+        // Build the place string
+        QString placeString(" ");
+        placeString.append(place);
+        // Append the death place if specified
+        if (!place.isNull()) {
+            // Create the place node if needed
+            if (!_deathPlaceNode) {
+                _deathPlaceNode = new GNode(placeString);
+            }
+        }
+        _deathDateNode->setNext(_deathPlaceNode);
+    }
+}
+
+
 //=== Private Helper Methods ===//
 
 /* Find all important data nodes in
@@ -160,14 +293,14 @@ void GIndiEntry::parseIndiData(GNode * n) {
         }
         // Sex
         else if (!_sexNode && n->type() == TYPE_SEX) {
-            parseSex(n);
+            _sexNode = n;
         }
         // Birth
-        else if (!_birthNode && n->type() == TYPE_BIRTH) {
+        else if (!_birthDateNode && n->type() == TYPE_BIRTH) {
             parseBirth(n);
         }
         // Death
-        else if (!_deathNode && n->type() == TYPE_DEATH) {
+        else if (!_deathDateNode && n->type() == TYPE_DEATH) {
             parseDeath(n);
         }
         // Family (Child)
@@ -197,14 +330,6 @@ void GIndiEntry::parseNames(GNode * n) {
     _romanNode = n;
 }
 
-/* Parses the sex data from the GNode tree
- * @n = Individual's the "1 SEX" node
- */
-void GIndiEntry::parseSex(GNode * n) {
-    // Extract sex node
-    _sexNode = n;
-}
-
 /* Parses the birth data from the GNode tree
  * @n = Individual's the "1 BIRT" node
  */
@@ -212,14 +337,20 @@ void GIndiEntry::parseBirth(GNode * n) {
     // Find birth date
     if (n) {
         n = n->firstChild();
-        while (n && n->type() != TYPE_DATE) {
+        while (n) {
+            // Extract birth date
+            if (n->type() == TYPE_DATE) {
+                _birthDateNode = n;
+            }
+            // Extract birth place
+            else if (n->type() == TYPE_PLACE) {
+                _birthPlaceNode = n;
+            }
             n = n->next();
         }
     }
-    // Extract birth date
-    _birthNode = n;
     // Convert date string to an object for calculation purposes
-    _birthYear = _birthNode ? QDate::fromString(_birthNode->data().right(4),"yyyy") : QDate();
+    _birthYear = _birthDateNode ? QDate::fromString(_birthDateNode->data().right(4),"yyyy") : QDate();
 }
 
 /* Parses the death data from the GNode tree
@@ -234,7 +365,7 @@ void GIndiEntry::parseDeath(GNode * n) {
         }
     }
     // Extract death date
-    _deathNode = n;
+    _deathDateNode = n;
     // Convert date string to an object for calculation purposes
-    _deathYear = _deathNode ? QDate::fromString(_deathNode->data().right(4),"yyyy") : QDate();
+    _deathYear = _deathDateNode ? QDate::fromString(_deathDateNode->data().right(4),"yyyy") : QDate();
 }

@@ -11,10 +11,13 @@ public:
     GFTNode();
 
     /* Constructor */
-    GFTNode(GIndiEntry * famHead, const QString & famName, GFTNode * parentFamily);
+    GFTNode(GFamily * thisFamily, GIndiEntry * famHead, const QString & famName, GFTNode * parentFamily);
 
     /* Destructor */
     ~GFTNode();
+
+    // GFamily object corresponding to this node
+    GFamily * thisFam;
 
     // Head member of the family (the husband
     // if this node is a child of the husband's

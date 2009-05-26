@@ -59,6 +59,11 @@ public:
      */
     void setNext(GNode * n);
 
+    /* Inserts a new node between
+     * this node and its next sibling
+     */
+    GNode * insertNext(GNode * n);
+
     /* Sets the first node in the
      * next level of the tree
      */

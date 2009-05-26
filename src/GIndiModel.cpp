@@ -80,7 +80,10 @@ QVariant GIndiModel::headerData(int section, Qt::Orientation orientation, int ro
                 data = tr("Romanized Name");
                 break;
             case BIRTH_COL:
-                data = tr("Birth Date");
+                data = tr("Birth");
+                break;
+            case DEATH_COL:
+                data = tr("Death");
                 break;
         }
     }
@@ -118,7 +121,8 @@ void GIndiModel::resetViews() {
  * object corresponding to this column
  */
 QVariant GIndiModel::getColData(int row, int col) const {
-    QVariant data;
+    QString data;
+    QDate year;
     // Todo: Change the cases to constants instead of literals
     switch (col) {
         case NAME_COL:
@@ -127,8 +131,28 @@ QVariant GIndiModel::getColData(int row, int col) const {
         case ROMAN_COL:
             data = _indiList->at(row)->romanizedName();
             break;
-        case BIRTH_COL:
-            data = _indiList->at(row)->birthDate();
+        case BIRTH_COL: // Write "Birth Place (Birth Year)"
+            year = _indiList->at(row)->birthYear();
+            data = _indiList->at(row)->birthPlace();
+            if (data.isNull()) data = "--";
+            data.append(year.isNull() ? " (--)" : year.toString(" (yyyy)"));
+            break;
+        case DEATH_COL: // Write "Death Place (Death Year)"
+            year = _indiList->at(row)->deathYear();
+            data = _indiList->at(row)->deathPlace();
+            if (data.isNull()) data = "--";
+            // Write the date if there is one
+            if (year.isValid()) {
+                data.append(year.toString(" (yyyy)"));
+            }
+            // Write "Deceased" if marked as such
+            else if (_indiList->at(row)->deceased()) {
+                data = tr("Deceased");
+            }
+            // Otherwise...
+            else {
+                data.append(" (--)");
+            }
             break;
     }
     return data;

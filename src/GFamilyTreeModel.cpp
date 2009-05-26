@@ -41,8 +41,22 @@ QVariant GFamilyTreeModel::data(const QModelIndex &index, int role) const {
         if (index.column() == 0) { // Name
             value = n->famName;
         }
-        else { // Birth date
-            value = n->famHead->birthDate();
+        else { // Marriage date
+            // Not applicable if this is a single individual
+            if (!n->thisFam) {
+                value = tr("N/A");
+            }
+            // Write the place and year
+            else {
+                // Place
+                QString place = n->thisFam->marriagePlace();
+                if (place.isNull()) place = "--";
+                // Year
+                QDate date = n->thisFam->marriageYear();
+                QString year = date.isValid() ? date.toString("yyyy") : "--";
+                // Value
+                value = QString("%1 (%2)").arg(place).arg(year);
+            }
         }
     }
     return value;
@@ -57,7 +71,7 @@ QVariant GFamilyTreeModel::headerData(int section, Qt::Orientation orientation, 
             value = tr("Name");
         }
         else { // Birth date
-            value = tr("Birth date");
+            value = tr("Marriage");
         }
     }
     return value;

@@ -22,6 +22,7 @@ public:
     static const int NAME_COL = 0;
     static const int ROMAN_COL = 1;
     static const int BIRTH_COL = 2;
+    static const int DEATH_COL = 3;
 
     //=== Constructor/Destructor ===//
 
@@ -69,7 +70,7 @@ private:
     //=== Private Data Members ===//
 
     // Number of columns in the table (used for the columnCount() method)
-    static const int COL_COUNT = 3;
+    static const int COL_COUNT = 4;
 
     // Map of IDs to Individuals
     QList<GIndiEntry*> * _indiList;

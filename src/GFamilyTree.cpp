@@ -4,11 +4,11 @@
 //=== GFTNode ===//
 
 /* Empty Constructor */
-GFTNode::GFTNode() : famHead(0), parentFam(0), childFams(0) {}
+GFTNode::GFTNode() : thisFam(0), famHead(0), parentFam(0), childFams(0) {}
 
 /* Constructor */
-GFTNode::GFTNode(GIndiEntry * familyHead, const QString & familyName, GFTNode * parentFamily) :
-  famHead(familyHead), famName(familyName), parentFam(parentFamily), childFams(0) {}
+GFTNode::GFTNode(GFamily * thisFamily, GIndiEntry * familyHead, const QString & familyName, GFTNode * parentFamily) :
+  thisFam(thisFamily), famHead(familyHead), famName(familyName), parentFam(parentFamily), childFams(0) {}
 
 /* Destructor */
 GFTNode::~GFTNode() {
@@ -49,11 +49,11 @@ GFTNode * GFamilyTree::root() const {
 GFTNode * GFamilyTree::buildBranch(GFamily * fam, GIndiEntry * head, GFTNode * parent) {
     GFTNode * n;
     if (!fam) { // No FAMS family entry
-        n = new GFTNode(head, head->name(), parent);
+        n = new GFTNode(fam, head, head->name(), parent);
     }
     // Family with children
     else {
-        n = new GFTNode(head, getFamilyName(fam, head), parent);
+        n = new GFTNode(fam, head, getFamilyName(fam, head), parent);
         // "Head Individual" Child
         GIndiEntry * child;
         // Child Family List & Iterators

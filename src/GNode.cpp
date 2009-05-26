@@ -77,6 +77,22 @@ void GNode::setNext(GNode * n) {
     _next = n;
 }
 
+/* Inserts a new node between
+ * this node and its next sibling
+ */
+GNode * GNode::insertNext(GNode * n) {
+    // Don't insert null nodes
+    if (n) {
+        // Link in existing siblings
+        if (this->_next) {
+            n->setNext(this->_next);
+        }
+        // Link in the new node
+        this->setNext(n);
+    }
+    return n;
+}
+
 /* Sets the first node in the
  * next level of the tree
  */

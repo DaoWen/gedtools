@@ -50,6 +50,15 @@ public:
      */
     const QStringList & children() const;
 
+    /* Date of the marriage */
+    QString marriageDate() const;
+
+    /* Year of the marriage (useful in calculations) */
+    QDate marriageYear() const;
+
+    /* Location of the marriage */
+    QString marriagePlace() const;
+
     /* If neither parent in this family is a child
      * in another family then this family is the root
      */
@@ -65,7 +74,10 @@ private:
     //=== Private Data Members ===//
 
     // Links GNode entries to corresponding data
-    GNode * _familyNode;
+    GNode * _familyNode, * _marriageDateNode, * _marriagePlaceNode;
+
+    // Year of marriage as a QDate for calculations
+    QDate _marriageYear;
 
     // Parents' xref_id data
     QString _husbandID, _wifeID;

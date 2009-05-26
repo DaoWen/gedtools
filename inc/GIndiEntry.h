@@ -57,10 +57,35 @@ public:
      */
     QString birthDate() const;
 
+    /* Get the year in which this individual was born
+     * (helpful for doing date calculations)
+     */
+    QDate birthYear();
+
+    /* Get a copy of the birth place string
+     * value in the GNode data tree
+     */
+    QString birthPlace() const;
+
     /* Get a copy of the death date string
      * value in the GNode data tree
      */
     QString deathDate() const;
+
+    /* Get the year in which this individual died
+     * (helpful for doing date calculations)
+     */
+    QDate deathYear();
+
+    /* Get a copy of the death place string
+     * value in the GNode data tree
+     */
+    QString deathPlace() const;
+
+    /* Returns true if the individual's
+     * death date is set to "DECEASED"
+     */
+    bool deceased();
 
     /* Get a copy of the family (child) ID
      *  string value in the GNode data tree
@@ -80,10 +105,15 @@ public:
      */
     void setRomanizedName(const QString & romanName);
 
-    /* Sets an individual as being dead
-     * (Inserts 'Y' as the DEAT value)
+    /* Sets an individual's estimated birth
+     * year and updates the BIRT node value
      */
-    void setDead();
+    void setBirthYear(const QDate & year, const QString & place = QString());
+
+    /* Sets an individual's death
+     * date value to "DECEASED"
+     */
+    void setDeceased(const QString & place = QString());
 
 private:
 
@@ -91,7 +121,9 @@ private:
 
     // Links GNode entries to corresponding data
     GNode * _indiNode, * _nameNode, * _romanNode, * _sexNode;
-    GNode * _birthNode, * _deathNode, * _famsNode, * _famcNode;
+    GNode * _birthDateNode, * _birthPlaceNode;
+    GNode * _deathDateNode, * _deathPlaceNode;
+    GNode * _famsNode, * _famcNode;
 
     // Date objects for performing missing date estimates
     QDate _birthYear, _deathYear;
@@ -108,11 +140,6 @@ private:
      * @n = Individual's the "1 NAME" node
      */
     void parseNames(GNode * n);
-
-    /* Parses the sex data from the GNode tree
-     * @n = Individual's the "1 SEX" node
-     */
-    void GIndiEntry::parseSex(GNode * n);
 
     /* Parses the birth data from the GNode tree
      * @n = Individual's the "1 BIRT" node
