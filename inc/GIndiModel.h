@@ -62,6 +62,9 @@ public:
     /* Provides an interface to update the internal data behind the model */
     bool setData(const QModelIndex &index, const QVariant &value, int role);
 
+    /* Sort column data */
+    void sort(int column, Qt::SortOrder order = Qt::AscendingOrder);
+
     /* Notify all views that internal data has been changed */
     void resetViews();
 
@@ -80,7 +83,23 @@ private:
     /* Retrieve the data from the Individual
      * object corresponding to this column
      */
-    QVariant getColData(int row, int col) const;
+    static QString getColData(const GIndiEntry * indi, int col);
+
+    //=== ColumnComparer Class ===//
+
+    /* ColumnComparer: Comparison operator for comparing
+     * columns in the _indiList and used by sort()
+     */
+    class ColumnComparer {
+        public:
+            /* Constructor */
+            ColumnComparer(int column, bool ascending);
+            /* Comparision Operation */
+            bool operator()(GIndiEntry * a, GIndiEntry * b);
+        private:
+            int _col; // Sort target column
+            bool _asc; // Sort direction
+    };
 
 };
 

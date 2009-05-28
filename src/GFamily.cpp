@@ -125,29 +125,29 @@ void GFamily::setMarriageYear(const QDate & year, const QString & place) {
     if (!year.isValid()) {
         throw QString("Attempted to set an invalid marriage date.");
     }
-    if (!_marriageDateNode || !_marriagePlaceNode) {
-        // Append MARR node if null
-        if (!_marriageNode) appendMarriageNode();
-        // Create the DATE node if needed
-        if (!_marriageDateNode) {
-            _marriageDateNode = new GNode(ENTRY_DATE);
-        }
-        // Build the date entry string
-        QString dateString("EST ");
-        dateString.append(year.toString("yyyy"));
-        // Update nodes
-        _marriageDateNode->setData(dateString);
-        _marriageNode->setFirstChild(_marriageDateNode);
-        // Append the marriage place if specified
-        if (!place.isNull()) {
-            // Create the place node if needed
-            if (!_marriagePlaceNode) {
-                _marriagePlaceNode = new GNode(ENTRY_PLACE);
-            }
-            _marriagePlaceNode->setData(place);
-        }
-        _marriageDateNode->setNext(_marriagePlaceNode);
+    // Update the internal date
+    _marriageYear = year;
+    // Append MARR node if null
+    if (!_marriageNode) appendMarriageNode();
+    // Create the DATE node if needed
+    if (!_marriageDateNode) {
+        _marriageDateNode = new GNode(ENTRY_DATE);
     }
+    // Build the date entry string
+    QString dateString("EST ");
+    dateString.append(year.toString("yyyy"));
+    // Update nodes
+    _marriageDateNode->setData(dateString);
+    _marriageNode->setFirstChild(_marriageDateNode);
+    // Append the marriage place if specified
+    if (!place.isNull()) {
+        // Create the place node if needed
+        if (!_marriagePlaceNode) {
+            _marriagePlaceNode = new GNode(ENTRY_PLACE);
+        }
+        _marriagePlaceNode->setData(place);
+    }
+    _marriageDateNode->setNext(_marriagePlaceNode);
 }
 
 

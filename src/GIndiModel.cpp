@@ -42,7 +42,7 @@ QVariant GIndiModel::data(const QModelIndex &index, int role) const {
             // of our list of individuals (this GIndiEntry doesn't exist)
             if (index.row() < _indiList->size()) {
                 // Otherwise return the data
-                data = getColData(index.row(), index.column());
+                data = getColData(_indiList->at(index.row()), index.column());
             }
         }
     }
@@ -108,7 +108,17 @@ bool GIndiModel::setData(const QModelIndex &index, const QVariant &value, int ro
         success = true;
     }
     return success;
- }
+}
+
+/* Sort column data */
+void GIndiModel::sort(int column, Qt::SortOrder order) {
+    // Only sort valid columns
+    if (column >= 0 && column < COL_COUNT) {
+        ColumnComparer cmp(column, order == Qt::AscendingOrder);
+        qSort(_indiList->begin(), _indiList->end(), cmp);
+        reset(); // Notify views that data has changed
+    }
+}
 
 /* Notify all views that internal data has been changed */
 void GIndiModel::resetViews() {
@@ -120,33 +130,33 @@ void GIndiModel::resetViews() {
 /* Retrieve the data from the Individual
  * object corresponding to this column
  */
-QVariant GIndiModel::getColData(int row, int col) const {
+QString GIndiModel::getColData(const GIndiEntry * indi, int col) {
     QString data;
     QDate year;
     // Todo: Change the cases to constants instead of literals
     switch (col) {
         case NAME_COL:
-            data = _indiList->at(row)->name();
+            data = indi->name();
             break;
         case ROMAN_COL:
-            data = _indiList->at(row)->romanizedName();
+            data = indi->romanizedName();
             break;
         case BIRTH_COL: // Write "Birth Place (Birth Year)"
-            year = _indiList->at(row)->birthYear();
-            data = _indiList->at(row)->birthPlace();
+            year = indi->birthYear();
+            data = indi->birthPlace();
             if (data.isNull()) data = "--";
             data.append(year.isNull() ? " (--)" : year.toString(" (yyyy)"));
             break;
         case DEATH_COL: // Write "Death Place (Death Year)"
-            year = _indiList->at(row)->deathYear();
-            data = _indiList->at(row)->deathPlace();
+            year = indi->deathYear();
+            data = indi->deathPlace();
             if (data.isNull()) data = "--";
             // Write the date if there is one
             if (year.isValid()) {
                 data.append(year.toString(" (yyyy)"));
             }
             // Write "Deceased" if marked as such
-            else if (_indiList->at(row)->deceased()) {
+            else if (indi->deceased()) {
                 data = tr("Deceased");
             }
             // Otherwise...
@@ -156,4 +166,17 @@ QVariant GIndiModel::getColData(int row, int col) const {
             break;
     }
     return data;
+}
+
+//=== ColumnComparer Class ===//
+
+/* Constructor */
+GIndiModel::ColumnComparer::ColumnComparer(int column, bool ascending)
+ : _col(column), _asc(ascending) {}
+
+/* Comparision Operation */
+bool GIndiModel::ColumnComparer::operator()(GIndiEntry * a, GIndiEntry * b) {
+    QString dataA = getColData(a, _col);
+    QString dataB = getColData(b, _col);
+    return _asc ? dataA < dataB : dataA > dataB;
 }

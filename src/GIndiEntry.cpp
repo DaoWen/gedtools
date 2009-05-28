@@ -52,8 +52,9 @@ const char * GIndiEntry::FEMALE = "F";
  * pointing to this individual's 0-level record.
  */
 GIndiEntry::GIndiEntry(GNode * n)
- : _indiNode(0), _nameNode(0), _romanNode(0), _birthDateNode(0), _birthPlaceNode(0),
-   _deathDateNode(0), _deathPlaceNode(0), _famsNode(0), _famcNode(0) {
+ : _indiNode(0), _nameNode(0), _romanNode(0), _sexNode(0), _birthNode(0),
+   _birthDateNode(0), _birthPlaceNode(0), _deathNode(0), _deathDateNode(0),
+   _deathPlaceNode(0), _famsNode(0), _famcNode(0) {
     // Validate that this is an individual record
     if (!n) {
         throw QString("Null Pointer to Individual");
@@ -114,7 +115,7 @@ QString GIndiEntry::birthDate() const {
 /* Get the year in which this individual was born
  * (helpful for doing date calculations)
  */
-QDate GIndiEntry::birthYear() {
+QDate GIndiEntry::birthYear() const {
     return _birthYear;
 }
 
@@ -137,7 +138,7 @@ QString GIndiEntry::deathDate() const {
 /* Get the year in which this individual died
  * (helpful for doing date calculations)
  */
-QDate GIndiEntry::deathYear() {
+QDate GIndiEntry::deathYear() const {
     return _deathYear;
 }
 
@@ -152,7 +153,7 @@ QString GIndiEntry::deathPlace() const {
 /* Returns true if the individual's
  * death date is set to "DECEASED"
  */
-bool GIndiEntry::deceased() {
+bool GIndiEntry::deceased() const {
     return _deathDateNode && _deathDateNode->data() == DATA_DECEASED;
 }
 
@@ -206,72 +207,52 @@ void GIndiEntry::setBirthYear(const QDate & year, const QString & place) {
     if (!year.isValid()) {
         throw QString("Attempted to set an invalid birth date.");
     }
-    if (!_birthDateNode || !_birthPlaceNode) {
-        GNode * birthNode = _nameNode->next();
-        // Create BIRT node if needed
-        if (birthNode->type() != TYPE_BIRTH) {
-            birthNode = new GNode(ENTRY_BIRTH);
-            _nameNode->insertNext(birthNode);
-        }
-        // Create the DATE node if needed
-        if (!_birthDateNode) {
-            _birthDateNode = new GNode(ENTRY_DATE);
-        }
-        // Build the date entry string
-        QString dateString("EST ");
-        dateString.append(year.toString("yyyy"));
-        // Update nodes
-        _birthDateNode->setData(dateString);
-        birthNode->setFirstChild(_birthDateNode);
-        // Append the birth place if specified
-        if (!place.isNull()) {
-            // Create the place node if needed
-            if (!_birthPlaceNode) {
-                _birthPlaceNode = new GNode(ENTRY_PLACE);
-            }
-            _birthPlaceNode->setData(place);
-        }
-        _birthDateNode->setNext(_birthPlaceNode);
+    // Update internal date value
+    _birthYear = year;
+    // Create BIRT node if needed
+    if (!_birthNode) appendBirthNode();
+    // Create the DATE node if needed
+    if (!_birthDateNode) {
+        _birthDateNode = new GNode(ENTRY_DATE);
     }
+    // Build the date entry string
+    QString dateString("EST ");
+    dateString.append(year.toString("yyyy"));
+    // Update nodes
+    _birthDateNode->setData(dateString);
+    _birthNode->setFirstChild(_birthDateNode);
+    // Append the birth place if specified
+    if (!place.isNull()) {
+        // Create the place node if needed
+        if (!_birthPlaceNode) {
+            _birthPlaceNode = new GNode(ENTRY_PLACE);
+        }
+        _birthPlaceNode->setData(place);
+    }
+    _birthDateNode->setNext(_birthPlaceNode);
 }
 
 /* Sets an individual's death
  * date value to "DECEASED"
  */
 void GIndiEntry::setDeceased(const QString & place) {
-    if (!_deathDateNode || !_deathPlaceNode) {
-        GNode * deathNode = _nameNode->next();
-        GNode * prevNode = _nameNode;
-        // Create DEAT node if needed
-        // Check in the first and second slot after NAME
-        if (deathNode->type() != TYPE_DEATH) {
-            // Insert death node after the birth node if it exists
-            if (deathNode->type() == TYPE_BIRTH) {
-                prevNode = deathNode;
-            }
-            // Check the second slot
-            deathNode = deathNode->next();
-            if (deathNode->type() != TYPE_DEATH) {
-                deathNode = new GNode(ENTRY_DEATH);
-                prevNode->insertNext(deathNode);
-            }
-        }
-        // Create the DATE node if needed
-        if (!_deathDateNode) {
-            _deathDateNode = new GNode(ENTRY_DATE);
-        }
-        _deathDateNode->setData(DATA_DECEASED);
-        deathNode->setFirstChild(_deathDateNode);
-        // Append the death place if specified
-        if (!place.isNull()) {
-            // Create the place node if needed
-            if (!_deathPlaceNode) {
-                _deathPlaceNode = new GNode(ENTRY_PLACE);
-            }
-            _deathPlaceNode->setData(place);
-        }
-        _deathDateNode->setNext(_deathPlaceNode);
+    // Create DEAT node if needed
+    if (!_deathNode) appendDeathNode();
+    // Create the DATE node if needed
+    if (!_deathDateNode) {
+        _deathDateNode = new GNode(ENTRY_DATE);
     }
+    _deathDateNode->setData(DATA_DECEASED);
+    _deathNode->setFirstChild(_deathDateNode);
+    // Append the death place if specified
+    if (!place.isNull()) {
+        // Create the place node if needed
+        if (!_deathPlaceNode) {
+            _deathPlaceNode = new GNode(ENTRY_PLACE);
+        }
+        _deathPlaceNode->setData(place);
+    }
+    _deathDateNode->setNext(_deathPlaceNode);
 }
 
 
@@ -332,6 +313,7 @@ void GIndiEntry::parseNames(GNode * n) {
 void GIndiEntry::parseBirth(GNode * n) {
     // Find birth date
     if (n) {
+        _birthNode = n;
         n = n->firstChild();
         while (n) {
             // Extract birth date
@@ -355,6 +337,7 @@ void GIndiEntry::parseBirth(GNode * n) {
 void GIndiEntry::parseDeath(GNode * n) {
     // Find death date
     if (n) {
+        _deathNode = n;
         n = n->firstChild();
         while (n && n->type() != TYPE_DATE) {
             n = n->next();
@@ -364,4 +347,22 @@ void GIndiEntry::parseDeath(GNode * n) {
     _deathDateNode = n;
     // Convert date string to an object for calculation purposes
     _deathYear = _deathDateNode ? QDate::fromString(_deathDateNode->data().right(4),"yyyy") : QDate();
+}
+
+/* Appends an empty BIRT node just after
+ * the last NAME or SEX node
+ */
+void GIndiEntry::appendBirthNode() {
+    GNode * n = _sexNode ? _sexNode : _nameNode;
+    // Append BIRT node here
+    _birthNode = n->insertNext(new GNode(ENTRY_BIRTH));
+}
+
+/* Appends an empty DEAT node just after
+ * the last NAME, SEX or BIRT node
+ */
+void GIndiEntry::appendDeathNode() {
+    GNode * n = _birthNode ? _birthNode : _sexNode ? _sexNode : _nameNode;
+    // Append BIRT node here
+    _deathNode = n->insertNext(new GNode(ENTRY_DEATH));
 }

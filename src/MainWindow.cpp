@@ -29,6 +29,7 @@ MainWindow::MainWindow() : _gedFile(0), _indiModel(0), _filteredModel(0), _trees
     setMenuBar(_menuBar);
     // Table View
     _tableView = new QTableView(this);
+    _tableView->setSortingEnabled(true);
     // Tell the table to expand to the size of the window
     // (do this after adding it to the layout or it'll be the wrong size)
     setCentralWidget(_tableView);
@@ -271,11 +272,16 @@ void MainWindow::estimateDates() {
     if (okPressed) {
         // Estimate the dates
         GDateEstimator estimator(*_trees, defaultLocation);
-        int datesAdded = estimator.estimateMissingDates();
-        // Update the Model/View now that data has been changed
-        _indiModel->resetViews();
-        // Alert the user as to how many dates were appened
-        statusBar()->showMessage(tr("%1 new dates were added").arg(datesAdded));
+        try {
+            int datesAdded = estimator.estimateMissingDates();
+            // Update the Model/View now that data has been changed
+            _indiModel->resetViews();
+            // Alert the user as to how many dates were appened
+            statusBar()->showMessage(tr("%1 new dates were added").arg(datesAdded));
+        }
+        catch (QString e) {
+            QMessageBox::critical(this, tr("Error"), e);
+        }
     }
 }
 

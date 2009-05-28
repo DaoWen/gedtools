@@ -60,7 +60,7 @@ public:
     /* Get the year in which this individual was born
      * (helpful for doing date calculations)
      */
-    QDate birthYear();
+    QDate birthYear() const;
 
     /* Get a copy of the birth place string
      * value in the GNode data tree
@@ -75,7 +75,7 @@ public:
     /* Get the year in which this individual died
      * (helpful for doing date calculations)
      */
-    QDate deathYear();
+    QDate deathYear() const;
 
     /* Get a copy of the death place string
      * value in the GNode data tree
@@ -85,7 +85,7 @@ public:
     /* Returns true if the individual's
      * death date is set to "DECEASED"
      */
-    bool deceased();
+    bool deceased() const;
 
     /* Get a copy of the family (child) ID
      *  string value in the GNode data tree
@@ -121,8 +121,8 @@ private:
 
     // Links GNode entries to corresponding data
     GNode * _indiNode, * _nameNode, * _romanNode, * _sexNode;
-    GNode * _birthDateNode, * _birthPlaceNode;
-    GNode * _deathDateNode, * _deathPlaceNode;
+    GNode * _birthNode, * _birthDateNode, * _birthPlaceNode;
+    GNode * _deathNode, * _deathDateNode, * _deathPlaceNode;
     GNode * _famsNode, * _famcNode;
 
     // Date objects for performing missing date estimates
@@ -150,6 +150,16 @@ private:
      * @n = Individual's the "1 DEAT" node
      */
     void parseDeath(GNode * n);
+
+    /* Appends an empty BIRT node just after
+     * the last NAME or SEX node
+     */
+    void appendBirthNode();
+
+    /* Appends an empty DEAT node just after
+     * the last NAME, SEX or BIRT node
+     */
+    void appendDeathNode();
 
 };
 

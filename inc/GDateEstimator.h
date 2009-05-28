@@ -57,6 +57,12 @@ private:
 
     //--- Siblings ---//
 
+    /* Recurse through all children in the tree
+     * and update them with respect to siblings
+     * @return number of dates added
+     */
+    int updateChildren(GFTNode * n);
+
     /* Estimates birth dates for siblings in a family
      * Assums that famNode->childFams is not null
      * @return number of dates added
@@ -83,11 +89,38 @@ private:
      */
     int estimateSiblingsUp(int & sibB, const QList<GFTNode *> & childFams);
 
-    //--- Branches ---//
+    //--- Paired References ---//
 
-    GFTNode * findFamilyA(GFTNode * n);
+    /* Recursively estimate birth dates for family heads found between two reference
+     * families with dates in the tree, and update individals' other dates along the way
+     * @return number of dates added
+     */
+    int updateBranchPairs(GFTNode * n, GFTNode * famA = 0,  bool passedIncomplete = false);
 
-    GFTNode * findFamilyB(GFTNode * famA, GFTNode * n);
+    /* Estimate birth dates for all heads of families between famA and famB
+     * @return number of dates added
+     */
+    int estimateBranchBetween(GFTNode * famA, GFTNode * famB);
+
+    //--- Single References ---//
+
+    /* Recursively estimate birth dates for family heads found above or below a
+     * reference family with a date in the tree, projecting 25 years per generation
+     * @return number of dates added
+     */
+    int updateBranchProjection(GFTNode * n, bool incompleteRoot = false);
+
+    /* Estimate birth dates for this node from parent
+     * Assumes that this node is an eldest child
+     * @return number of dates added
+     */
+    int estimateBranchDown(GFTNode * n);
+
+    /* Estimate birth dates for parent of famB
+     * Assumes that this node has a parent
+     * @return number of dates added
+     */
+    int estimateBranchUp(GFTNode * famB);
 
 };
 
