@@ -69,23 +69,33 @@ public:
      */
     bool isTreeLeaf(GIndiMap & indiMap) const;
 
+    //=== Mutators ===//
+
+    /* Sets a couple's estimated marriage
+     * year and updates the MARR node value
+     */
+    void setMarriageYear(const QDate & year, const QString & place = QString());
+
 private:
 
     //=== Private Data Members ===//
 
     // Links GNode entries to corresponding data
-    GNode * _familyNode, * _marriageDateNode, * _marriagePlaceNode;
+    GNode * _familyNode, * _husbandNode, * _wifeNode;
+    GNode * _marriageNode, * _marriageDateNode, * _marriagePlaceNode;
 
     // Year of marriage as a QDate for calculations
     QDate _marriageYear;
-
-    // Parents' xref_id data
-    QString _husbandID, _wifeID;
 
     // Children's xref_id data
     QStringList _childrenIDs;
 
     //=== Private Helper Methods ===//
+
+    /* Appends an empty MARR node just after
+     * the last HUSB, WIFE, or CHIL node
+     */
+    void appendMarriageNode();
 
     /* Parses the family member
      * references for the parents and

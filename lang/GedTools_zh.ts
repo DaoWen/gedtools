@@ -3,14 +3,19 @@
 <context>
     <name>GFamilyTreeModel</name>
     <message>
-        <location filename="../src/GFamilyTreeModel.cpp" line="57"/>
+        <location filename="../src/GFamilyTreeModel.cpp" line="71"/>
         <source>Name</source>
         <translation>姓名</translation>
     </message>
     <message>
-        <location filename="../src/GFamilyTreeModel.cpp" line="60"/>
-        <source>Birth date</source>
-        <translation>出生日期</translation>
+        <location filename="../src/GFamilyTreeModel.cpp" line="47"/>
+        <source>N/A</source>
+        <translation>不適用</translation>
+    </message>
+    <message>
+        <location filename="../src/GFamilyTreeModel.cpp" line="74"/>
+        <source>Marriage</source>
+        <translation>婚姻</translation>
     </message>
 </context>
 <context>
@@ -27,8 +32,18 @@
     </message>
     <message>
         <location filename="../src/GIndiModel.cpp" line="83"/>
-        <source>Birth Date</source>
-        <translation>出生日期</translation>
+        <source>Birth</source>
+        <translation>出生</translation>
+    </message>
+    <message>
+        <location filename="../src/GIndiModel.cpp" line="86"/>
+        <source>Death</source>
+        <translation>死亡</translation>
+    </message>
+    <message>
+        <location filename="../src/GIndiModel.cpp" line="150"/>
+        <source>Deceased</source>
+        <translation>去世</translation>
     </message>
 </context>
 <context>
@@ -214,32 +229,32 @@
         <translation>儲存失敗了</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="168"/>
+        <location filename="../src/MainWindow.cpp" line="167"/>
         <source>Pinyin added successfully!</source>
         <translation>附加拼音資料成功了</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="173"/>
+        <location filename="../src/MainWindow.cpp" line="172"/>
         <source> Incomplete Entries: </source>
         <translation>　不完整的紀錄：</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="179"/>
+        <location filename="../src/MainWindow.cpp" line="178"/>
         <source>Unable to read PinyinMap.dat</source>
         <translation>無法開啓PinyinMap.dat</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="197"/>
+        <location filename="../src/MainWindow.cpp" line="196"/>
         <source>No incomplete entries to display</source>
         <translation>沒有不完整的紀錄</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="179"/>
+        <location filename="../src/MainWindow.cpp" line="178"/>
         <source>Error</source>
         <translation>錯誤</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="197"/>
+        <location filename="../src/MainWindow.cpp" line="196"/>
         <source>Notice</source>
         <translation>通知</translation>
     </message>
@@ -249,25 +264,25 @@
         <translation>先開啓一個ＧＥＤＣＯＭ的檔案來開始</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="237"/>
+        <location filename="../src/MainWindow.cpp" line="236"/>
         <source>http://ouuuuch.phoenixteam.org/released/gedTools/</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="241"/>
+        <location filename="../src/MainWindow.cpp" line="240"/>
         <source>About GedTools</source>
         <translation>關於ＧｅｄＴｏｏｌｓ</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="248"/>
-        <source>GedTools v1.0.5
+        <location filename="../src/MainWindow.cpp" line="247"/>
+        <source>GedTools v%1
 Copyright &#xa9; 2009 Nick Vrvilo
 http://ouuuuch.phoenixteam.org/
 
 GedTools is distributed under the GNU General Public License version 3
 See the accompanying gpl-3.0.txt for details, or visit
 http://www.gnu.org/copyleft/gpl.html</source>
-        <translation>GedTools 1.0.5版
+        <translation>GedTools %1版
 版權所有 © 2009年 Nick Vrvilo
 http://ouuuuch.phoenixteam.org/
 

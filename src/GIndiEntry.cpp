@@ -223,15 +223,13 @@ void GIndiEntry::setBirthYear(const QDate & year, const QString & place) {
         // Update nodes
         _birthDateNode->setData(dateString);
         birthNode->setFirstChild(_birthDateNode);
-        // Build the place string
-        QString placeString(" ");
-        placeString.append(place);
         // Append the birth place if specified
         if (!place.isNull()) {
             // Create the place node if needed
             if (!_birthPlaceNode) {
-                _birthPlaceNode = new GNode(placeString);
+                _birthPlaceNode = new GNode(ENTRY_PLACE);
             }
+            _birthPlaceNode->setData(place);
         }
         _birthDateNode->setNext(_birthPlaceNode);
     }
@@ -264,15 +262,13 @@ void GIndiEntry::setDeceased(const QString & place) {
         }
         _deathDateNode->setData(DATA_DECEASED);
         deathNode->setFirstChild(_deathDateNode);
-        // Build the place string
-        QString placeString(" ");
-        placeString.append(place);
         // Append the death place if specified
         if (!place.isNull()) {
             // Create the place node if needed
             if (!_deathPlaceNode) {
-                _deathPlaceNode = new GNode(placeString);
+                _deathPlaceNode = new GNode(ENTRY_PLACE);
             }
+            _deathPlaceNode->setData(place);
         }
         _deathDateNode->setNext(_deathPlaceNode);
     }

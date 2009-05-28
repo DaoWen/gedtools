@@ -14,8 +14,11 @@ const char TYPE_HUSBAND[] = "HUSB";
 const char TYPE_WIFE[] = "WIFE";
 const char TYPE_CHILD[] = "CHIL";
 const char TYPE_MARRIAGE[] = "MARR";
+const char ENTRY_MARRIAGE[] = "1 MARR";
 const char TYPE_DATE[] = "DATE";
+const char ENTRY_DATE[] = "2 DATE";
 const char TYPE_PLACE[] = "PLAC";
+const char ENTRY_PLACE[] = "2 PLAC";
 
 //=== Constructor/Destructor ===//
 
@@ -25,7 +28,8 @@ const char TYPE_PLACE[] = "PLAC";
  * to the proper GNodes, starting with the GNode
  * pointing to this family's 0-level record.
  */
-GFamily::GFamily(GNode * n) : _familyNode(0), _marriageDateNode(0), _marriagePlaceNode(0) {
+GFamily::GFamily(GNode * n) : _familyNode(0), _husbandNode(0), _wifeNode(0),
+  _marriageNode(0), _marriageDateNode(0), _marriagePlaceNode(0) {
     // Validate that this is a family record
     if (!n) {
         throw QString("Null Pointer to Family");
@@ -57,14 +61,14 @@ QString GFamily::id() const {
  * value of the husband
  */
 QString GFamily::husband() const {
-    return _husbandID;
+    return _husbandNode ? _husbandNode->data() : QString();
 }
 
 /* Get a copy of the ID string
  * value of the wife
  */
 QString GFamily::wife() const {
-    return _wifeID;
+    return _wifeNode ? _wifeNode->data() : QString();
 }
 
 /* Get the list of ID strings
@@ -96,12 +100,12 @@ bool GFamily::isTreeRoot(GIndiMap & indiMap) const {
     GIndiMap::iterator i;
     return !(
       // Husband or Wife is the child of another family
-      (!_husbandID.isNull() && // This family contains a husband
-      ((i = indiMap.find(_husbandID)) != indiMap.end()) && // Husband is found in the map
-      !i.value()->familyChild().isNull()) || // Husband is the child of another family
-      (!_wifeID.isNull() && // This family contains a wife
-      ((i = indiMap.find(_wifeID)) != indiMap.end()) && // Wife is found in the map
-      !i.value()->familyChild().isNull()) // Wife is the child of another family
+      (_husbandNode && // This family contains a husband
+        ((i = indiMap.find(husband())) != indiMap.end()) && // Husband is found in the map
+        !i.value()->familyChild().isNull()) || // Husband is the child of another family
+      (_wifeNode && // This family contains a wife
+        ((i = indiMap.find(wife())) != indiMap.end()) && // Wife is found in the map
+        !i.value()->familyChild().isNull()) // Wife is the child of another family
     );
 }
 
@@ -112,7 +116,59 @@ bool GFamily::isTreeLeaf(GIndiMap & indiMap) const {
     return _childrenIDs.size() == 0;
 }
 
+//=== Mutators ===//
+
+/* Sets a couple's estimated marriage
+ * year and updates the MARR node value
+ */
+void GFamily::setMarriageYear(const QDate & year, const QString & place) {
+    if (!year.isValid()) {
+        throw QString("Attempted to set an invalid marriage date.");
+    }
+    if (!_marriageDateNode || !_marriagePlaceNode) {
+        // Append MARR node if null
+        if (!_marriageNode) appendMarriageNode();
+        // Create the DATE node if needed
+        if (!_marriageDateNode) {
+            _marriageDateNode = new GNode(ENTRY_DATE);
+        }
+        // Build the date entry string
+        QString dateString("EST ");
+        dateString.append(year.toString("yyyy"));
+        // Update nodes
+        _marriageDateNode->setData(dateString);
+        _marriageNode->setFirstChild(_marriageDateNode);
+        // Append the marriage place if specified
+        if (!place.isNull()) {
+            // Create the place node if needed
+            if (!_marriagePlaceNode) {
+                _marriagePlaceNode = new GNode(ENTRY_PLACE);
+            }
+            _marriagePlaceNode->setData(place);
+        }
+        _marriageDateNode->setNext(_marriagePlaceNode);
+    }
+}
+
+
 //=== Private Helper Methods ===//
+
+/* Appends an empty MARR node just after
+ * the last HUSB, WIFE, or CHIL node
+ */
+void GFamily::appendMarriageNode() {
+    GNode * m, * n = _familyNode->firstChild();
+    QString nextType;
+    // The MARR node should be inserted after the last
+    // HUSB, WIFE, or CHIL node, so find the last one
+    do {
+        m = n; // Next node
+        n = n->next(); // Next-next node
+        nextType = n ? n->type() : QString();
+    } while (!nextType.isNull() && (nextType == TYPE_CHILD || nextType == TYPE_HUSBAND || nextType == TYPE_WIFE));
+    // Append MARR node here
+    _marriageNode = m->insertNext(new GNode(ENTRY_MARRIAGE));
+}
 
 /* Parses the family member
  * references for the parents and
@@ -122,10 +178,10 @@ bool GFamily::isTreeLeaf(GIndiMap & indiMap) const {
 void GFamily::parseMembers(GNode * n) {
     while (n) {
         if (n->type() == TYPE_HUSBAND) {
-            _husbandID = n->data();
+            _husbandNode = n;
         }
         else if (n->type() == TYPE_WIFE) {
-            _wifeID = n->data();
+            _wifeNode = n;
         }
         else if (n->type() == TYPE_CHILD) {
             // Children should all be clumped together,
@@ -141,6 +197,7 @@ void GFamily::parseMembers(GNode * n) {
             break;
         }
         else if (n->type() == TYPE_MARRIAGE) {
+            _marriageNode = n;
             GNode * m = n->firstChild();
             while (m) {
                 if (m->type() == TYPE_DATE) {

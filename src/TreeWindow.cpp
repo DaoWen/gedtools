@@ -2,7 +2,7 @@
 #include "TreeWindow.h"
 
 TreeWindow::TreeWindow(GFamilyTreeModel * treeModel, QWidget * parent)
- : QDialog(parent), _treeModel(treeModel) {
+ : QDialog(parent, Qt::WindowMinMaxButtonsHint), _treeModel(treeModel) {
     _mainLayout = new QVBoxLayout();
     // Tree
     _treeView = new QTreeView();

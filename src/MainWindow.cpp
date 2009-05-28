@@ -3,6 +3,7 @@
 #include "MainMenuBar.h"
 #include "PinyinMap.h"
 #include "GFamilyTreeModel.h"
+#include "GDateEstimator.h"
 #include "TreeWindow.h"
 
 //=== Constants ===//
@@ -15,7 +16,7 @@ const int CJK_CODEPOINT = 0x3400;
 /* Constructor
  * Creates the window, menus, data display, etc.
  */
-MainWindow::MainWindow() : _gedFile(0), _indiModel(0), _filteredModel(0) {
+MainWindow::MainWindow() : _gedFile(0), _indiModel(0), _filteredModel(0), _trees(0) {
     // Load Translation based on user's locale
     _translator = new QTranslator();
     _translator->load("lang/GedTools_" + QLocale::system().name());
@@ -44,11 +45,42 @@ MainWindow::~MainWindow() {
 // Children automatically deleted by Qt
     //delete _menuBar;
     //delete _tableView;
+    clearFamilyTrees();
     delete _indiModel;
+    delete _filteredModel;
     delete _gedFile;
+    delete _translator;
 }
 
 //=== Private Helper Methods ===//
+
+/* Builds the GFamilyTree objects for this GEDCOM file
+ * and stores them in the _trees class-level variable
+ */
+void MainWindow::createFamilyTrees() {
+    // Create the list if necessary
+    if (!_trees) _trees = new QList<GFamilyTree *>();
+    // Destroy any pre-existing trees first
+    else qDeleteAll(*_trees);
+    // Build the trees
+    GIndiMap & indiMap = _gedFile->indiMap();
+    GFamilyMap & famMap = _gedFile->familyMap();
+    GFamily * f;
+    foreach (f, famMap) {
+        if (f->isTreeRoot(indiMap)) {
+            _trees->append(new GFamilyTree(f,famMap,indiMap));
+        }
+    }
+}
+
+/* Deletes the _trees variable and its elements */
+void MainWindow::clearFamilyTrees() {
+    if (_trees) {
+        qDeleteAll(*_trees);
+        delete _trees;
+        _trees = 0;
+    }
+}
 
 /* Resets the table model and related objects
  * Uses indiModel as the new display model
@@ -72,14 +104,20 @@ void MainWindow::openFile() {
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open GEDCOM File"), "", tr("GEDCOM Files (*.ged)"));
     if (!fileName.isEmpty()) {
         try { // GFile may throw an exception on bad GEDCOM files
+            // Attempt to open the new file and parse the data
             GFile * gedFile = new GFile(fileName);
             GIndiMap & indiMap = gedFile->indiMap();
             GIndiModel * indiModel = new GIndiModel(indiMap);
-            _tableView->setModel(indiModel);
+            // Clear old data
             delete _gedFile;
+            clearFamilyTrees();
+            // Display new data
             resetDisplayModel(indiModel);
+            // Store new data
             _gedFile = gedFile;
+            // Enable menu items that require an open GEDCOM file
             _menuBar->enableLockedItems();
+            // Display success message
             statusBar()->showMessage(tr("File opened."));
         }
         catch (...) {
@@ -206,24 +244,45 @@ void MainWindow::filterIncomplete(bool checked) {
 }
 
 void MainWindow::viewTree() {
-    QList<GFamilyTree *> trees;
-    GIndiMap & indiMap = _gedFile->indiMap();
-    GFamilyMap & famMap = _gedFile->familyMap();
-    GFamily * f;
-    foreach (f, famMap) {
-        if (f->isTreeRoot(indiMap)) {
-            trees.append(new GFamilyTree(f,famMap,indiMap));
-        }
-    }
-    GFamilyTreeModel * treeModel = new GFamilyTreeModel(trees);
+    // Build the family trees first if necessary
+    if (!_trees) createFamilyTrees();
+    // Create and display the gui elements in a model window
+    GFamilyTreeModel * treeModel = new GFamilyTreeModel(*_trees);
     TreeWindow tw(treeModel, this);
-    tw.exec();
+    tw.exec(); // Hangs here until the new window is closed
+    // Destroy the model when the window is closed
     delete treeModel;
-    qDeleteAll(trees);
+}
+
+void MainWindow::estimateDates() {
+    // Build the family trees first if necessary
+    if (!_trees) createFamilyTrees();
+    // Prompt for a default location (Defaults to China)
+    QString defaultLocation;
+      defaultLocation.resize(2);
+      defaultLocation[0] = QChar(0x4e2d); // Zhong1
+      defaultLocation[1] = QChar(0x570b); // Guo2
+    bool okPressed;
+    // Todo: fix this so that the OK/Cancel buttons get translated into Chinese
+    QInputDialog::getText(this, tr("Enter Default Location"),
+      tr("Automatically use this location to\nfill in blank birth, marriage and death places:"),
+      QLineEdit::Normal, defaultLocation, &okPressed);
+    // Continue only if the user pressed OK
+    if (okPressed) {
+        // Estimate the dates
+        GDateEstimator estimator(*_trees, defaultLocation);
+        int datesAdded = estimator.estimateMissingDates();
+        // Update the Model/View now that data has been changed
+        _indiModel->resetViews();
+        // Alert the user as to how many dates were appened
+        statusBar()->showMessage(tr("%1 new dates were added").arg(datesAdded));
+    }
 }
 
 void MainWindow::switchLanguage(QAction * source) {
+    // Set translators
     _translator->load("lang/GedTools_" + source->data().toString());
+    // Rebuild the menus and display area
     _menuBar = new MainMenuBar(this);
     setMenuBar(_menuBar);
     if (_gedFile) {
@@ -237,12 +296,12 @@ void MainWindow::launchWebsite() {
 }
 
 void MainWindow::displayAbout() {
-    QMessageBox::about(this, tr("About GedTools"), tr(
-        "GedTools v1.0.5\n"
+    QMessageBox::about(this, tr("About GedTools"), QString(tr(
+        "GedTools v%1\n"
         "Copyright \xA9 2009 Nick Vrvilo\n"
         "http://ouuuuch.phoenixteam.org/\n\n"
         "GedTools is distributed under the GNU General Public License version 3\n"
         "See the accompanying gpl-3.0.txt for details, or visit\n"
         "http://www.gnu.org/copyleft/gpl.html"
-    ));
+    )).arg("1.0.6"));
 }

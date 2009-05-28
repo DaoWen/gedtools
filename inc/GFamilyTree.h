@@ -11,7 +11,8 @@ public:
     GFTNode();
 
     /* Constructor */
-    GFTNode(GFamily * thisFamily, GIndiEntry * famHead, const QString & famName, GFTNode * parentFamily);
+    GFTNode(GFamily * thisFamily, GIndiEntry * famHead, GIndiEntry * familySpouse,
+      const QString & famName, GFTNode * parentFamily, int lvl);
 
     /* Destructor */
     ~GFTNode();
@@ -25,6 +26,10 @@ public:
     // or an unmarried individual)
     GIndiEntry * famHead;
 
+    // Spouse of the family head
+    // (null if famHead is single)
+    GIndiEntry * spouse;
+
     // Names of both parents "famHead & spouse"
     // or the name of an unmarried individual
     QString famName;
@@ -34,6 +39,18 @@ public:
 
     // Pointers to all childrens' families
     QList<GFTNode *> * childFams;
+
+    // How deep is this node in the tree (starts at 0)
+    int level;
+
+    // Stores references to the closest nodes up/down that
+    // have a birth date set (for calculation purposes)
+    // (upperDate is closer to root, lowerDate to leaves)
+    GFTNode * upperDate, * lowerDate;
+
+    // Tells whether any dates are missing for this node
+    bool headComplete, kidsComplete;
+
 };
 
 class GFamilyTree {
@@ -73,17 +90,23 @@ private:
     /* Recursively build GFTNodes for
      * this branch of the family tree
      */
-    GFTNode * buildBranch(GFamily * fam, GIndiEntry * head, GFTNode * parent);
+    GFTNode * buildBranch(GFamily * fam, GIndiEntry * head, GIndiEntry * spouse, GFTNode * parent, int level);
 
     /* Construct a name to display for this family
      * Couple: "head & spouse"
      * Individual: "head"
      */
-    QString getFamilyName(GFamily * fam, GIndiEntry * head);
+    QString getFamilyName(GIndiEntry * head, GIndiEntry * spouse);
+
+    /* Find the spouse of the head of a family
+     */
+    GIndiEntry * getSpouse(GFamily * fam, GIndiEntry * head);
 
     /* Recursively destroy a branch of the tree */
     void deleteBranch(GFTNode * n);
 
 };
+
+typedef QList<GFamilyTree *> GFTList;
 
 #endif

@@ -3,13 +3,18 @@
 <context>
     <name>GFamilyTreeModel</name>
     <message>
-        <location filename="../src/GFamilyTreeModel.cpp" line="57"/>
+        <location filename="../src/GFamilyTreeModel.cpp" line="71"/>
         <source>Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/GFamilyTreeModel.cpp" line="60"/>
-        <source>Birth date</source>
+        <location filename="../src/GFamilyTreeModel.cpp" line="47"/>
+        <source>N/A</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/GFamilyTreeModel.cpp" line="74"/>
+        <source>Marriage</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -27,7 +32,17 @@
     </message>
     <message>
         <location filename="../src/GIndiModel.cpp" line="83"/>
-        <source>Birth Date</source>
+        <source>Birth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/GIndiModel.cpp" line="86"/>
+        <source>Death</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/GIndiModel.cpp" line="150"/>
+        <source>Deceased</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -127,7 +142,7 @@
         <location filename="../src/MainMenuBar.cpp" line="75"/>
         <source>English</source>
         <comment>Current Language Name</comment>
-        <translation type="unfinished">English</translation>
+        <translation>English</translation>
     </message>
     <message>
         <location filename="../src/MainMenuBar.cpp" line="85"/>
@@ -198,7 +213,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="179"/>
+        <location filename="../src/MainWindow.cpp" line="178"/>
         <source>Error</source>
         <translation type="unfinished"></translation>
     </message>
@@ -224,43 +239,43 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="168"/>
+        <location filename="../src/MainWindow.cpp" line="167"/>
         <source>Pinyin added successfully!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="173"/>
+        <location filename="../src/MainWindow.cpp" line="172"/>
         <source> Incomplete Entries: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="179"/>
+        <location filename="../src/MainWindow.cpp" line="178"/>
         <source>Unable to read PinyinMap.dat</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="197"/>
+        <location filename="../src/MainWindow.cpp" line="196"/>
         <source>Notice</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="197"/>
+        <location filename="../src/MainWindow.cpp" line="196"/>
         <source>No incomplete entries to display</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="237"/>
+        <location filename="../src/MainWindow.cpp" line="236"/>
         <source>http://ouuuuch.phoenixteam.org/released/gedTools/</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="241"/>
+        <location filename="../src/MainWindow.cpp" line="240"/>
         <source>About GedTools</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="248"/>
-        <source>GedTools v1.0.5
+        <location filename="../src/MainWindow.cpp" line="247"/>
+        <source>GedTools v%1
 Copyright &#xa9; 2009 Nick Vrvilo
 http://ouuuuch.phoenixteam.org/
 

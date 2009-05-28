@@ -4,11 +4,15 @@
 //=== GFTNode ===//
 
 /* Empty Constructor */
-GFTNode::GFTNode() : thisFam(0), famHead(0), parentFam(0), childFams(0) {}
+GFTNode::GFTNode()
+ : thisFam(0), famHead(0), spouse(0), parentFam(0), childFams(0), level(-1),
+   upperDate(0), lowerDate(0), headComplete(false), kidsComplete(false) {}
 
 /* Constructor */
-GFTNode::GFTNode(GFamily * thisFamily, GIndiEntry * familyHead, const QString & familyName, GFTNode * parentFamily) :
-  thisFam(thisFamily), famHead(familyHead), famName(familyName), parentFam(parentFamily), childFams(0) {}
+GFTNode::GFTNode(GFamily * thisFamily, GIndiEntry * familyHead, GIndiEntry * familySpouse,
+  const QString & familyName,GFTNode * parentFamily, int lvl)
+ : thisFam(thisFamily), famHead(familyHead), spouse(0), famName(familyName), parentFam(parentFamily),
+   childFams(0), level(lvl), upperDate(0), lowerDate(0), headComplete(false), kidsComplete(false) {}
 
 /* Destructor */
 GFTNode::~GFTNode() {
@@ -21,10 +25,12 @@ GFTNode::~GFTNode() {
  * Pass in the root family and this will
  * construct the tree down to the leaves
  */
-GFamilyTree::GFamilyTree(GFamily * rootFam, GFamilyMap & famMap, GIndiMap & indiMap) :
-  _famMap(famMap), _indiMap(indiMap) {
+GFamilyTree::GFamilyTree(GFamily * rootFam, GFamilyMap & famMap, GIndiMap & indiMap)
+ : _famMap(famMap), _indiMap(indiMap) {
     QString famHeadId = rootFam->husband().isNull() ? rootFam->wife() : rootFam->husband();
-    _root = buildBranch(rootFam, *indiMap.find(famHeadId),0);
+    // The root node has a level of 0
+    GIndiEntry * head = *indiMap.find(famHeadId);
+    _root = buildBranch(rootFam, head, getSpouse(rootFam, head), 0, 0);
 }
 
 /* Destructor (Recursive)
@@ -46,16 +52,17 @@ GFTNode * GFamilyTree::root() const {
 /* Recursively build GFTNodes for
  * this branch of the family tree
  */
-GFTNode * GFamilyTree::buildBranch(GFamily * fam, GIndiEntry * head, GFTNode * parent) {
+GFTNode * GFamilyTree::buildBranch(GFamily * fam,
+  GIndiEntry * head, GIndiEntry * spouse, GFTNode * parent, int level) {
     GFTNode * n;
     if (!fam) { // No FAMS family entry
-        n = new GFTNode(fam, head, head->name(), parent);
+        n = new GFTNode(fam, head, 0, head->name(), parent, level);
     }
     // Family with children
     else {
-        n = new GFTNode(fam, head, getFamilyName(fam, head), parent);
-        // "Head Individual" Child
-        GIndiEntry * child;
+        n = new GFTNode(fam, head, spouse, getFamilyName(head, spouse), parent, level);
+        // "Head Individual" Child & Spouse
+        GIndiEntry * child, * childSpouse;
         // Child Family List & Iterators
         QList<GFTNode *> * childFamilies = new QList<GFTNode *>();
         QStringList::ConstIterator i = fam->children().begin();
@@ -72,12 +79,14 @@ GFTNode * GFamilyTree::buildBranch(GFamily * fam, GIndiEntry * head, GFTNode * p
             // No GFamily with this individual as a head
             if (famIterator == famEnd) {
                 childFam = 0;
+                childSpouse = 0;
             }
             // Individual heads a family
             else {
                 childFam = *famIterator;
+                childSpouse = getSpouse(childFam, child);
             }
-            childFamilies->append(buildBranch(childFam,child,n));
+            childFamilies->append(buildBranch(childFam,child,childSpouse,n,level+1));
         }
         n->childFams = childFamilies;
     }
@@ -88,17 +97,28 @@ GFTNode * GFamilyTree::buildBranch(GFamily * fam, GIndiEntry * head, GFTNode * p
  * Couple: "head & spouse"
  * Individual: "head"
  */
-QString GFamilyTree::getFamilyName(GFamily * fam, GIndiEntry * head) {
+QString GFamilyTree::getFamilyName(GIndiEntry * head, GIndiEntry * spouse) {
     QString familyName;
-    // If head is the husband, then append wife, otherwise append husband
-    QString spouseID = head->id() == fam->husband() ? fam->wife() : fam->husband();
     familyName = head->name();
-    GIndiMap::Iterator spouse = _indiMap.find(spouseID);
-    if (spouse != _indiMap.end()) {
+    if (spouse) {
         // TODO: Should the " & " be translated?
-        familyName.append(" & ").append((*spouse)->name());
+        familyName.append(" & ").append(spouse->name());
     }
     return familyName;
+}
+
+/* Find the spouse of the head of a family
+ */
+GIndiEntry * GFamilyTree::getSpouse(GFamily * fam, GIndiEntry * head) {
+    if (fam && head) {
+        // If head is the husband, then find the wife, otherwise find the husband
+        QString spouseID = head->id() == fam->husband() ? fam->wife() : fam->husband();
+        GIndiMap::Iterator spouse = _indiMap.find(spouseID);
+        return (spouse == _indiMap.end()) ? 0 : *spouse;
+    }
+    else {
+        return 0;
+    }
 }
 
 /* Recursively destroy a branch of the tree */

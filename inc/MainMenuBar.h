@@ -51,9 +51,10 @@ private:
     QAction * _appendPinyinAct;
     QAction * _filterIncompleteAct;
 
-    // Tools Menu
+    // Family Tree Menu
     QMenu * _toolsMenu;
     QAction * _viewTreeAct;
+    QAction * _estimateDatesAct;
 
     // Language Menu
     QMenu * _languageMenu;

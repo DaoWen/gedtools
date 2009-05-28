@@ -46,14 +46,22 @@ MainMenuBar::MainMenuBar(MainWindow * mainWin) : QMenuBar(mainWin) {
     _filterIncompleteAct->setEnabled(false); // Enable after a file is opened
     connect(_filterIncompleteAct, SIGNAL(toggled(bool)), mainWin, SLOT(filterIncomplete(bool)));
     _pinyinMenu->addAction(_filterIncompleteAct);
-// Tools Menu
-    _toolsMenu = addMenu(tr("&Tools"));
+// Family Tree Menu
+    _toolsMenu = addMenu(tr("Family &Tree"));
+    // View Family Tree
     _viewTreeAct = new QAction(tr("View Family Tree"), this);
     _viewTreeAct->setStatusTip(tr("View families in a tree format"));
     _viewTreeAct->setShortcut(tr("F10"));
     _viewTreeAct->setEnabled(false); // Enable after a file is opened
     connect(_viewTreeAct, SIGNAL(triggered()), mainWin, SLOT(viewTree()));
     _toolsMenu->addAction(_viewTreeAct);
+    // Estimate Missing Dates
+    _estimateDatesAct = new QAction(tr("Estimate Missing Dates"), this);
+    _estimateDatesAct->setStatusTip(tr("Calculate estimated values for missing dates"));
+    _estimateDatesAct->setShortcut(tr("Ctrl+E"));
+    _estimateDatesAct->setEnabled(false); // Enable after a file is opened
+    connect(_estimateDatesAct, SIGNAL(triggered()), mainWin, SLOT(estimateDates()));
+    _toolsMenu->addAction(_estimateDatesAct);
 // Language Menu
     _languageMenu = addMenu(tr("Language"));
     _languageActionGroup = new QActionGroup(this);
@@ -112,6 +120,7 @@ void MainMenuBar::clearFilterToggle() {
 void MainMenuBar::enableLockedItems() {
     _saveAct->setEnabled(true);
     _appendPinyinAct->setEnabled(true);
-    _viewTreeAct->setEnabled(true);
     _filterIncompleteAct->setEnabled(true);
+    _viewTreeAct->setEnabled(true);
+    _estimateDatesAct->setEnabled(true);
 }

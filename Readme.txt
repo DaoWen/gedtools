@@ -1,4 +1,4 @@
-GedTools v1.0.5
+GedTools v1.0.6
 Copyright © 2009 Nick Vrvilo
 http://ouuuuch.phoenixteam.org/
 

@@ -5,6 +5,7 @@
 #include <QtCore>
 #include "GFile.h"
 #include "GIndiModel.h"
+#include "GFamilyTree.h"
 #include "MainMenuBar.h"
 
 /* MainWindow: Main Window for the GedTools GUI
@@ -50,6 +51,9 @@ private:
     // Filtered display model
     QSortFilterProxyModel * _filteredModel;
 
+    // List of family trees in this GEDCOM file
+    GFTList * _trees;
+
     //=== GUI Components ===//
 
     MainMenuBar * _menuBar;
@@ -57,6 +61,14 @@ private:
     QTableView * _tableView;
 
     //=== Private Helper Methods ===//
+
+    /* Builds the GFamilyTree objects for this GEDCOM file
+     * and stores them in the _trees class-level variable
+     */
+    void createFamilyTrees();
+
+    /* Deletes the _trees variable and its elements */
+    void clearFamilyTrees();
 
     /* Resets the table view and related objects
      * Uses indiModel as the new display model
@@ -80,6 +92,8 @@ public slots:
     void filterIncomplete(bool checked);
 
     void viewTree();
+
+    void estimateDates();
 
     void switchLanguage(QAction * source);
 

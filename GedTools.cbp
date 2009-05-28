@@ -50,6 +50,7 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="inc\GDateEstimator.h" />
 		<Unit filename="inc\GFamily.h" />
 		<Unit filename="inc\GFamilyMap.h" />
 		<Unit filename="inc\GFamilyTree.h" />
@@ -63,6 +64,7 @@
 		<Unit filename="inc\MainWindow.h" />
 		<Unit filename="inc\PinyinMap.h" />
 		<Unit filename="inc\TreeWindow.h" />
+		<Unit filename="src\GDateEstimator.cpp" />
 		<Unit filename="src\GFamily.cpp" />
 		<Unit filename="src\GFamilyMap.cpp" />
 		<Unit filename="src\GFamilyTree.cpp" />
