@@ -22,9 +22,6 @@ const int PAIR = 1;
 const int SIBLING = 2;
 const int PROJECTION = 4;
 
-#include <iostream>
-using namespace std;
-
 /* Estimates missing dates for Births, Marriages
  * and Deaths and fills in the estimated values
  * (along with optional locations) in the GNodes
@@ -41,7 +38,6 @@ int GDateEstimator::estimateMissingDates() {
             // Clear PAIR and SIBLING flags
             updateStatus &= PROJECTION;
             do {
-                //cout << " {PAIR} ";
                 // Clear PAIR flag
                 updateStatus &= PROJECTION | SIBLING;
                 // Branch Pairs / Individuals
@@ -52,9 +48,7 @@ int GDateEstimator::estimateMissingDates() {
                         updateStatus = PAIR | SIBLING | PROJECTION;
                     }
                 }
-                cout << "PAIR(" << totalUpdated << ") " << endl;
             } while (updateStatus & PAIR > NONE);
-            //cout << " {SIBLING} ";
             // Siblings
             foreach (t, _trees) {
                 newUpdates = updateChildren(t->root());
@@ -63,7 +57,6 @@ int GDateEstimator::estimateMissingDates() {
                     updateStatus = SIBLING | PROJECTION;
                 }
             }
-            cout << "SIBLING(" << totalUpdated << ") " << endl;
         } while (updateStatus & SIBLING > NONE);
         // Projecting Branches
         foreach (t, _trees) {
@@ -73,7 +66,6 @@ int GDateEstimator::estimateMissingDates() {
                 updateStatus = PROJECTION;
             }
         }
-        cout << "PROJECTION(" << totalUpdated << ") " << endl;
     } while (updateStatus & PROJECTION > NONE);
     return totalUpdated;
 }
@@ -90,7 +82,6 @@ int GDateEstimator::estimateMissingDates() {
  * @return number of dates added
  */
 int GDateEstimator::updateCouple(GFTNode * famNode) {
-    //cout << " <COUPLE>(" << famNode->famHead->romanizedName().toStdString() << ") " << endl;
     // Tells the caller how many updates were made
     int updated = 0;
     // Only check incomplete nodes
@@ -103,11 +94,10 @@ int GDateEstimator::updateCouple(GFTNode * famNode) {
         // Estimate marriage year if null
         if (fam && marriageYear.isNull()) {
             updated += updateMarriage(fam, head, spouse);
-            marriageYear = fam->marriageYear();
         }
         // Update individuals' data
-        updateIndividual(head, marriageYear);
-        if (spouse) updateIndividual(spouse, marriageYear);
+        updateIndividual(head, fam);
+        if (spouse) updateIndividual(spouse, fam);
         // Check if this family is complete or not
         // (if the head's birth year is set then so is everything else)
         if (head->birthYear().isValid()) {
@@ -164,10 +154,11 @@ int GDateEstimator::updateMarriage(GFamily * fam, GIndiEntry * head, GIndiEntry 
  * individual if relavent data is available and needed
  * @return number of dates added to this node
  */
-int GDateEstimator::updateIndividual(GIndiEntry * indi, const QDate & marriageYear) {
+int GDateEstimator::updateIndividual(GIndiEntry * indi, GFamily * fam) {
     // Tells the caller how many updates were made
     int updated = 0;
     QDate birthYear = indi->birthYear();
+    QDate marriageYear = fam ? fam->marriageYear() : QDate();
     // Estimate birth year if null
     if (birthYear.isNull() && marriageYear.isValid()) {
         // Man's birth year = marriage year - 24
@@ -203,7 +194,6 @@ int GDateEstimator::updateIndividual(GIndiEntry * indi, const QDate & marriageYe
  * @return number of dates added
  */
 int GDateEstimator::updateChildren(GFTNode * n) {
-    //cout << " <CHILDREN> " << endl;
     int updated = 0;
     if (n->childFams) {
         // Update siblings
@@ -223,8 +213,6 @@ int GDateEstimator::updateChildren(GFTNode * n) {
  * @return number of dates added
  */
 int GDateEstimator::updateSiblings(GFTNode * famNode) {
-    int * x = 0;
-    //cout << " <SIBLINGS> " << endl;
     // Tells the caller how many updates were made
     int updated = 0;
     // Variables for the loop below
@@ -233,9 +221,6 @@ int GDateEstimator::updateSiblings(GFTNode * famNode) {
     for (;;) { // Loop until this hits one of the two break statements at bottom
         // Find upper & lower sibling references
         findSiblingRefs(sibA, sibB, childFams);
-        if ((int)(++x) > 200) {
-            --x;
-        }
         // Estimate dates using found references
         if (sibB > -1) {
             // Upper & lower siblings were found
@@ -290,7 +275,7 @@ void GDateEstimator::findSiblingRefs(int & sibA, int & sibB, const QList<GFTNode
             if (childFams[i]->headComplete) {
                 sibA = i;
                 // famA can't be the last child
-                if (i < childFams.size()-1) {
+                if (i == childFams.size()-1) {
                     sibA = -1;
                 }
             }
@@ -306,7 +291,6 @@ void GDateEstimator::findSiblingRefs(int & sibA, int & sibB, const QList<GFTNode
  * @return number of dates added
  */
 int GDateEstimator::estimateSiblingsBetween(int & sibA, int & sibB, const QList<GFTNode *> & childFams) {
-    //cout << " [B] " ;
     int updated = 0;
     QDate startDate = childFams[sibA]->famHead->birthYear();
     // Average sibA & sibB's birth dates to find the gap in bewtween
@@ -329,7 +313,6 @@ int GDateEstimator::estimateSiblingsBetween(int & sibA, int & sibB, const QList<
  * @return number of dates added
  */
 int GDateEstimator::estimateSiblingsDown(int & sibA, const QList<GFTNode *> & childFams) {
-    //cout << " [D] " ;
     int updated = 0;
     QDate birthDate = childFams[sibA]->famHead->birthYear();
     // Loop back to the end (if there was another
@@ -349,7 +332,6 @@ int GDateEstimator::estimateSiblingsDown(int & sibA, const QList<GFTNode *> & ch
  * @return number of dates added
  */
 int GDateEstimator::estimateSiblingsUp(int & sibB, const QList<GFTNode *> & childFams) {
-    //cout << " [U] " ;
     int updated = 0;
     QDate birthDate = childFams[sibB]->famHead->birthYear();
     // Loop back to the start (if there was another
@@ -445,7 +427,10 @@ int GDateEstimator::updateBranchProjection(GFTNode * n, bool incompleteRoot) {
     int updated = 0;
     // Found blank nodes below FamilyA
     if (!incompleteRoot && n->parentFam && !n->headComplete) {
-        updated += estimateBranchDown(n);
+        // Only project upward from eldest child
+        if (n->parentFam->childFams->at(0) == n) {
+            updated += estimateBranchDown(n);
+        }
     }
     else {
         // Found a blank root
@@ -482,9 +467,7 @@ int GDateEstimator::updateBranchProjection(GFTNode * n, bool incompleteRoot) {
  * @return number of dates added
  */
 int GDateEstimator::estimateBranchDown(GFTNode * n) {
-    cout << " [DOWN] " ;
-    if (n->headComplete)
-        throw QString("Found complete node below FamilyA on projection");
+    if (n->headComplete) throw QString("Found complete node below FamilyA on projection");
     int updated = 0;
     GIndiEntry * parent = n->parentFam->famHead;
     // Get year from parent
@@ -503,17 +486,12 @@ int GDateEstimator::estimateBranchDown(GFTNode * n) {
  * @return number of dates added
  */
 int GDateEstimator::estimateBranchUp(GFTNode * famB) {
-    cout << " [UP] " ;
     int updated = 0;
     GFTNode * n = famB->parentFam;
-    if (n->headComplete)
-        throw QString("Found complete node above FamilyB on projection");
+    if (n->headComplete) throw QString("Found complete node above FamilyB on projection");
     GIndiEntry * parent = n->famHead;
     // Get year from eldest child
     QDate birthYear = famB->famHead->birthYear();
-    QString s = famB->famHead->birthDate();
-    s = s.isNull() ? s : "X";
-    cout << s.toStdString();
     // 25 years between father and first child
     // 21 years between mother and first child
     birthYear = parent->sex() == GIndiEntry::MALE ? birthYear.addYears(-25) : birthYear.addYears(-21);

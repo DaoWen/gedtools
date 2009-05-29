@@ -11,7 +11,7 @@ GFTNode::GFTNode()
 /* Constructor */
 GFTNode::GFTNode(GFamily * thisFamily, GIndiEntry * familyHead, GIndiEntry * familySpouse,
   const QString & familyName,GFTNode * parentFamily, int lvl)
- : thisFam(thisFamily), famHead(familyHead), spouse(0), famName(familyName), parentFam(parentFamily),
+ : thisFam(thisFamily), famHead(familyHead), spouse(familySpouse), famName(familyName), parentFam(parentFamily),
    childFams(0), level(lvl), upperDate(0), lowerDate(0), headComplete(false), kidsComplete(false) {}
 
 /* Destructor */

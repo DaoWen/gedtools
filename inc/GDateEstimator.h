@@ -65,7 +65,7 @@ private:
      * individual if relavent data is available and needed
      * @return number of dates added to this node
      */
-    int updateIndividual(GIndiEntry * indi, const QDate & marriageYear);
+    int updateIndividual(GIndiEntry * indi, GFamily * fam);
 
     //--- Siblings ---//
 
