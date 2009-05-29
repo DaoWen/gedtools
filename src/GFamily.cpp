@@ -145,7 +145,9 @@ void GFamily::setMarriageYear(const QDate & year, const QString & place) {
         if (!_marriagePlaceNode) {
             _marriagePlaceNode = new GNode(ENTRY_PLACE);
         }
-        _marriagePlaceNode->setData(place);
+        if (_marriagePlaceNode->data().isEmpty()) {
+            _marriagePlaceNode->setData(place);
+        }
     }
     _marriageDateNode->setNext(_marriagePlaceNode);
 }

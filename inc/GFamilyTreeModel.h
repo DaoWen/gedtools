@@ -54,7 +54,7 @@ private:
     //=== Private Data Members ===//
 
     // Number of columns in the model (used for the columnCount() method)
-    static const int COL_COUNT = 2;
+    static const int COL_COUNT = 3;
 
     // Special node
     GFTNode * _root;

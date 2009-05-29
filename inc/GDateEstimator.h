@@ -48,12 +48,24 @@ private:
 
     //--- Individals ---//
 
-    /* Estimates birth, marriage, and death dates for an
-     * individual if relavent data is available and needed.
-     * famNode->complete set true if no more dates are needed
+    /* Estimates birth, marriage, and death dates for a
+     * couple if relavent data is available and needed.
+     * famNode->complete is set true if no more dates are needed
+     * @return number of dates added
+     */
+    int updateCouple(GFTNode * famNode);
+
+    /* Estimates marriage date for a
+     * couple if relavent data is available
+     * @return number of dates added
+     */
+    int updateMarriage(GFamily * fam, GIndiEntry * head, GIndiEntry * spouse);
+
+    /* Estimates birth and death dates for an
+     * individual if relavent data is available and needed
      * @return number of dates added to this node
      */
-    int updateIndividual(GFTNode * famNode);
+    int updateIndividual(GIndiEntry * indi, const QDate & marriageYear);
 
     //--- Siblings ---//
 

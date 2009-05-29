@@ -38,10 +38,22 @@ QVariant GFamilyTreeModel::data(const QModelIndex &index, int role) const {
     // Only using DisplayRole
     if (index.isValid() && role == Qt::DisplayRole) {
         GFTNode * n = static_cast<GFTNode *>(index.internalPointer());
-        if (index.column() == 0) { // Name
+        // Name
+        if (index.column() == 0) {
             value = n->famName;
         }
-        else { // Marriage date
+        // Birth
+        else if (index.column() == 1) {
+            QString place = n->famHead->birthPlace();
+            if (place.isNull()) place = "--";
+            // Year
+            QDate date = n->famHead->birthYear();
+            QString year = date.isValid() ? date.toString("yyyy") : "--";
+            // Value
+            value = QString("%1 (%2)").arg(place).arg(year);
+        }
+        // Marriage
+        else {
             // Not applicable if this is a single individual
             if (!n->thisFam) {
                 value = tr("N/A");
@@ -67,11 +79,15 @@ QVariant GFamilyTreeModel::headerData(int section, Qt::Orientation orientation, 
     QVariant value;
     // Only horizontal DisplayRole headers
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
-        if (section == 0) { // Name
-            value = tr("Name");
-        }
-        else { // Birth date
-            value = tr("Marriage");
+        switch(section) {
+            case 0: // Name
+                value = tr("Name");
+                break;
+            case 1: // Birth date
+                value = tr("Birth");
+                break;
+            case 2: // Marriage date
+                value = tr("Marriage");
         }
     }
     return value;

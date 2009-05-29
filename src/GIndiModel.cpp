@@ -157,7 +157,7 @@ QString GIndiModel::getColData(const GIndiEntry * indi, int col) {
             }
             // Write "Deceased" if marked as such
             else if (indi->deceased()) {
-                data = tr("Deceased");
+                data.append(" (").append(tr("Deceased")).append(")");
             }
             // Otherwise...
             else {

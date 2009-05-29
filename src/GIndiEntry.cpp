@@ -31,7 +31,7 @@ const char ENTRY_PLACE[] = "2 PLAC";
 // Level-2 date attributes have this type
 const char TYPE_DATE[] = "DATE";
 // Level-2 place attributes have this type
-const char TYPE_PLACE[] = "PLACE";
+const char TYPE_PLACE[] = "PLAC";
 // Level-1 family (spouse) attributes have this type
 const char TYPE_FAMS[] = "FAMS";
 // Level-1 family (child) attributes have this type
@@ -227,7 +227,9 @@ void GIndiEntry::setBirthYear(const QDate & year, const QString & place) {
         if (!_birthPlaceNode) {
             _birthPlaceNode = new GNode(ENTRY_PLACE);
         }
-        _birthPlaceNode->setData(place);
+        if (_birthPlaceNode->data().isEmpty()) {
+            _birthPlaceNode->setData(place);
+        }
     }
     _birthDateNode->setNext(_birthPlaceNode);
 }
@@ -250,7 +252,9 @@ void GIndiEntry::setDeceased(const QString & place) {
         if (!_deathPlaceNode) {
             _deathPlaceNode = new GNode(ENTRY_PLACE);
         }
-        _deathPlaceNode->setData(place);
+        if (_deathPlaceNode->data().isEmpty()) {
+            _deathPlaceNode->setData(place);
+        }
     }
     _deathDateNode->setNext(_deathPlaceNode);
 }
