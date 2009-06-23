@@ -7,6 +7,7 @@
 #include "GIndiModel.h"
 #include "GFamilyTree.h"
 #include "MainMenuBar.h"
+#include "UpdateChecker.h"
 
 /* MainWindow: Main Window for the GedTools GUI
  * This window is the heart of the GedTools GUI,
@@ -21,6 +22,14 @@ class MainWindow : public QMainWindow {
 Q_OBJECT // Qt Library Macro
 
 public:
+
+    //=== Constants ===//
+
+    // Program Version
+    static const char * VERSION_NUMBER;
+
+    // File that disables auto updates
+    static const char * NO_UPDATE_FILE;
 
     //=== Constructor/Destructor ===//
 
@@ -75,6 +84,11 @@ private:
      */
     void resetDisplayModel(GIndiModel * model);
 
+    /* Queries the GedTools website to see if
+     * there is a new version of GedTools available
+     */
+    void checkForUpdates();
+
 public slots:
 
     //=== Menu Action Methods ===//
@@ -99,7 +113,13 @@ public slots:
 
     void launchWebsite();
 
+    void setAutoUpdate(bool enabled);
+
     void displayAbout();
+
+    //=== Other Actions ===//
+
+    void updateCheckFinished(const UpdateChecker * checker);
 
 };
 

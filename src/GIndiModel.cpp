@@ -1,6 +1,10 @@
 
 #include "GIndiModel.h"
 
+//=== Constants ===//
+
+const char * EMPTY_VALUE = "--";
+
 //=== Constructor/Destructor ===//
 
 /* Constructor
@@ -79,12 +83,20 @@ QVariant GIndiModel::headerData(int section, Qt::Orientation orientation, int ro
             case ROMAN_COL:
                 data = tr("Romanized Name");
                 break;
-            case BIRTH_COL:
-                data = tr("Birth");
+            case BIRTH_DATE_COL:
+                data = tr("Birth Date");
                 break;
-            case DEATH_COL:
-                data = tr("Death");
+            case BIRTH_PLACE_COL:
+                data = tr("Birth Place");
                 break;
+            case DEATH_DATE_COL:
+                data = tr("Death Date");
+                break;
+            case DEATH_PLACE_COL:
+                data = tr("Death Place");
+                break;
+            case ID_COL:
+                data = tr("Record #");
         }
     }
     return data;
@@ -141,28 +153,39 @@ QString GIndiModel::getColData(const GIndiEntry * indi, int col) {
         case ROMAN_COL:
             data = indi->romanizedName();
             break;
-        case BIRTH_COL: // Write "Birth Place (Birth Year)"
+        case BIRTH_DATE_COL:
             year = indi->birthYear();
-            data = indi->birthPlace();
-            if (data.isNull()) data = "--";
-            data.append(year.isNull() ? " (--)" : year.toString(" (yyyy)"));
+            data = year.isNull() ? EMPTY_VALUE : year.toString("yyyy");
             break;
-        case DEATH_COL: // Write "Death Place (Death Year)"
+        case BIRTH_PLACE_COL:
+            data = indi->birthPlace();
+            if (data.isNull()) data = EMPTY_VALUE;
+            break;
+        case DEATH_DATE_COL: // Write "Death Place (Death Year)"
             year = indi->deathYear();
             data = indi->deathPlace();
-            if (data.isNull()) data = "--";
+            if (data.isNull()) data = EMPTY_VALUE;
             // Write the date if there is one
             if (year.isValid()) {
-                data.append(year.toString(" (yyyy)"));
+                data = year.toString("yyyy");
             }
             // Write "Deceased" if marked as such
             else if (indi->deceased()) {
-                data.append(" (").append(tr("Deceased")).append(")");
+                data = tr("Deceased");
             }
             // Otherwise...
             else {
-                data.append(" (--)");
+                data = EMPTY_VALUE;
             }
+            break;
+        case DEATH_PLACE_COL:
+            data = indi->deathPlace();
+            if (data.isNull()) data = EMPTY_VALUE;
+            break;
+        case ID_COL:
+            data = indi->id();
+            // Remove "@I @"
+            data = data.remove(data.length()-1, 1).remove(0, 2);
             break;
     }
     return data;

@@ -63,7 +63,7 @@ MainMenuBar::MainMenuBar(MainWindow * mainWin) : QMenuBar(mainWin) {
     connect(_estimateDatesAct, SIGNAL(triggered()), mainWin, SLOT(estimateDates()));
     _toolsMenu->addAction(_estimateDatesAct);
 // Language Menu
-    _languageMenu = addMenu(tr("Language"));
+    _languageMenu = addMenu(tr("&Language"));
     _languageActionGroup = new QActionGroup(this);
     connect(_languageActionGroup, SIGNAL(triggered(QAction *)), mainWin, SLOT(switchLanguage(QAction *)));
     // Loop Variables
@@ -96,6 +96,13 @@ MainMenuBar::MainMenuBar(MainWindow * mainWin) : QMenuBar(mainWin) {
     _websiteAct->setStatusTip(tr("Go to the GedTools web page"));
     connect(_websiteAct, SIGNAL(triggered()), mainWin, SLOT(launchWebsite()));
     _helpMenu->addAction(_websiteAct);
+    // Enable/Disable Auto Updates (toggle item)
+    _enableUpdateAct = new QAction(tr("Enable &Update Checks"), this);
+    _enableUpdateAct->setStatusTip(tr("Allow GedTools to automatically check for newer versions"));
+    _enableUpdateAct->setCheckable(true);
+    _enableUpdateAct->setChecked(!QFile(mainWin->NO_UPDATE_FILE).exists());
+    connect(_enableUpdateAct, SIGNAL(toggled(bool)), mainWin, SLOT(setAutoUpdate(bool)));
+    _helpMenu->addAction(_enableUpdateAct);
     // About
     _aboutAct = new QAction(tr("&About"), this);
     _aboutAct->setStatusTip(tr("Information about GedTools"));

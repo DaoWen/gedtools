@@ -2,7 +2,8 @@
 # Configuration #
 #################
 TEMPLATE = app
-CONFIG += console
+CONFIG += qt console
+QT += network
 TARGET = GedTools
 
 ###############################
@@ -21,7 +22,8 @@ HEADERS = inc/GFile.h \
           inc/PinyinMap.h \
           inc/MainWindow.h \
           inc/MainMenuBar.h \
-          inc/TreeWindow.h
+          inc/TreeWindow.h \
+          inc/UpdateChecker.h
 SOURCES = src/GFile.cpp \
           src/GIndiEntry.cpp \
           src/GIndiMap.cpp \
@@ -36,10 +38,12 @@ SOURCES = src/GFile.cpp \
           src/MainWindow.cpp \
           src/MainMenuBar.cpp \
           src/TreeWindow.cpp \
+          src/UpdateChecker.cpp \
           src/Main.cpp
 TRANSLATIONS = lang/GedTools_en.ts \
                lang/GedTools_zh.ts
 INCLUDEPATH += inc/
+DEPENDPATH += inc/
 OBJECTS_DIR = obj/
 DESTDIR = bin/
 MOC_DIR = moc/

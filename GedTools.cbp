@@ -50,6 +50,7 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="GedTools.pro" />
 		<Unit filename="inc\GDateEstimator.h" />
 		<Unit filename="inc\GFamily.h" />
 		<Unit filename="inc\GFamilyMap.h" />
@@ -64,6 +65,7 @@
 		<Unit filename="inc\MainWindow.h" />
 		<Unit filename="inc\PinyinMap.h" />
 		<Unit filename="inc\TreeWindow.h" />
+		<Unit filename="inc\UpdateChecker.h" />
 		<Unit filename="src\GDateEstimator.cpp" />
 		<Unit filename="src\GFamily.cpp" />
 		<Unit filename="src\GFamilyMap.cpp" />
@@ -79,6 +81,7 @@
 		<Unit filename="src\MainWindow.cpp" />
 		<Unit filename="src\PinyinMap.cpp" />
 		<Unit filename="src\TreeWindow.cpp" />
+		<Unit filename="src\UpdateChecker.cpp" />
 		<Extensions>
 			<code_completion>
 				<search_path add="$(#qt4)/include" />

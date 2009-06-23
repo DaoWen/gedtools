@@ -1,10 +1,6 @@
 
 #include "GDateEstimator.h"
 
-// Todo: Remove this
-#include <iostream>
-using namespace std;
-
 //=== Constructor/Destructor ===//
 
 /* Constructor */
@@ -96,8 +92,8 @@ int GDateEstimator::updateCouple(GFTNode * famNode) {
             updated += updateMarriage(fam, head, spouse);
         }
         // Update individuals' data
-        updateIndividual(head, fam);
-        if (spouse) updateIndividual(spouse, fam);
+        updateIndividual(head, fam, spouse);
+        if (spouse) updateIndividual(spouse, fam, head);
         // Check if this family is complete or not
         // (if the head's birth year is set then so is everything else)
         if (head->birthYear().isValid()) {
@@ -115,11 +111,18 @@ int GDateEstimator::updateMarriage(GFamily * fam, GIndiEntry * head, GIndiEntry 
     // Tells the caller how many updates were made
     int updated = 0;
     QDate marriageYear;
+    // Check head for valid birth year
+    GIndiEntry * indi = head;
     QDate birthYear = head->birthYear();
+    // Otherwise check spouse for valid birth year
+    if (!birthYear.isValid() && spouse) {
+        indi = spouse;
+        birthYear = spouse->birthYear();
+    }
     // If this individual has a valid birth year
     if (birthYear.isValid()) {
         // Man's marriage year = birth year + 24
-        if (head->sex() == GIndiEntry::MALE) {
+        if (indi->sex() == GIndiEntry::MALE) {
             marriageYear = birthYear.addYears(24);
         }
         // Woman's marriage year = birth year + 20
@@ -130,23 +133,6 @@ int GDateEstimator::updateMarriage(GFamily * fam, GIndiEntry * head, GIndiEntry 
         // Tell the caller that updates have been made
         ++updated;
     }
-    else  {
-        QDate spouseBirthYear = spouse ? spouse->birthYear() : QDate();
-        // If this individual's spouse has a valid birth year
-        if (spouseBirthYear.isValid()) {
-            // Man's marriage year = birth year + 24
-            if (spouse->sex() == GIndiEntry::MALE) {
-                marriageYear = spouseBirthYear.addYears(24);
-            }
-            // Woman's marriage year = birth year + 20
-            else {
-                marriageYear = spouseBirthYear.addYears(20);
-            }
-            fam->setMarriageYear(marriageYear, _defaultPlace);
-            // Tell the caller that updates have been made
-            ++updated;
-        }
-    }
     return updated;
 }
 
@@ -154,7 +140,7 @@ int GDateEstimator::updateMarriage(GFamily * fam, GIndiEntry * head, GIndiEntry 
  * individual if relavent data is available and needed
  * @return number of dates added to this node
  */
-int GDateEstimator::updateIndividual(GIndiEntry * indi, GFamily * fam) {
+int GDateEstimator::updateIndividual(GIndiEntry * indi, GFamily * fam, GIndiEntry * spouse) {
     // Tells the caller how many updates were made
     int updated = 0;
     QDate birthYear = indi->birthYear();
@@ -167,7 +153,18 @@ int GDateEstimator::updateIndividual(GIndiEntry * indi, GFamily * fam) {
         }
         // Woman's birth year = marriage year - 20
         else {
-            birthYear = marriageYear.addYears(-20);
+            // Single parent or first wife
+            if (!spouse || spouse->familyParent() == indi->familyParent()) {
+                birthYear = marriageYear.addYears(-20);
+            }
+            // Second, third, ...
+            else {
+                const QStringList * marriages = spouse->marriages();
+                if (!marriages) throw QString("Null marriages list");
+                // Each wife is 5 years younger than the last
+                int yearsYounger = marriages->indexOf(indi->familyParent()) * 5;
+                birthYear = marriageYear.addYears(yearsYounger-20);
+            }
         }
         indi->setBirthYear(birthYear, _defaultPlace);
         // Tell the caller that updates have been made

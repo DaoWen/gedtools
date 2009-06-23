@@ -60,7 +60,10 @@ public:
     QString marriagePlace() const;
 
     /* If neither parent in this family is a child
-     * in another family then this family is the root
+     * in another family then this family is the root,
+     * and if this family will not show up in the
+     * direct line of the tree because it's not the
+     * first marriage then it is a tree root
      */
     bool isTreeRoot(GIndiMap & indiMap) const;
 

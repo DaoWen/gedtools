@@ -54,7 +54,7 @@ const char * GIndiEntry::FEMALE = "F";
 GIndiEntry::GIndiEntry(GNode * n)
  : _indiNode(0), _nameNode(0), _romanNode(0), _sexNode(0), _birthNode(0),
    _birthDateNode(0), _birthPlaceNode(0), _deathNode(0), _deathDateNode(0),
-   _deathPlaceNode(0), _famsNode(0), _famcNode(0) {
+   _deathPlaceNode(0), _famsNode(0), _famcNode(0), _marriages(0) {
     // Validate that this is an individual record
     if (!n) {
         throw QString("Null Pointer to Individual");
@@ -169,6 +169,14 @@ QString GIndiEntry::familyChild() const {
  */
 QString GIndiEntry::familyParent() const {
     return _famsNode ? _famsNode->data() : QString();
+}
+
+/* Get the list of IDs of all families
+ * in which this individual is a parent
+ * (null if only 0-1 marriages exist)
+ */
+const QStringList * GIndiEntry::marriages() const {
+    return _marriages;
 }
 
 //=== Mutators ===//
@@ -289,8 +297,21 @@ void GIndiEntry::parseIndiData(GNode * n) {
             _famcNode = n;
         }
         // Family (Parent)
-        else if (!_famsNode && n->type() == TYPE_FAMS) {
-            _famsNode = n;
+        else if (n->type() == TYPE_FAMS) {
+            // First marriage
+            if (!_famsNode) {
+                _famsNode = n;
+            }
+            // Second marriage
+            else if (!_marriages) {
+                _marriages = new QStringList();
+                _marriages->append(_famsNode->data());
+                _marriages->append(n->data());
+            }
+            // Third, fourth, ...
+            else {
+                _marriages->append(n->data());
+            }
         }
         n = n->next();
     }

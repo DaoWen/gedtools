@@ -19,10 +19,13 @@ public:
     //=== Constants ===//
 
     // Column Indecies
-    static const int NAME_COL = 0;
-    static const int ROMAN_COL = 1;
-    static const int BIRTH_COL = 2;
-    static const int DEATH_COL = 3;
+    static const int NAME_COL        = 0;
+    static const int ROMAN_COL       = 1;
+    static const int BIRTH_DATE_COL  = 2;
+    static const int BIRTH_PLACE_COL = 3;
+    static const int DEATH_DATE_COL  = 4;
+    static const int DEATH_PLACE_COL = 5;
+    static const int ID_COL          = 6;
 
     //=== Constructor/Destructor ===//
 
@@ -73,7 +76,7 @@ private:
     //=== Private Data Members ===//
 
     // Number of columns in the table (used for the columnCount() method)
-    static const int COL_COUNT = 4;
+    static const int COL_COUNT = 7;
 
     // Map of IDs to Individuals
     QList<GIndiEntry*> * _indiList;

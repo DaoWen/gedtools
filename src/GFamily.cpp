@@ -94,19 +94,43 @@ QString GFamily::marriagePlace() const {
 }
 
 /* If neither parent in this family is a child
- * in another family then this family is the root
+ * in another family then this family is the root,
+ * and if this family will not show up in the
+ * direct line of the tree because it's not the
+ * first marriage then it is a tree root
  */
 bool GFamily::isTreeRoot(GIndiMap & indiMap) const {
-    GIndiMap::iterator i;
-    return !(
-      // Husband or Wife is the child of another family
-      (_husbandNode && // This family contains a husband
-        ((i = indiMap.find(husband())) != indiMap.end()) && // Husband is found in the map
-        !i.value()->familyChild().isNull()) || // Husband is the child of another family
-      (_wifeNode && // This family contains a wife
-        ((i = indiMap.find(wife())) != indiMap.end()) && // Wife is found in the map
-        !i.value()->familyChild().isNull()) // Wife is the child of another family
-    );
+    GIndiMap::iterator iHusband, iWife;
+    // Assume husband/wife is not the child of another family
+    bool husbandRoot = true, wifeRoot = true;
+    // Assume this is the husband/wife's first marriage
+    bool husbandRemarried = false, wifeRemarried = false;
+    // Husband
+    if (_husbandNode) {
+        iHusband = indiMap.find(husband());
+        // Verify that this person exists
+        if (iHusband == indiMap.end()) {
+            throw (QString("Husband not found: ").append(husband()));
+        }
+        // Husband is not the child of another family
+        husbandRoot = iHusband.value()->familyChild().isNull();
+        // This is not his first marriage
+        husbandRemarried = id() != iHusband.value()->familyParent();
+    }
+    // Wife
+    if (_wifeNode) {
+        iWife = indiMap.find(wife());
+        // Verify that this person exists
+        if (iWife == indiMap.end()) {
+            throw (QString("Wife not found: ").append(wife()));
+        }
+        // Wife is the child of another family
+        wifeRoot = iWife.value()->familyChild().isNull();
+        // This is not her first marriage
+        wifeRemarried = id() != iWife.value()->familyParent();
+    }
+    // Both roots, or one remarried and the other a root
+    return (husbandRoot && wifeRoot) || (husbandRemarried && wifeRoot) || (wifeRemarried && husbandRoot);
 }
 
 /* If this family contains no children then

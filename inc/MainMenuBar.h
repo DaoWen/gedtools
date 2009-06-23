@@ -63,6 +63,7 @@ private:
     // Help Menu
     QMenu * _helpMenu;
     QAction * _websiteAct;
+    QAction * _enableUpdateAct;
     QAction * _aboutAct;
 
 };

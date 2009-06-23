@@ -11,6 +11,12 @@
 // First unicode point for Chinese characters
 const int CJK_CODEPOINT = 0x3400;
 
+// Program Version
+const char * MainWindow::VERSION_NUMBER = "1.1.0";
+
+// File that disables auto updates
+const char * MainWindow::NO_UPDATE_FILE = "noUpdates";
+
 //=== Constructor/Destructor ===//
 
 /* Constructor
@@ -22,8 +28,8 @@ MainWindow::MainWindow() : _gedFile(0), _indiModel(0), _filteredModel(0), _trees
     _translator->load("lang/GedTools_" + QLocale::system().name());
     qApp->installTranslator(_translator);
     // Window Creation
-    setWindowTitle("GedTools Beta");
-    setGeometry(75,100,400,250);
+    setWindowTitle(tr("GedTools"));
+    setGeometry(75,100,600,450);
     // Menu Creation
     _menuBar = new MainMenuBar(this);
     setMenuBar(_menuBar);
@@ -36,6 +42,7 @@ MainWindow::MainWindow() : _gedFile(0), _indiModel(0), _filteredModel(0), _trees
     //_tableView->verticalHeader()->setStretchLastSection(true);
     // Create the status bar
     statusBar()->showMessage(tr("Open a GEDCOM file to begin."));
+    checkForUpdates();
 }
 
 /* Destructor
@@ -97,6 +104,19 @@ void MainWindow::resetDisplayModel(GIndiModel * model) {
     _tableView->setModel(model);
     _tableView->resizeColumnsToContents();
     _tableView->horizontalHeader()->setStretchLastSection(true);
+}
+
+/* Queries the GedTools website to see if
+ * there is a new version of GedTools available
+ */
+void MainWindow::checkForUpdates() {
+    UpdateChecker * checker = new UpdateChecker(
+      "http://ouuuuch.phoenixteam.org/released/gedTools/version/",
+      VERSION_NUMBER
+    );
+    connect(checker, SIGNAL(checkFinished(const UpdateChecker *)),
+      this, SLOT(updateCheckFinished(const UpdateChecker *)));
+    checker->check();
 }
 
 //=== Menu Action Methods ===//
@@ -301,6 +321,19 @@ void MainWindow::launchWebsite() {
     QDesktopServices::openUrl(QUrl(tr("http://ouuuuch.phoenixteam.org/released/gedTools/")));
 }
 
+void MainWindow::setAutoUpdate(bool enabled) {
+    // Delete the file "noUpdates" if enabled
+    if (enabled) {
+        QFile(NO_UPDATE_FILE).remove();
+    }
+    // Create the file "noUpdates" if enabled
+    else {
+        QFile xFile(NO_UPDATE_FILE);
+        xFile.open(QFile::WriteOnly);
+        xFile.close();
+    }
+}
+
 void MainWindow::displayAbout() {
     QMessageBox::about(this, tr("About GedTools"), QString(tr(
         "GedTools v%1\n"
@@ -309,5 +342,21 @@ void MainWindow::displayAbout() {
         "GedTools is distributed under the GNU General Public License version 3\n"
         "See the accompanying gpl-3.0.txt for details, or visit\n"
         "http://www.gnu.org/copyleft/gpl.html"
-    )).arg("1.0.6"));
+    )).arg(VERSION_NUMBER));
+}
+
+//=== Other Actions ===//
+
+void MainWindow::updateCheckFinished(const UpdateChecker * checker) {
+    if (checker->hasUpdate()) {
+        int response = QMessageBox::information(
+          this, tr("Update"),
+          tr("A new version of GedTools is available for download.\n"
+             "Would you like to visit the GedTools website?"
+          ), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes
+        );
+        if (response == QMessageBox::Yes) {
+            launchWebsite();
+        }
+    }
 }

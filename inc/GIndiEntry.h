@@ -3,6 +3,7 @@
 
 #include "GNode.h"
 #include <QDate>
+#include <QStringList>
 
 /* GIndiEntry: Representation of an individual in a GEDCOM file
  * This class contains all relevant data found in a GEDCOM entry
@@ -97,6 +98,12 @@ public:
      */
     QString familyParent() const;
 
+    /* Get the list of IDs of all families
+     * in which this individual is a parent
+     * (null if only 0-1 marriages exist)
+     */
+    const QStringList * marriages() const;
+
     //=== Mutators ===//
 
     /* Set a new value for the romanized name
@@ -124,6 +131,8 @@ private:
     GNode * _birthNode, * _birthDateNode, * _birthPlaceNode;
     GNode * _deathNode, * _deathDateNode, * _deathPlaceNode;
     GNode * _famsNode, * _famcNode;
+
+    QStringList * _marriages;
 
     // Date objects for performing missing date estimates
     QDate _birthYear, _deathYear;
