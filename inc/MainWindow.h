@@ -49,7 +49,7 @@ private:
     //=== Private Data Members ===//
 
     // Translator for the application
-    QTranslator * _translator;
+    QTranslator * _appTranslator, * _qtTranslator;
 
     // Data from GEDCOM file opened by the user
     GFile * _gedFile;

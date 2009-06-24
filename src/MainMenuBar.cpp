@@ -97,7 +97,7 @@ MainMenuBar::MainMenuBar(MainWindow * mainWin) : QMenuBar(mainWin) {
     connect(_websiteAct, SIGNAL(triggered()), mainWin, SLOT(launchWebsite()));
     _helpMenu->addAction(_websiteAct);
     // Enable/Disable Auto Updates (toggle item)
-    _enableUpdateAct = new QAction(tr("Enable &Update Checks"), this);
+    _enableUpdateAct = new QAction(tr("Enable &Automatic Update Checks"), this);
     _enableUpdateAct->setStatusTip(tr("Allow GedTools to automatically check for newer versions"));
     _enableUpdateAct->setCheckable(true);
     _enableUpdateAct->setChecked(!QFile(mainWin->NO_UPDATE_FILE).exists());

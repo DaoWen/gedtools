@@ -24,9 +24,12 @@ const char * MainWindow::NO_UPDATE_FILE = "noUpdates";
  */
 MainWindow::MainWindow() : _gedFile(0), _indiModel(0), _filteredModel(0), _trees(0) {
     // Load Translation based on user's locale
-    _translator = new QTranslator();
-    _translator->load("lang/GedTools_" + QLocale::system().name());
-    qApp->installTranslator(_translator);
+    _appTranslator = new QTranslator();
+    _appTranslator->load("lang/GedTools_" + QLocale::system().name());
+    qApp->installTranslator(_appTranslator);
+    _qtTranslator = new QTranslator();
+    _qtTranslator->load("qt_" + QLocale::system().name());
+    qApp->installTranslator(_qtTranslator);
     // Window Creation
     setWindowTitle(tr("GedTools"));
     setGeometry(75,100,600,450);
@@ -42,7 +45,9 @@ MainWindow::MainWindow() : _gedFile(0), _indiModel(0), _filteredModel(0), _trees
     //_tableView->verticalHeader()->setStretchLastSection(true);
     // Create the status bar
     statusBar()->showMessage(tr("Open a GEDCOM file to begin."));
-    checkForUpdates();
+    if (!QFile(NO_UPDATE_FILE).exists()) {
+        checkForUpdates();
+    }
 }
 
 /* Destructor
@@ -57,7 +62,8 @@ MainWindow::~MainWindow() {
     delete _indiModel;
     delete _filteredModel;
     delete _gedFile;
-    delete _translator;
+    delete _appTranslator;
+    delete _qtTranslator;
 }
 
 //=== Private Helper Methods ===//
@@ -307,7 +313,8 @@ void MainWindow::estimateDates() {
 
 void MainWindow::switchLanguage(QAction * source) {
     // Set translators
-    _translator->load("lang/GedTools_" + source->data().toString());
+    _appTranslator->load("lang/GedTools_" + source->data().toString());
+    _qtTranslator->load("lang/qt_" + source->data().toString());
     // Rebuild the menus and display area
     _menuBar = new MainMenuBar(this);
     setMenuBar(_menuBar);
