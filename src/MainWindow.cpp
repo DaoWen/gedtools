@@ -128,7 +128,11 @@ void MainWindow::checkForUpdates() {
 //=== Menu Action Methods ===//
 
 void MainWindow::openFile() {
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Open GEDCOM File"), "", tr("GEDCOM Files (*.ged)"));
+    QString fileName = QFileDialog::getOpenFileName(
+      this, tr("Open GEDCOM File"),
+      QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation),
+      tr("GEDCOM Files (*.ged)")
+    );
     if (!fileName.isEmpty()) {
         try { // GFile may throw an exception on bad GEDCOM files
             // Attempt to open the new file and parse the data
@@ -291,7 +295,7 @@ void MainWindow::estimateDates() {
       defaultLocation[1] = QChar(0x570b); // Guo2
     bool okPressed;
     // Todo: fix this so that the OK/Cancel buttons get translated into Chinese
-    QInputDialog::getText(this, tr("Enter Default Location"),
+    defaultLocation = QInputDialog::getText(this, tr("Enter Default Location"),
       tr("Automatically use this location to\nfill in blank birth, marriage and death places:"),
       QLineEdit::Normal, defaultLocation, &okPressed);
     // Continue only if the user pressed OK
@@ -325,7 +329,9 @@ void MainWindow::switchLanguage(QAction * source) {
 }
 
 void MainWindow::launchWebsite() {
-    QDesktopServices::openUrl(QUrl(tr("http://ouuuuch.phoenixteam.org/released/gedTools/")));
+    if (!QDesktopServices::openUrl(QUrl(tr("http://ouuuuch.phoenixteam.org/released/gedTools/")))) {
+        QMessageBox::critical(this, tr("Error"), tr("Failed to open web browser"));
+    }
 }
 
 void MainWindow::setAutoUpdate(bool enabled) {

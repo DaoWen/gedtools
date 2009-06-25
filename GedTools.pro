@@ -2,9 +2,14 @@
 # Configuration #
 #################
 TEMPLATE = app
-CONFIG += qt console
+CONFIG += qt
 QT += network
 TARGET = GedTools
+
+#########################
+# Windows Resource File #
+#########################
+RC_FILE = res/GedTools.rc
 
 ###############################
 # Project Files & Directories #
@@ -41,8 +46,7 @@ SOURCES = src/GFile.cpp \
           src/UpdateChecker.cpp \
           src/Main.cpp
 TRANSLATIONS = lang/GedTools_en.ts \
-               lang/GedTools_zh.ts \
-               lang/qt_zh.ts
+               lang/GedTools_zh.ts
 INCLUDEPATH += inc/
 DEPENDPATH += inc/
 OBJECTS_DIR = obj/

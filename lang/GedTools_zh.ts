@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="zh">
+<defaultcodec></defaultcodec>
 <context>
     <name>GFamilyTreeModel</name>
     <message>
@@ -253,68 +254,68 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/MainWindow.cpp" line="129"/>
+        <location filename="../src/MainWindow.cpp" line="131"/>
         <source>Open GEDCOM File</source>
         <translation>開啓ＧＥＤＣＯＭ的檔案</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="156"/>
+        <location filename="../src/MainWindow.cpp" line="158"/>
         <source>GEDCOM Files (*.ged)</source>
         <translation>GEDCOM檔案 (*.ged)</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="146"/>
+        <location filename="../src/MainWindow.cpp" line="148"/>
         <source>File opened.</source>
         <translation>開啓了檔案</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="149"/>
+        <location filename="../src/MainWindow.cpp" line="151"/>
         <source>Unable to open file:
 </source>
         <translation>無法開啓檔案：</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="156"/>
+        <location filename="../src/MainWindow.cpp" line="158"/>
         <source>Save GEDCOM File</source>
         <translation>儲存ＧＥＤＣＯＭ檔案</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="159"/>
+        <location filename="../src/MainWindow.cpp" line="161"/>
         <source>File saved.</source>
         <translation>檔案儲存了</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="162"/>
+        <location filename="../src/MainWindow.cpp" line="164"/>
         <source>Save failed.</source>
         <translation>儲存失敗了</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="230"/>
+        <location filename="../src/MainWindow.cpp" line="232"/>
         <source>Pinyin added successfully!</source>
         <translation>附加拼音資料成功了</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="235"/>
+        <location filename="../src/MainWindow.cpp" line="237"/>
         <source> Incomplete Entries: </source>
         <translation>　不完整的紀錄：</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="241"/>
+        <location filename="../src/MainWindow.cpp" line="243"/>
         <source>Unable to read PinyinMap.dat</source>
         <translation>無法開啓PinyinMap.dat</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="259"/>
+        <location filename="../src/MainWindow.cpp" line="261"/>
         <source>No incomplete entries to display</source>
         <translation>沒有不完整的紀錄</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="307"/>
+        <location filename="../src/MainWindow.cpp" line="329"/>
         <source>Error</source>
         <translation>錯誤</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="259"/>
+        <location filename="../src/MainWindow.cpp" line="261"/>
         <source>Notice</source>
         <translation>通知</translation>
     </message>
@@ -324,17 +325,17 @@
         <translation>先開啓一個ＧＥＤＣＯＭ的檔案來開始</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="326"/>
+        <location filename="../src/MainWindow.cpp" line="328"/>
         <source>http://ouuuuch.phoenixteam.org/released/gedTools/</source>
         <translation>http://ouuuuch.phoenixteam.org/released/gedTools/tw/</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="343"/>
+        <location filename="../src/MainWindow.cpp" line="347"/>
         <source>About GedTools</source>
         <translation>關於ＧｅｄＴｏｏｌｓ</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="350"/>
+        <location filename="../src/MainWindow.cpp" line="354"/>
         <source>GedTools v%1
 Copyright &#xa9; 2009 Nick Vrvilo
 http://ouuuuch.phoenixteam.org/
@@ -351,18 +352,18 @@ GedTools 是根據 GNU 通用公共授權 第三版
 http://www.gnu.org/copyleft/gpl.html</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="292"/>
+        <location filename="../src/MainWindow.cpp" line="294"/>
         <source>Enter Default Location</source>
         <translation>填寫默認地點</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="293"/>
+        <location filename="../src/MainWindow.cpp" line="295"/>
         <source>Automatically use this location to
 fill in blank birth, marriage and death places:</source>
         <translation>自動利用此地點以填寫空白的出生、婚姻、死亡地點：</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="304"/>
+        <location filename="../src/MainWindow.cpp" line="306"/>
         <source>%1 new dates were added</source>
         <translation>附加了%1個新的日期</translation>
     </message>
@@ -372,16 +373,21 @@ fill in blank birth, marriage and death places:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="358"/>
+        <location filename="../src/MainWindow.cpp" line="362"/>
         <source>Update</source>
         <translation>更新</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="361"/>
+        <location filename="../src/MainWindow.cpp" line="365"/>
         <source>A new version of GedTools is available for download.
 Would you like to visit the GedTools website?</source>
         <translation>GedTools有新版本可以下載。
 您想開啓GedTools的網頁嗎？</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="329"/>
+        <source>Failed to open web browser</source>
+        <translation>開啓網路瀏覽器失敗</translation>
     </message>
 </context>
 <context>

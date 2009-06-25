@@ -243,83 +243,83 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="129"/>
+        <location filename="../src/MainWindow.cpp" line="131"/>
         <source>Open GEDCOM File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="156"/>
+        <location filename="../src/MainWindow.cpp" line="158"/>
         <source>GEDCOM Files (*.ged)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="146"/>
+        <location filename="../src/MainWindow.cpp" line="148"/>
         <source>File opened.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="307"/>
+        <location filename="../src/MainWindow.cpp" line="329"/>
         <source>Error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="149"/>
+        <location filename="../src/MainWindow.cpp" line="151"/>
         <source>Unable to open file:
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="156"/>
+        <location filename="../src/MainWindow.cpp" line="158"/>
         <source>Save GEDCOM File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="159"/>
+        <location filename="../src/MainWindow.cpp" line="161"/>
         <source>File saved.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="162"/>
+        <location filename="../src/MainWindow.cpp" line="164"/>
         <source>Save failed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="230"/>
+        <location filename="../src/MainWindow.cpp" line="232"/>
         <source>Pinyin added successfully!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="235"/>
+        <location filename="../src/MainWindow.cpp" line="237"/>
         <source> Incomplete Entries: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="241"/>
+        <location filename="../src/MainWindow.cpp" line="243"/>
         <source>Unable to read PinyinMap.dat</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="259"/>
+        <location filename="../src/MainWindow.cpp" line="261"/>
         <source>Notice</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="259"/>
+        <location filename="../src/MainWindow.cpp" line="261"/>
         <source>No incomplete entries to display</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="326"/>
+        <location filename="../src/MainWindow.cpp" line="328"/>
         <source>http://ouuuuch.phoenixteam.org/released/gedTools/</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="343"/>
+        <location filename="../src/MainWindow.cpp" line="347"/>
         <source>About GedTools</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="350"/>
+        <location filename="../src/MainWindow.cpp" line="354"/>
         <source>GedTools v%1
 Copyright &#xa9; 2009 Nick Vrvilo
 http://ouuuuch.phoenixteam.org/
@@ -330,18 +330,18 @@ http://www.gnu.org/copyleft/gpl.html</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="292"/>
+        <location filename="../src/MainWindow.cpp" line="294"/>
         <source>Enter Default Location</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="293"/>
+        <location filename="../src/MainWindow.cpp" line="295"/>
         <source>Automatically use this location to
 fill in blank birth, marriage and death places:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="304"/>
+        <location filename="../src/MainWindow.cpp" line="306"/>
         <source>%1 new dates were added</source>
         <translation type="unfinished"></translation>
     </message>
@@ -351,14 +351,19 @@ fill in blank birth, marriage and death places:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="358"/>
+        <location filename="../src/MainWindow.cpp" line="362"/>
         <source>Update</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="361"/>
+        <location filename="../src/MainWindow.cpp" line="365"/>
         <source>A new version of GedTools is available for download.
 Would you like to visit the GedTools website?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="329"/>
+        <source>Failed to open web browser</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
