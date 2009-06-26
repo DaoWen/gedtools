@@ -159,7 +159,13 @@ void GFamily::setMarriageYear(const QDate & year, const QString & place) {
     }
     // Build the date entry string
     QString dateString("EST ");
-    dateString.append(year.toString("yyyy"));
+    if (year.year() < 0) {
+        // Remove the "-" from the front and add "BC"
+        dateString.append(year.toString("yyyy BC").mid(1));
+    }
+    else {
+        dateString.append(year.toString("yyyy"));
+    }
     // Update nodes
     _marriageDateNode->setData(dateString);
     _marriageNode->setFirstChild(_marriageDateNode);
@@ -229,8 +235,7 @@ void GFamily::parseMembers(GNode * n) {
                 if (m->type() == TYPE_DATE) {
                     _marriageDateNode = m;
                     // Convert date string to an object for calculation purposes
-                    _marriageYear = _marriageDateNode ?
-                      QDate::fromString(_marriageDateNode->data().right(4),"yyyy") : QDate();
+                    _marriageYear = GNode::parseDateNode(_marriageDateNode);
                 }
                 else if (m->type() == TYPE_PLACE) {
                     _marriagePlaceNode = m;

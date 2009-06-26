@@ -225,7 +225,13 @@ void GIndiEntry::setBirthYear(const QDate & year, const QString & place) {
     }
     // Build the date entry string
     QString dateString("EST ");
-    dateString.append(year.toString("yyyy"));
+    if (year.year() < 0) {
+        // Remove the "-" from the front and add "BC"
+        dateString.append(year.toString("yyyy BC").mid(1));
+    }
+    else {
+        dateString.append(year.toString("yyyy"));
+    }
     // Update nodes
     _birthDateNode->setData(dateString);
     _birthNode->setFirstChild(_birthDateNode);
@@ -353,7 +359,7 @@ void GIndiEntry::parseBirth(GNode * n) {
         }
     }
     // Convert date string to an object for calculation purposes
-    _birthYear = _birthDateNode ? QDate::fromString(_birthDateNode->data().right(4),"yyyy") : QDate();
+    _birthYear = GNode::parseDateNode(_birthDateNode);
 }
 
 /* Parses the death data from the GNode tree
@@ -371,7 +377,7 @@ void GIndiEntry::parseDeath(GNode * n) {
     // Extract death date
     _deathDateNode = n;
     // Convert date string to an object for calculation purposes
-    _deathYear = _deathDateNode ? QDate::fromString(_deathDateNode->data().right(4),"yyyy") : QDate();
+    _deathYear = GNode::parseDateNode(_deathDateNode);
 }
 
 /* Appends an empty BIRT node just after

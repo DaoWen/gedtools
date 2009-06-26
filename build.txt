@@ -1,3 +1,5 @@
+GedTools was built using Qt by Nokia v4.5.2 (OpenSource)
+
 To build this project you need to run qmake first:
 
 qmake -makefile -o Makefile GedTools.pro

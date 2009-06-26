@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS><TS version="1.1" language="en">
+<!DOCTYPE TS>
+<TS version="2.0" language="en">
 <context>
     <name>GFamilyTreeModel</name>
     <message>
@@ -154,6 +155,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../src/MainMenuBar.cpp" line="70"/>
         <location filename="../src/MainMenuBar.cpp" line="83"/>
         <source>English</source>
         <comment>Current Language Name</comment>
@@ -243,85 +245,89 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="131"/>
+        <location filename="../src/MainWindow.cpp" line="132"/>
         <source>Open GEDCOM File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="158"/>
+        <location filename="../src/MainWindow.cpp" line="134"/>
+        <location filename="../src/MainWindow.cpp" line="165"/>
         <source>GEDCOM Files (*.ged)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="148"/>
+        <location filename="../src/MainWindow.cpp" line="152"/>
         <source>File opened.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="329"/>
+        <location filename="../src/MainWindow.cpp" line="155"/>
+        <location filename="../src/MainWindow.cpp" line="251"/>
+        <location filename="../src/MainWindow.cpp" line="317"/>
+        <location filename="../src/MainWindow.cpp" line="337"/>
         <source>Error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="151"/>
+        <location filename="../src/MainWindow.cpp" line="155"/>
         <source>Unable to open file:
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="158"/>
+        <location filename="../src/MainWindow.cpp" line="163"/>
         <source>Save GEDCOM File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="161"/>
+        <location filename="../src/MainWindow.cpp" line="169"/>
         <source>File saved.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="164"/>
+        <location filename="../src/MainWindow.cpp" line="172"/>
         <source>Save failed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="232"/>
+        <location filename="../src/MainWindow.cpp" line="240"/>
         <source>Pinyin added successfully!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="237"/>
+        <location filename="../src/MainWindow.cpp" line="245"/>
         <source> Incomplete Entries: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="243"/>
+        <location filename="../src/MainWindow.cpp" line="251"/>
         <source>Unable to read PinyinMap.dat</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="261"/>
+        <location filename="../src/MainWindow.cpp" line="269"/>
         <source>Notice</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="261"/>
+        <location filename="../src/MainWindow.cpp" line="269"/>
         <source>No incomplete entries to display</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="328"/>
+        <location filename="../src/MainWindow.cpp" line="336"/>
         <source>http://ouuuuch.phoenixteam.org/released/gedTools/</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="347"/>
+        <location filename="../src/MainWindow.cpp" line="355"/>
         <source>About GedTools</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="354"/>
+        <location filename="../src/MainWindow.cpp" line="355"/>
         <source>GedTools v%1
-Copyright &#xa9; 2009 Nick Vrvilo
+Copyright © 2009 Nick Vrvilo
 http://ouuuuch.phoenixteam.org/
 
 GedTools is distributed under the GNU General Public License version 3
@@ -330,18 +336,18 @@ http://www.gnu.org/copyleft/gpl.html</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="294"/>
+        <location filename="../src/MainWindow.cpp" line="302"/>
         <source>Enter Default Location</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="295"/>
+        <location filename="../src/MainWindow.cpp" line="303"/>
         <source>Automatically use this location to
 fill in blank birth, marriage and death places:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="306"/>
+        <location filename="../src/MainWindow.cpp" line="314"/>
         <source>%1 new dates were added</source>
         <translation type="unfinished"></translation>
     </message>
@@ -351,18 +357,18 @@ fill in blank birth, marriage and death places:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="362"/>
+        <location filename="../src/MainWindow.cpp" line="370"/>
         <source>Update</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="365"/>
+        <location filename="../src/MainWindow.cpp" line="371"/>
         <source>A new version of GedTools is available for download.
 Would you like to visit the GedTools website?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="329"/>
+        <location filename="../src/MainWindow.cpp" line="337"/>
         <source>Failed to open web browser</source>
         <translation type="unfinished"></translation>
     </message>

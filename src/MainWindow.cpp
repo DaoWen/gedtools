@@ -12,7 +12,7 @@
 const int CJK_CODEPOINT = 0x3400;
 
 // Program Version
-const char * MainWindow::VERSION_NUMBER = "1.1.0";
+const char * MainWindow::VERSION_NUMBER = "1.2.0";
 
 // File that disables auto updates
 const char * MainWindow::NO_UPDATE_FILE = "noUpdates";
@@ -159,7 +159,11 @@ void MainWindow::openFile() {
 
 void MainWindow::saveFile() {
     // TODO: check for file write fails
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Save GEDCOM File"), "", tr("GEDCOM Files (*.ged)"));
+    QString fileName = QFileDialog::getSaveFileName(
+      this, tr("Save GEDCOM File"),
+      QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation),
+      tr("GEDCOM Files (*.ged)")
+    );
     if (!fileName.isEmpty()) {
         if (_gedFile->saveFile(fileName)) {
             statusBar()->showMessage(tr("File saved."));

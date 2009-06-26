@@ -2,6 +2,7 @@
 #define V_GNODE_H
 
 #include <QString>
+#include <QDate>
 
 /* GNode: Single node in the GEDCOM list-tree
  * GEDCOM files have a complex structure resembling
@@ -80,6 +81,13 @@ public:
     /* Sets the data string of this line
      */
     void setData(const QString & dStr);
+
+    //=== Static Utility Methods ===//
+
+    /* Creates a QDate object to represent
+     * the value of a DATE node (year only)
+     */
+    static QDate parseDateNode(GNode * dateNode);
 
 private:
 

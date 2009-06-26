@@ -290,9 +290,13 @@ void GDateEstimator::findSiblingRefs(int & sibA, int & sibB, const QList<GFTNode
 int GDateEstimator::estimateSiblingsBetween(int & sibA, int & sibB, const QList<GFTNode *> & childFams) {
     int updated = 0;
     QDate startDate = childFams[sibA]->famHead->birthYear();
+    // Account for no year 0
+    int yearA = startDate.year();;
+    int yearB = childFams[sibB]->famHead->birthYear().year();
+    if (yearA < 0 && yearB > 0) yearA += 1;
     // Average sibA & sibB's birth dates to find the gap in bewtween
     double avgGap =
-      (double)(startDate.year() - childFams[sibB]->famHead->birthYear().year()) / (sibB - sibA - 1);
+      (double)(yearB - yearA) / (sibB - sibA);
     // Total year gap between sibA and childFams[i]
     double birthGap = 0;
     // Estimate birth years for all siblings between sibA & sibB
@@ -398,14 +402,21 @@ int GDateEstimator::estimateBranchBetween(GFTNode * famA, GFTNode * famB) {
     int updated = 0;
     QDate startYear = famB->famHead->birthYear();
     double yearGap = 0;
-    int levelGap = famB->level - famA->level - 1;
+    int levelGap = famB->level - famA->level;
     // Check for division by 0
     if (levelGap < 1) throw QString("FamilyA and FamilyB have no gap! (Division by 0)");
-    double avgGap = (double)(famA->famHead->birthYear().year() - startYear.year()) / levelGap;
+    // Account for no year 0
+    int yearA = famA->famHead->birthYear().year();
+    int yearB = startYear.year();
+    if (yearA < 0 && yearB > 0) yearA += 1;
+    // Calculate the average gap between individuals
+    double avgGap = (double)(yearA - yearB) / levelGap;
+    // Fill in the gaps
     famB = famB->parentFam;
     while (famB != famA) {
         yearGap += avgGap;
-        famB->famHead->setBirthYear(startYear.addYears((int)yearGap), _defaultPlace);
+        //famB->famHead->setBirthYear(startYear.addYears((int)yearGap), _defaultPlace);
+        famB->famHead->setBirthYear(startYear.addYears((int)yearGap), QString("%1 %2").arg(yearGap).arg(avgGap));
         famB = famB->parentFam;
         ++updated;
     }

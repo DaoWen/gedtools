@@ -1,0 +1,18 @@
+GedTools - Version History
+
+1.2.0 - 25 June 2009
+* Support for dates in the B.C. era added
+* Fixed bugs in GDateEstimator::estimateBranchBetween()
+  and GDateEstimator::estimateSiblingsBetween() algorithms
+
+1.1.0 - 23 June 2009
+* Automatic update checks added
+
+1.0.9 - 29 May 2009
+* Algorithms added to estimate missing dates in the database
+
+1.0.5 - 3 May 2009
+* Interface added to view individuals in a tree format
+
+1.0.0 - 23 Mar 2009
+* Support for appending Hanyu Pinyin data to the ROMN field

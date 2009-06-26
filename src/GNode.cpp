@@ -117,3 +117,28 @@ void GNode::setType(const QString & tStr) {
 void GNode::setData(const QString & dStr) {
     _data = dStr;
 }
+
+//=== Static Utility Methods ===//
+
+/* Creates a QDate object to represent
+ * the value of a DATE node (year only)
+ */
+QDate GNode::parseDateNode(GNode * dateNode) {
+    QDate dateYear;
+    static QRegExp YEAR_EXP("(\\d{4})( BC)?");
+    if (dateNode) {
+        if (YEAR_EXP.indexIn(dateNode->data()) > -1) {
+            bool conversionOK;
+            int intYear = YEAR_EXP.cap(1).toInt(&conversionOK);
+            if (conversionOK) {
+                // If "BC" is in the date then make it negative
+                if (!YEAR_EXP.cap(2).isEmpty()) {
+                    intYear *= -1;
+                }
+                // Use default value of January 1 for the month and year
+                dateYear = QDate(intYear,1,1);
+            }
+        }
+    }
+    return dateYear;
+}
