@@ -12,18 +12,18 @@ GDateEstimator::~GDateEstimator() {}
 
 //=== Mutators ===//
 
-// Bit values for updateStatuses in estimateMissingDates
-const int NONE = 0;
-const int PAIR = 1;
-const int SIBLING = 2;
-const int PROJECTION = 4;
-
 /* Estimates missing dates for Births, Marriages
  * and Deaths and fills in the estimated values
  * (along with optional locations) in the GNodes
  * Returns the number of dates appeneded
  */
 int GDateEstimator::estimateMissingDates() {
+    // Bit values for updateStatuses in estimateMissingDates
+    const int NONE = 0;
+    const int PAIR = 1;
+    const int SIBLING = 2;
+    const int PROJECTION = 4;
+    //
     bool updateStatus;
     int totalUpdated = 0, newUpdates;
     GFamilyTree * t;
