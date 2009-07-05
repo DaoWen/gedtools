@@ -145,7 +145,7 @@ bool GFamily::isTreeLeaf(GIndiMap & indiMap) const {
 /* Sets a couple's estimated marriage
  * year and updates the MARR node value
  */
-void GFamily::setMarriageYear(const QDate & year, const QString & place) {
+void GFamily::setMarriageYear(const QDate & year) {
     if (!year.isValid()) {
         throw QString("Attempted to set an invalid marriage date.");
     }
@@ -169,19 +169,18 @@ void GFamily::setMarriageYear(const QDate & year, const QString & place) {
     // Update nodes
     _marriageDateNode->setData(dateString);
     _marriageNode->setFirstChild(_marriageDateNode);
-    // Append the marriage place if specified
-    if (!place.isNull()) {
-        // Create the place node if needed
-        if (!_marriagePlaceNode) {
-            _marriagePlaceNode = new GNode(ENTRY_PLACE);
-        }
-        if (_marriagePlaceNode->data().isEmpty()) {
-            _marriagePlaceNode->setData(place);
-        }
-    }
     _marriageDateNode->setNext(_marriagePlaceNode);
 }
 
+/* Sets the PLAC value for the MARR node
+ */
+void GFamily::setMarriagePlace(const QString & place) {
+    // Create the place node if needed
+    if (!_marriagePlaceNode) {
+        _marriagePlaceNode = new GNode(ENTRY_PLACE);
+    }
+    _marriagePlaceNode->setData(place);
+}
 
 //=== Private Helper Methods ===//
 

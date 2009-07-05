@@ -113,14 +113,22 @@ public:
     void setRomanizedName(const QString & romanName);
 
     /* Sets an individual's estimated birth
-     * year and updates the BIRT node value
+     * year and updates the BIRT DATE node value
      */
-    void setBirthYear(const QDate & year, const QString & place = QString());
+    void setBirthYear(const QDate & year);
+
+    /* Sets the PLAC value for the BIRT node
+     */
+    void setBirthPlace(const QString & place);
 
     /* Sets an individual's death
      * date value to "DECEASED"
      */
-    void setDeceased(const QString & place = QString());
+    void setDeceased();
+
+    /* Sets the PLAC value for the DEAT node
+     */
+    void setDeathPlace(const QString & place);
 
 private:
 

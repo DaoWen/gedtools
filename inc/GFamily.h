@@ -75,9 +75,13 @@ public:
     //=== Mutators ===//
 
     /* Sets a couple's estimated marriage
-     * year and updates the MARR node value
+     * year and updates the MARR DATE node value
      */
-    void setMarriageYear(const QDate & year, const QString & place = QString());
+    void setMarriageYear(const QDate & year);
+
+    /* Sets the PLAC value for the MARR node
+     */
+    void setMarriagePlace(const QString & place);
 
 private:
 

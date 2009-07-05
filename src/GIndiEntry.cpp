@@ -209,9 +209,9 @@ void GIndiEntry::setRomanizedName(const QString & romanName) {
 }
 
 /* Sets an individual's estimated birth
- * year and updates the BIRT node value
+ * year and updates the BIRT DATE node value
  */
-void GIndiEntry::setBirthYear(const QDate & year, const QString & place) {
+void GIndiEntry::setBirthYear(const QDate & year) {
     if (!year.isValid()) {
         throw QString("Attempted to set an invalid birth date.");
     }
@@ -235,23 +235,23 @@ void GIndiEntry::setBirthYear(const QDate & year, const QString & place) {
     // Update nodes
     _birthDateNode->setData(dateString);
     _birthNode->setFirstChild(_birthDateNode);
-    // Append the birth place if specified
-    if (!place.isNull()) {
-        // Create the place node if needed
-        if (!_birthPlaceNode) {
-            _birthPlaceNode = new GNode(ENTRY_PLACE);
-        }
-        if (_birthPlaceNode->data().isEmpty()) {
-            _birthPlaceNode->setData(place);
-        }
-    }
     _birthDateNode->setNext(_birthPlaceNode);
+}
+
+/* Sets the PLAC value for the BIRT node
+ */
+void GIndiEntry::setBirthPlace(const QString & place) {
+    // Create the place node if needed
+    if (!_birthPlaceNode) {
+        _birthPlaceNode = new GNode(ENTRY_PLACE);
+    }
+    _birthPlaceNode->setData(place);
 }
 
 /* Sets an individual's death
  * date value to "DECEASED"
  */
-void GIndiEntry::setDeceased(const QString & place) {
+void GIndiEntry::setDeceased() {
     // Create DEAT node if needed
     if (!_deathNode) appendDeathNode();
     // Create the DATE node if needed
@@ -260,19 +260,18 @@ void GIndiEntry::setDeceased(const QString & place) {
     }
     _deathDateNode->setData(DATA_DECEASED);
     _deathNode->setFirstChild(_deathDateNode);
-    // Append the death place if specified
-    if (!place.isNull()) {
-        // Create the place node if needed
-        if (!_deathPlaceNode) {
-            _deathPlaceNode = new GNode(ENTRY_PLACE);
-        }
-        if (_deathPlaceNode->data().isEmpty()) {
-            _deathPlaceNode->setData(place);
-        }
-    }
     _deathDateNode->setNext(_deathPlaceNode);
 }
 
+/* Sets the PLAC value for the DEAT node
+ */
+void GIndiEntry::setDeathPlace(const QString & place) {
+    // Create the place node if needed
+    if (!_deathPlaceNode) {
+        _deathPlaceNode = new GNode(ENTRY_PLACE);
+    }
+    _deathPlaceNode->setData(place);
+}
 
 //=== Private Helper Methods ===//
 

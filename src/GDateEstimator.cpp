@@ -1,9 +1,6 @@
 
 #include "GDateEstimator.h"
 
-#include <iostream>
-using namespace std;
-
 //=== Constructor/Destructor ===//
 
 /* Constructor */
@@ -26,7 +23,6 @@ int GDateEstimator::estimateMissingDates() {
     const int SIBLING = 1;
     const int PAIR = 2;
     const int PROJECTION = 4;
-    //
     bool updateStatus;
     int totalUpdated = 0, newUpdates;
     GFamilyTree * t;
@@ -132,7 +128,7 @@ int GDateEstimator::updateMarriage(GFamily * fam, GIndiEntry * head, GIndiEntry 
         else {
             marriageYear = birthYear.addYears(20);
         }
-        fam->setMarriageYear(marriageYear, _defaultPlace);
+        fam->setMarriageYear(marriageYear);
         // Tell the caller that updates have been made
         ++updated;
     }
@@ -169,7 +165,7 @@ int GDateEstimator::updateIndividual(GIndiEntry * indi, GFamily * fam, GIndiEntr
                 birthYear = marriageYear.addYears(yearsYounger-20);
             }
         }
-        indi->setBirthYear(birthYear, _defaultPlace);
+        indi->setBirthYear(birthYear);
         // Tell the caller that updates have been made
         ++updated;
     }
@@ -177,9 +173,21 @@ int GDateEstimator::updateIndividual(GIndiEntry * indi, GFamily * fam, GIndiEntr
     if (indi->deathDate().isNull() && birthYear.isValid()) {
         // Over 110 years old => they're dead
         if (birthYear.addYears(110) < _currentYear) {
-            indi->setDeceased(_defaultPlace);
+            indi->setDeceased();
             // Tell the caller that updates have been made
             ++updated;
+        }
+    }
+    // Fill in any empty PLAC nodes
+    if (birthYear.isValid()) {
+        if (indi->birthPlace().isEmpty()) {
+            indi->setBirthPlace(_defaultPlace);
+        }
+        if (indi->deathPlace().isEmpty()) {
+            indi->setDeathPlace(_defaultPlace);
+        }
+        if (fam && fam->marriagePlace().isEmpty()) {
+            fam->setMarriagePlace(_defaultPlace);
         }
     }
     return updated;
@@ -309,7 +317,7 @@ int GDateEstimator::estimateSiblingsBetween(int & sibA, int & sibB, const QList<
     // Estimate birth years for all siblings between sibA & sibB
     for (int i=sibA+1; i<sibB; ++i) {
         birthGap += avgGap;
-        childFams[i]->famHead->setBirthYear(startDate.addYears((int)birthGap), _defaultPlace);
+        childFams[i]->famHead->setBirthYear(startDate.addYears((int)birthGap));
         ++updated;
         // Update individual so that headComplete is set
         updated += updateCouple(childFams[i]);
@@ -328,7 +336,7 @@ int GDateEstimator::estimateSiblingsDown(int & sibA, const QList<GFTNode *> & ch
     for (int i=sibA+1; i<childFams.size(); ++i) {
         // 2 years between sibling births
         birthDate = birthDate.addYears(2);
-        childFams[i]->famHead->setBirthYear(birthDate, _defaultPlace);
+        childFams[i]->famHead->setBirthYear(birthDate);
         ++updated;
         // Update individual so that headComplete is set
         updated += updateCouple(childFams[i]);
@@ -347,7 +355,7 @@ int GDateEstimator::estimateSiblingsUp(int & sibB, const QList<GFTNode *> & chil
     for (int i=sibB-1; i>-1; --i) {
         // 2 years between sibling births
         birthDate = birthDate.addYears(-2);
-        childFams[i]->famHead->setBirthYear(birthDate, _defaultPlace);
+        childFams[i]->famHead->setBirthYear(birthDate);
         ++updated;
         // Update individual so that headComplete is set
         updated += updateCouple(childFams[i]);
@@ -431,7 +439,7 @@ int GDateEstimator::estimateBranchBetween(GFTNode * famA, GFTNode * famB) {
     while (famB != famA) {
         yearGap += avgGap;
         sibOffset = famB->parentFam->childFams->indexOf(famB) * 2;
-        famB->famHead->setBirthYear(startYear.addYears((int)yearGap+sibOffset), _defaultPlace);
+        famB->famHead->setBirthYear(startYear.addYears((int)yearGap+sibOffset));
         famB = famB->parentFam;
         ++updated;
     }
@@ -499,7 +507,7 @@ int GDateEstimator::estimateBranchDown(GFTNode * n) {
     // 21 years between mother and first child
     birthYear = parent->sex() == GIndiEntry::MALE ? birthYear.addYears(25) : birthYear.addYears(21);
     // Set eldest child's birth year
-    n->famHead->setBirthYear(birthYear, _defaultPlace);
+    n->famHead->setBirthYear(birthYear);
     ++updated;
     return updated;
 }
@@ -519,7 +527,7 @@ int GDateEstimator::estimateBranchUp(GFTNode * famB) {
     // 21 years between mother and first child
     birthYear = parent->sex() == GIndiEntry::MALE ? birthYear.addYears(-25) : birthYear.addYears(-21);
     // Set parent's birth year
-    parent->setBirthYear(birthYear, _defaultPlace);
+    parent->setBirthYear(birthYear);
     ++updated;
     return updated;
 }

@@ -2,7 +2,7 @@
 # Configuration #
 #################
 TEMPLATE = app
-CONFIG += qt console
+CONFIG += qt
 QT += network
 TARGET = GedTools
 
