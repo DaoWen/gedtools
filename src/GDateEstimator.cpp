@@ -1,6 +1,9 @@
 
 #include "GDateEstimator.h"
 
+#include <iostream>
+using namespace std;
+
 //=== Constructor/Destructor ===//
 
 /* Constructor */
@@ -20,8 +23,8 @@ GDateEstimator::~GDateEstimator() {}
 int GDateEstimator::estimateMissingDates() {
     // Bit values for updateStatuses in estimateMissingDates
     const int NONE = 0;
-    const int PAIR = 1;
-    const int SIBLING = 2;
+    const int SIBLING = 1;
+    const int PAIR = 2;
     const int PROJECTION = 4;
     //
     bool updateStatus;
@@ -31,29 +34,29 @@ int GDateEstimator::estimateMissingDates() {
         // Clear all flags
         updateStatus = NONE;
         do {
-            // Clear PAIR and SIBLING flags
+            // Clear SIBLING and PAIR flags
             updateStatus &= PROJECTION;
             do {
-                // Clear PAIR flag
-                updateStatus &= PROJECTION | SIBLING;
-                // Branch Pairs / Individuals
+                // Clear SIBLING flag
+                updateStatus &= PROJECTION | PAIR;
+                // Siblings / Individuals
                 foreach (t, _trees) {
-                    newUpdates = updateBranchPairs(t->root());
+                    newUpdates = updateChildren(t->root());
                     if (newUpdates > 0) {
                         totalUpdated += newUpdates;
-                        updateStatus = PAIR | SIBLING | PROJECTION;
+                        updateStatus = SIBLING | PAIR | PROJECTION;
                     }
                 }
-            } while (updateStatus & PAIR > NONE);
-            // Siblings
+            } while (updateStatus & SIBLING > NONE);
+            // Branch Pairs
             foreach (t, _trees) {
-                newUpdates = updateChildren(t->root());
+                newUpdates = updateBranchPairs(t->root());
                 if (newUpdates > 0) {
                     totalUpdated += newUpdates;
-                    updateStatus = SIBLING | PROJECTION;
+                    updateStatus = PAIR | PROJECTION;
                 }
             }
-        } while (updateStatus & SIBLING > NONE);
+        } while (updateStatus & PAIR > NONE);
         // Projecting Branches
         foreach (t, _trees) {
             newUpdates = updateBranchProjection(t->root());
@@ -98,6 +101,7 @@ int GDateEstimator::updateCouple(GFTNode * famNode) {
         // (if the head's birth year is set then so is everything else)
         if (head->birthYear().isValid()) {
             famNode->headComplete = true;
+            if (head->id() == "@I789@") cout << famNode->headComplete << "COMPLETE!!!" << endl;
         }
     }
     return updated;
@@ -192,9 +196,13 @@ int GDateEstimator::updateIndividual(GIndiEntry * indi, GFamily * fam, GIndiEntr
  */
 int GDateEstimator::updateChildren(GFTNode * n) {
     int updated = 0;
+    // Update this node
+    updated += updateCouple(n);
     if (n->childFams) {
         // Update siblings
-        updated += updateSiblings(n);
+        if (!n->kidsComplete) {
+            updated += updateSiblings(n);
+        }
         // Recursively update children
         QList<GFTNode *> & childFams = *(n->childFams);
         GFTNode * m;
@@ -214,35 +222,46 @@ int GDateEstimator::updateSiblings(GFTNode * famNode) {
     int updated = 0;
     // Variables for the loop below
     int sibA, sibB;
+    if (famNode->famHead->id() == "@I786@") {
+        cout << (famNode->famHead->birthYear().isValid() ? "YES(" : "NO(");
+    }
     QList<GFTNode *> & childFams = *(famNode->childFams);
     for (;;) { // Loop until this hits one of the two break statements at bottom
         // Find upper & lower sibling references
         findSiblingRefs(sibA, sibB, childFams);
+        if (famNode->famHead->id() == "@I786@") cout << sibA << " ";
+        if (famNode->famHead->id() == "@I786@") cout << famNode->childFams->at(0)->famHead->birthYear().isValid() << famNode->childFams->at(0)->headComplete << famNode->childFams->at(0)->famHead->id().toStdString() << " ";
         // Estimate dates using found references
         if (sibB > -1) {
             // Upper & lower siblings were found
             if (sibA > -1) {
                 updated += estimateSiblingsBetween(sibA, sibB, childFams);
+                if (famNode->famHead->id() == "@I786@") cout << "BETWEEN";
             }
             // Only lower sibling was found
             else {
                 updated += estimateSiblingsUp(sibB, childFams);
+                if (famNode->famHead->id() == "@I786@") cout << "UP";
             }
         }
         // Only upper sibling was found
         else if (sibA > -1) {
-            // Break the upper sibling is the last sibling in the list
+            // Break if the upper sibling is the last sibling in the list
             // (that means all siblings are complete)
             if (sibA == childFams.size()-1) {
                 famNode->kidsComplete = true;
+                if (famNode->famHead->id() == "@I786@") cout << "DONE";
                 break;
             }
             // Otherwise estimate birth dates for siblings below sibA
             updated += estimateSiblingsDown(sibA, childFams);
+            if (famNode->famHead->id() == "@I786@") cout << "DOWN";
         }
         // Break if no references were found
-        else break;
+        else  { if (famNode->famHead->id() == "@I786@") cout << "NONE"; break; }
+        //else break;
     }
+    if (famNode->famHead->id() == "@I786@") cout << ") " << endl;
     return updated;
 }
 
@@ -358,16 +377,18 @@ int GDateEstimator::estimateSiblingsUp(int & sibB, const QList<GFTNode *> & chil
  */
 int GDateEstimator::updateBranchPairs(GFTNode * n, GFTNode * famA, bool passedIncomplete) {
     int updated = 0;
-    // Update this node
-    updated += updateCouple(n);
     // Only find FamilyB if an incomplete was passed
     if (passedIncomplete) {
         // Find FamilyB with a reference birth date
         if (n->headComplete) {
-            // If FamilyA was found then fill in the gaps
-            if (famA) updated += estimateBranchBetween(famA, n);
+            // If FamilyA was found earlier, then fill in
+            // the gaps, but only if famB is the eldest child
+            if (famA && n->eldestSibling() == n) updated += estimateBranchBetween(famA, n);
             // Make this node the new FamilyA
             famA = n;
+            // Update all siblings of famA so that there
+            // aren't conflicts with date averages
+            if (n->parentFam) updated += updateSiblings(n->parentFam);
             passedIncomplete = false;
         }
     }
@@ -388,6 +409,9 @@ int GDateEstimator::updateBranchPairs(GFTNode * n, GFTNode * famA, bool passedIn
             if (n != famA && n->headComplete) {
                 famA = n;
                 passedIncomplete = false;
+                // Update all siblings of famA so that there
+                // aren't conflicts with date averages
+                if (n->parentFam) updated += updateSiblings(n->parentFam);
             }
             updated += updateBranchPairs(m, famA, passedIncomplete);
         }
@@ -411,12 +435,15 @@ int GDateEstimator::estimateBranchBetween(GFTNode * famA, GFTNode * famB) {
     if (yearA < 0 && yearB > 0) yearA += 1;
     // Calculate the average gap between individuals
     double avgGap = (double)(yearA - yearB) / levelGap;
+    // Offset for younger children since the generation
+    // gaps should be based on the eldest child
+    int sibOffset;
     // Fill in the gaps
     famB = famB->parentFam;
     while (famB != famA) {
         yearGap += avgGap;
-        //famB->famHead->setBirthYear(startYear.addYears((int)yearGap), _defaultPlace);
-        famB->famHead->setBirthYear(startYear.addYears((int)yearGap), QString("%1 %2").arg(yearGap).arg(avgGap));
+        sibOffset = famB->parentFam->childFams->indexOf(famB) * 2;
+        famB->famHead->setBirthYear(startYear.addYears((int)yearGap+sibOffset), _defaultPlace);
         famB = famB->parentFam;
         ++updated;
     }
@@ -436,7 +463,7 @@ int GDateEstimator::updateBranchProjection(GFTNode * n, bool incompleteRoot) {
     // Found blank nodes below FamilyA
     if (!incompleteRoot && n->parentFam && !n->headComplete) {
         // Only project upward from eldest child
-        if (n->parentFam->childFams->at(0) == n) {
+        if (n->eldestSibling() == n) {
             updated += estimateBranchDown(n);
         }
     }
@@ -448,7 +475,7 @@ int GDateEstimator::updateBranchProjection(GFTNode * n, bool incompleteRoot) {
         // Found FamilyB below blank root
         else if (incompleteRoot) {
             // Only project upward from eldest child
-            if (n->parentFam->childFams->at(0) == n) {
+            if (n->eldestSibling() == n) {
                 // Project upward from this node
                 updated += estimateBranchUp(n);
             }
