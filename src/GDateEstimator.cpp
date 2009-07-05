@@ -95,13 +95,12 @@ int GDateEstimator::updateCouple(GFTNode * famNode) {
             updated += updateMarriage(fam, head, spouse);
         }
         // Update individuals' data
-        updateIndividual(head, fam, spouse);
-        if (spouse) updateIndividual(spouse, fam, head);
+        updated += updateIndividual(head, fam, spouse);
+        if (spouse) updated += updateIndividual(spouse, fam, head);
         // Check if this family is complete or not
         // (if the head's birth year is set then so is everything else)
         if (head->birthYear().isValid()) {
             famNode->headComplete = true;
-            if (head->id() == "@I789@") cout << famNode->headComplete << "COMPLETE!!!" << endl;
         }
     }
     return updated;
@@ -222,26 +221,19 @@ int GDateEstimator::updateSiblings(GFTNode * famNode) {
     int updated = 0;
     // Variables for the loop below
     int sibA, sibB;
-    if (famNode->famHead->id() == "@I786@") {
-        cout << (famNode->famHead->birthYear().isValid() ? "YES(" : "NO(");
-    }
     QList<GFTNode *> & childFams = *(famNode->childFams);
     for (;;) { // Loop until this hits one of the two break statements at bottom
         // Find upper & lower sibling references
         findSiblingRefs(sibA, sibB, childFams);
-        if (famNode->famHead->id() == "@I786@") cout << sibA << " ";
-        if (famNode->famHead->id() == "@I786@") cout << famNode->childFams->at(0)->famHead->birthYear().isValid() << famNode->childFams->at(0)->headComplete << famNode->childFams->at(0)->famHead->id().toStdString() << " ";
         // Estimate dates using found references
         if (sibB > -1) {
             // Upper & lower siblings were found
             if (sibA > -1) {
                 updated += estimateSiblingsBetween(sibA, sibB, childFams);
-                if (famNode->famHead->id() == "@I786@") cout << "BETWEEN";
             }
             // Only lower sibling was found
             else {
                 updated += estimateSiblingsUp(sibB, childFams);
-                if (famNode->famHead->id() == "@I786@") cout << "UP";
             }
         }
         // Only upper sibling was found
@@ -250,18 +242,14 @@ int GDateEstimator::updateSiblings(GFTNode * famNode) {
             // (that means all siblings are complete)
             if (sibA == childFams.size()-1) {
                 famNode->kidsComplete = true;
-                if (famNode->famHead->id() == "@I786@") cout << "DONE";
                 break;
             }
             // Otherwise estimate birth dates for siblings below sibA
             updated += estimateSiblingsDown(sibA, childFams);
-            if (famNode->famHead->id() == "@I786@") cout << "DOWN";
         }
         // Break if no references were found
-        else  { if (famNode->famHead->id() == "@I786@") cout << "NONE"; break; }
-        //else break;
+        else break;
     }
-    if (famNode->famHead->id() == "@I786@") cout << ") " << endl;
     return updated;
 }
 
