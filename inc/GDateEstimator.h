@@ -5,8 +5,8 @@
 
 /* GDateEstimator: Utility class for estimating missing
  * dates in a group of GFamilyTrees created from the
- * data in a GEDCOM file. Estimates Birth, Marriage and
- * Death dates based on the methods set forth in
+ * data in a GEDCOM file. Estimates birth, marriage and
+ * death dates based on the methods set forth in
  * "Filling out the Pedigree Chart"
  * (Hong Kong Family History Service Center, July 2007)
  * Optionally appends automatic PLACE values as well
@@ -24,8 +24,8 @@ public:
 
     //=== Mutators ===//
 
-    /* Estimates missing dates for Births, Marriages
-     * and Deaths and fills in the estimated values
+    /* Estimates missing dates for births, marriages
+     * and deaths and fills in the estimated values
      * (along with optional locations) in the GNodes
      * Returns the number of dates appeneded
      */

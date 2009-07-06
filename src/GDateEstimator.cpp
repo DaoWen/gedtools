@@ -12,8 +12,8 @@ GDateEstimator::~GDateEstimator() {}
 
 //=== Mutators ===//
 
-/* Estimates missing dates for Births, Marriages
- * and Deaths and fills in the estimated values
+/* Estimates missing dates for births, marriages
+ * and deaths and fills in the estimated values
  * (along with optional locations) in the GNodes
  * Returns the number of dates appeneded
  */
