@@ -139,7 +139,9 @@ void GFile::printGedcomFile(QTextStream & s, GNode * n) const {
     if (n) {
         // First stream out the contents of this node in the proper format:
         // LEVEL# TYPE DATA
-        s << QString::number(n->level()).append(' ').append(n->type()).append(' ').append(n->data()).append('\n');
+        s << QString::number(n->level()) << ' ' << n->type();
+        if (!n->data().isEmpty()) s << ' ' << n->data();
+        s << "\r\n";
         // Print out this node's children
         printGedcomFile(s, n->firstChild());
         // Print out this node's next sibling
