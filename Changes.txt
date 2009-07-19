@@ -1,5 +1,10 @@
 GedTools - Version History
 
+1.4.0 - 19 July 2009
+* Fixed GDateEstimator::updateIndividual() so that only blank places
+  with a corresponding non-blank date will be filled during estimation
+* Changed the end of line from "\n" to "\r\n" to match PAF's output
+
 1.3.0 - 6 July 2009
 * Fixed the GDateEstimator::estimateBranchBetween() algorithm so that
   all date projections are done relative to the eldest child

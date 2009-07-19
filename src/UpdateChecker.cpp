@@ -69,5 +69,7 @@ void UpdateChecker::requestFinished(QNetworkReply * reply) {
     _hasMinorUpdate = _hasUpdate || (_v2 == nv2) && (_v3 < nv3);
     // Finished!
     _finished = true;
+    // Emit a signal so that users know that the request has
+    // finished, and give them a pointer to this object
     emit checkFinished(this);
 }

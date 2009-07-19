@@ -180,13 +180,13 @@ int GDateEstimator::updateIndividual(GIndiEntry * indi, GFamily * fam, GIndiEntr
     }
     // Fill in any empty PLAC nodes
     if (birthYear.isValid()) {
-        if (indi->birthPlace().isEmpty()) {
+        if (indi->birthPlace().isEmpty() && !indi->birthDate().isEmpty()) {
             indi->setBirthPlace(_defaultPlace);
         }
-        if (indi->deathPlace().isEmpty()) {
+        if (indi->deathPlace().isEmpty() && !indi->deathDate().isEmpty()) {
             indi->setDeathPlace(_defaultPlace);
         }
-        if (fam && fam->marriagePlace().isEmpty()) {
+        if (fam && fam->marriagePlace().isEmpty() && !fam->marriageDate().isEmpty()) {
             fam->setMarriagePlace(_defaultPlace);
         }
     }

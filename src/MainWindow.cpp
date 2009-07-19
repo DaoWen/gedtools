@@ -12,7 +12,7 @@
 const int CJK_CODEPOINT = 0x3400;
 
 // Program Version
-const char * MainWindow::VERSION_NUMBER = "1.3.0";
+const char * MainWindow::VERSION_NUMBER = "1.4.0";
 
 // File that disables auto updates
 const char * MainWindow::NO_UPDATE_FILE = "noUpdates";
