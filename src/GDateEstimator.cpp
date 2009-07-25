@@ -23,7 +23,7 @@ int GDateEstimator::estimateMissingDates() {
     const int SIBLING = 1;
     const int PAIR = 2;
     const int PROJECTION = 4;
-    bool updateStatus;
+    int updateStatus;
     int totalUpdated = 0, newUpdates;
     GFamilyTree * t;
     do {
@@ -43,7 +43,7 @@ int GDateEstimator::estimateMissingDates() {
                         updateStatus = SIBLING | PAIR | PROJECTION;
                     }
                 }
-            } while (updateStatus & SIBLING > NONE);
+            } while ((updateStatus & SIBLING) > NONE);
             // Branch Pairs
             foreach (t, _trees) {
                 newUpdates = updateBranchPairs(t->root());
@@ -52,7 +52,7 @@ int GDateEstimator::estimateMissingDates() {
                     updateStatus = PAIR | PROJECTION;
                 }
             }
-        } while (updateStatus & PAIR > NONE);
+        } while ((updateStatus & PAIR) > NONE);
         // Projecting Branches
         foreach (t, _trees) {
             newUpdates = updateBranchProjection(t->root());
@@ -61,7 +61,7 @@ int GDateEstimator::estimateMissingDates() {
                 updateStatus = PROJECTION;
             }
         }
-    } while (updateStatus & PROJECTION > NONE);
+    } while ((updateStatus & PROJECTION) > NONE);
     return totalUpdated;
 }
 
@@ -116,7 +116,7 @@ int GDateEstimator::updateMarriage(GFamily * fam, GIndiEntry * head, GIndiEntry 
     // Otherwise check spouse for valid birth year
     if (!birthYear.isValid() && spouse) {
         indi = spouse;
-        birthYear = spouse->birthYear();
+        birthYear = indi->birthYear();
     }
     // If this individual has a valid birth year
     if (birthYear.isValid()) {
@@ -269,12 +269,15 @@ void GDateEstimator::findSiblingRefs(int & sibA, int & sibB, const QList<GFTNode
     sibA = -1;
     sibB = -1;
     bool passedIncomplete = false;
+    bool childHasBirthDate;
     // Find upper & lower siblings with birth dates
     for (int i=0; i<childFams.size(); ++i) {
+        // Find out if this child's birth date is set
+        childHasBirthDate = childFams[i]->famHead->birthYear().isValid();
         // Only find a lower sibling if an incomplete was passed
         if (passedIncomplete) {
             // Find a lower sibling with a reference birth date
-            if (childFams[i]->headComplete) {
+            if (childHasBirthDate) {
                 sibB = i;
                 // Lower reference has been found so stop looping
                 break;
@@ -284,7 +287,7 @@ void GDateEstimator::findSiblingRefs(int & sibA, int & sibB, const QList<GFTNode
         // we can't find a new upper sibling
         else {
             // Find an upper sibling with a reference birth date
-            if (childFams[i]->headComplete) {
+            if (childHasBirthDate) {
                 sibA = i;
                 // famA can't be the last child
                 if (i == childFams.size()-1) {
