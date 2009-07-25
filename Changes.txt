@@ -1,5 +1,12 @@
 GedTools - Version History
 
+1.5.0 - 25 July 2009
+* Fixed operator precedence-related logic error causing loops in
+  GDateEstimator::estimateMissingDates() to exit too soon
+* Altered GDateEstimator::findSiblingRefs() to use the birthYear
+  property of the famHead rather than the headComplete since it
+  might not yet be set at that point in the algorithm
+
 1.4.0 - 19 July 2009
 * Fixed GDateEstimator::updateIndividual() so that only blank places
   with a corresponding non-blank date will be filled during estimation

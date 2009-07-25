@@ -12,7 +12,7 @@
 const int CJK_CODEPOINT = 0x3400;
 
 // Program Version
-const char * MainWindow::VERSION_NUMBER = "1.4.0";
+const char * MainWindow::VERSION_NUMBER = "1.5.0";
 
 // File that disables auto updates
 const char * MainWindow::NO_UPDATE_FILE = "noUpdates";
@@ -308,14 +308,14 @@ void MainWindow::estimateDates() {
         GDateEstimator estimator(*_trees, defaultLocation);
         try {
             int datesAdded = estimator.estimateMissingDates();
-            // Update the Model/View now that data has been changed
-            _indiModel->resetViews();
             // Alert the user as to how many dates were appened
             statusBar()->showMessage(tr("%1 new dates were added").arg(datesAdded));
         }
         catch (QString e) {
             QMessageBox::critical(this, tr("Error"), e);
         }
+        // Update the Model/View now that data has been changed
+        _indiModel->resetViews();
     }
 }
 
