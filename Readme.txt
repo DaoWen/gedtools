@@ -1,4 +1,4 @@
-GedTools v1.5.0
+GedTools v1.5.1
 Copyright © 2009 Nick Vrvilo
 http://ouuuuch.phoenixteam.org/
 
@@ -8,3 +8,7 @@ http://www.gnu.org/copyleft/gpl.html
 
 PinyinMap.dat was generated from the Unihan Project's database:
 http://unicode.org/charts/unihan.html
+
+Unihan.zip contains a plain text version of the Unihan database
+The latest version of Unihan.zip is available for download at
+http://unicode.org/Public/UNIDATA/
