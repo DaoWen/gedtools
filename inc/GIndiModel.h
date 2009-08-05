@@ -88,15 +88,29 @@ private:
      */
     static QString getColData(const GIndiEntry * indi, int col);
 
-    //=== ColumnComparer Class ===//
+    //=== ColumnComparer Classes ===//
 
     /* ColumnComparer: Comparison operator for comparing
      * columns in the _indiList and used by sort()
      */
-    class ColumnComparer {
+    class IntColumnComparer {
         public:
             /* Constructor */
-            ColumnComparer(int column, bool ascending);
+            IntColumnComparer(int column, bool ascending);
+            /* Comparision Operation */
+            bool operator()(GIndiEntry * a, GIndiEntry * b);
+        private:
+            int _col; // Sort target column
+            bool _asc; // Sort direction
+    };
+
+    /* ColumnComparer: Comparison operator for comparing
+     * columns in the _indiList and used by sort()
+     */
+    class StrColumnComparer {
+        public:
+            /* Constructor */
+            StrColumnComparer(int column, bool ascending);
             /* Comparision Operation */
             bool operator()(GIndiEntry * a, GIndiEntry * b);
         private:

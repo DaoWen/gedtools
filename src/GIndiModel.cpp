@@ -1,4 +1,5 @@
 
+#include <limits.h>
 #include "GIndiModel.h"
 
 //=== Constants ===//
@@ -126,8 +127,21 @@ bool GIndiModel::setData(const QModelIndex &index, const QVariant &value, int ro
 void GIndiModel::sort(int column, Qt::SortOrder order) {
     // Only sort valid columns
     if (column >= 0 && column < COL_COUNT) {
-        ColumnComparer cmp(column, order == Qt::AscendingOrder);
-        qSort(_indiList->begin(), _indiList->end(), cmp);
+        switch (column) {
+            case ID_COL: // These columns are sorted as integers
+            case BIRTH_DATE_COL:
+            case DEATH_DATE_COL:
+            {
+                IntColumnComparer cmp(column, order == Qt::AscendingOrder);
+                qSort(_indiList->begin(), _indiList->end(), cmp);
+            }
+                break;
+            default: // Sort all other valid columns as strings
+            {
+                StrColumnComparer cmp(column, order == Qt::AscendingOrder);
+                qSort(_indiList->begin(), _indiList->end(), cmp);
+            }
+        }
         reset(); // Notify views that data has changed
     }
 }
@@ -191,14 +205,35 @@ QString GIndiModel::getColData(const GIndiEntry * indi, int col) {
     return data;
 }
 
-//=== ColumnComparer Class ===//
+//=== ColumnComparer Classes ===//
 
-/* Constructor */
-GIndiModel::ColumnComparer::ColumnComparer(int column, bool ascending)
+/* Int Constructor */
+GIndiModel::IntColumnComparer::IntColumnComparer(int column, bool ascending)
  : _col(column), _asc(ascending) {}
 
-/* Comparision Operation */
-bool GIndiModel::ColumnComparer::operator()(GIndiEntry * a, GIndiEntry * b) {
+/* Int Comparision Operation */
+bool GIndiModel::IntColumnComparer::operator()(GIndiEntry * a, GIndiEntry * b) {
+    bool okA, okB;
+    QString dataStrA = getColData(a, _col);
+    QString dataStrB = getColData(b, _col);
+    int dataA = dataStrA.toInt(&okA);
+    int dataB = dataStrB.toInt(&okB);
+    // Not all date values will parse as integers
+    // Empty dates "--" should be put at the bottom, not at 0
+    // (otherwise all empty dates will appear beteen BC and AD)
+    // And we set non-empty strings to the top, otherwise
+    // "Deceased" and "--" won't be separated
+    if (!okA) dataA = dataStrA == EMPTY_VALUE ? INT_MIN : INT_MAX;
+    if (!okB) dataB = dataStrB == EMPTY_VALUE ? INT_MIN : INT_MAX;
+    return _asc ? dataA < dataB : dataA > dataB;
+}
+
+/* Str Constructor */
+GIndiModel::StrColumnComparer::StrColumnComparer(int column, bool ascending)
+ : _col(column), _asc(ascending) {}
+
+/* Str Comparision Operation */
+bool GIndiModel::StrColumnComparer::operator()(GIndiEntry * a, GIndiEntry * b) {
     QString dataA = getColData(a, _col);
     QString dataB = getColData(b, _col);
     return _asc ? dataA < dataB : dataA > dataB;
