@@ -178,8 +178,8 @@ int GDateEstimator::updateIndividual(GIndiEntry * indi, GFamily * fam, GIndiEntr
             ++updated;
         }
     }
-    // Fill in any empty PLAC nodes
-    if (birthYear.isValid()) {
+    // Fill in any empty PLAC nodes if default place is set
+    if (!_defaultPlace.isEmpty() && birthYear.isValid()) {
         if (indi->birthPlace().isEmpty() && !indi->birthDate().isEmpty()) {
             indi->setBirthPlace(_defaultPlace);
         }

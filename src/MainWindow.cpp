@@ -127,6 +127,7 @@ void MainWindow::checkForUpdates() {
 
 //=== Menu Action Methods ===//
 
+/* Open a GEDCOM file */
 void MainWindow::openFile() {
     QString fileName = QFileDialog::getOpenFileName(
       this, tr("Open GEDCOM File"),
@@ -152,11 +153,12 @@ void MainWindow::openFile() {
             statusBar()->showMessage(tr("File opened."));
         }
         catch (...) {
-            QMessageBox::critical(this, tr("Error"), fileName.prepend(tr("Unable to open file:\n")));
+            QMessageBox::critical(this, tr("Error"), tr("Unable to open file:\n").append(fileName));
         }
     }
 }
 
+/* Save current GEDCOM file */
 void MainWindow::saveFile() {
     // TODO: check for file write fails
     QString fileName = QFileDialog::getSaveFileName(
@@ -174,6 +176,7 @@ void MainWindow::saveFile() {
     }
 }
 
+/* Append Hanyu Pinyin data */
 void MainWindow::appendPinyin() {
     // Todo: Separate this from the GUI
     int incompleteCount = 0;
@@ -182,11 +185,9 @@ void MainWindow::appendPinyin() {
         GIndiMap & indiMap = _gedFile->indiMap();
         GIndiMap::Iterator i, end = indiMap.end();
         QString name, romanName, pinyin;
-        bool needSpace;
-        // If there are no hanzi then we don't need a romanized name
-        bool hasHanzi;
-        // If this romanization has a "?" then it's incomplete
-        bool incomplete;
+        bool needSpace; // Don't append spaces between hanzi
+        bool hasHanzi; // If there are no hanzi then we don't need a romanized name
+        bool incomplete; // If this romanization has a "?" then it's incomplete
         // Loop through every GIndiEntry in the GIndiMap
         for (i=indiMap.begin();i!=end;++i) {
             // Reset variables for this name entry
@@ -200,9 +201,7 @@ void MainWindow::appendPinyin() {
                 // If it's a Hanzi then append pinyin for it
                 if (name[j] >= CJK_CODEPOINT) {
                     // Append space if needed
-                    if (needSpace) {
-                        romanName.append(' ');
-                    }
+                    if (needSpace) romanName.append(' ');
                     hasHanzi = true;
                     // Find the pinyin entry for this hanzi
                     pinyin = pinyinMap.lookup(name[j]);
@@ -225,14 +224,9 @@ void MainWindow::appendPinyin() {
                 }
             }
             // Update the romanized name entry if needed
-            if (hasHanzi) {
-                i.value()->setRomanizedName(romanName);
-            }
+            if (hasHanzi) i.value()->setRomanizedName(romanName);
             // If this entry was incomplete then increment the count
-            if (incomplete) {
-                ++incompleteCount;
-            }
-
+            if (incomplete) ++incompleteCount;
         }
         // Update the Model/View now that data has been changed
         _indiModel->resetViews();
@@ -252,6 +246,10 @@ void MainWindow::appendPinyin() {
     }
 }
 
+/* Toggles display between the full set
+ * of names, and the filtered set containg
+ * only entries with incomplete pinyin.
+ */
 void MainWindow::filterIncomplete(bool checked) {
     // Make sure the filtered model exists
     if (!_filteredModel) {
@@ -278,6 +276,7 @@ void MainWindow::filterIncomplete(bool checked) {
     }
 }
 
+/* Open a new tree view to view all families */
 void MainWindow::viewTree() {
     // Build the family trees first if necessary
     if (!_trees) createFamilyTrees();
@@ -289,6 +288,7 @@ void MainWindow::viewTree() {
     delete treeModel;
 }
 
+/* Estimate missing dates in the family tree */
 void MainWindow::estimateDates() {
     // Build the family trees first if necessary
     if (!_trees) createFamilyTrees();
@@ -298,7 +298,6 @@ void MainWindow::estimateDates() {
       defaultLocation[0] = QChar(0x4e2d); // Zhong1
       defaultLocation[1] = QChar(0x570b); // Guo2
     bool okPressed;
-    // Todo: fix this so that the OK/Cancel buttons get translated into Chinese
     defaultLocation = QInputDialog::getText(this, tr("Enter Default Location"),
       tr("Automatically use this location to\nfill in blank birth, marriage and death places:"),
       QLineEdit::Normal, defaultLocation, &okPressed);
@@ -319,6 +318,7 @@ void MainWindow::estimateDates() {
     }
 }
 
+/* Switch between GUI translations */
 void MainWindow::switchLanguage(QAction * source) {
     // Set translators
     _appTranslator->load("lang/GedTools_" + source->data().toString());
@@ -332,12 +332,14 @@ void MainWindow::switchLanguage(QAction * source) {
     resetDisplayModel(_indiModel);
 }
 
+/* Launch browser to view the GedTools website */
 void MainWindow::launchWebsite() {
     if (!QDesktopServices::openUrl(QUrl(tr("http://ouuuuch.phoenixteam.org/released/gedTools/")))) {
         QMessageBox::critical(this, tr("Error"), tr("Failed to open web browser"));
     }
 }
 
+/* Enable/Disable automatic update checks */
 void MainWindow::setAutoUpdate(bool enabled) {
     // Delete the file "noUpdates" if enabled
     if (enabled) {
@@ -351,6 +353,7 @@ void MainWindow::setAutoUpdate(bool enabled) {
     }
 }
 
+/* Display "About" dialog */
 void MainWindow::displayAbout() {
     QMessageBox::about(this, tr("About GedTools"), QString(tr(
         "GedTools v%1\n"
@@ -364,6 +367,8 @@ void MainWindow::displayAbout() {
 
 //=== Other Actions ===//
 
+/* Called when the update check has been completed
+ */
 void MainWindow::updateCheckFinished(const UpdateChecker * checker) {
     if (checker->hasUpdate()) {
         int response = QMessageBox::information(

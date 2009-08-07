@@ -86,8 +86,7 @@ MainMenuBar::MainMenuBar(MainWindow * mainWin) : QMenuBar(mainWin) {
         action->setData(locale);
         _languageMenu->addAction(action);
         _languageActionGroup->addAction(action);
-        if (language == currentLanguage)
-            action->setChecked(true);
+        if (language == currentLanguage) action->setChecked(true);
     }
 // Help Menu
     _helpMenu = addMenu(tr("&Help"));

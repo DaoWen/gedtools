@@ -100,10 +100,7 @@ GFTNode * GFamilyTree::buildBranch(GFamily * fam,
 QString GFamilyTree::getFamilyName(GIndiEntry * head, GIndiEntry * spouse) {
     QString familyName;
     familyName = head->name();
-    if (spouse) {
-        // TODO: Should the " & " be translated?
-        familyName.append(" & ").append(spouse->name());
-    }
+    if (spouse) familyName.append(" & ").append(spouse->name());
     return familyName;
 }
 

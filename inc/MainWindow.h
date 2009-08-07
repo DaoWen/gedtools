@@ -65,8 +65,10 @@ private:
 
     //=== GUI Components ===//
 
+    // The main menu bar for the main window
     MainMenuBar * _menuBar;
 
+    // Table-style view to display the GEDCOM file data
     QTableView * _tableView;
 
     //=== Private Helper Methods ===//
@@ -93,32 +95,43 @@ public slots:
 
     //=== Menu Action Methods ===//
 
+    /* Open a GEDCOM file */
     void openFile();
 
+    /* Save current GEDCOM file */
     void saveFile();
 
+    /* Append Hanyu Pinyin data */
     void appendPinyin();
 
     /* Toggles display between the full set
-      * of names, and the filtered set containg
-      * only entries with incomplete pinyin.
-      */
+     * of names, and the filtered set containg
+     * only entries with incomplete pinyin.
+     */
     void filterIncomplete(bool checked);
 
+    /* Open a new tree view to view all families */
     void viewTree();
 
+    /* Estimate missing dates in the family tree */
     void estimateDates();
 
+    /* Switch between GUI translations */
     void switchLanguage(QAction * source);
 
+    /* Launch browser to view the GedTools website */
     void launchWebsite();
 
+    /* Enable/Disable automatic update checks */
     void setAutoUpdate(bool enabled);
 
+    /* Display "About" dialog */
     void displayAbout();
 
     //=== Other Actions ===//
 
+    /* Called when the update check has been completed
+     */
     void updateCheckFinished(const UpdateChecker * checker);
 
 };

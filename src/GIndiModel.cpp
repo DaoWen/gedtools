@@ -159,7 +159,6 @@ void GIndiModel::resetViews() {
 QString GIndiModel::getColData(const GIndiEntry * indi, int col) {
     QString data;
     QDate year;
-    // Todo: Change the cases to constants instead of literals
     switch (col) {
         case NAME_COL:
             data = indi->name();
