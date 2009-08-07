@@ -244,6 +244,9 @@ void GIndiEntry::setBirthPlace(const QString & place) {
     // Create the place node if needed
     if (!_birthPlaceNode) {
         _birthPlaceNode = new GNode(ENTRY_PLACE);
+        // Add the new node into the tree
+        if (_birthDateNode) _birthDateNode->setNext(_birthPlaceNode);
+        else _birthNode->setFirstChild(_birthPlaceNode);
     }
     _birthPlaceNode->setData(place);
 }
@@ -269,6 +272,9 @@ void GIndiEntry::setDeathPlace(const QString & place) {
     // Create the place node if needed
     if (!_deathPlaceNode) {
         _deathPlaceNode = new GNode(ENTRY_PLACE);
+        // Add the new node into the tree
+        if (_deathDateNode) _deathDateNode->setNext(_deathPlaceNode);
+        else _deathNode->setFirstChild(_deathPlaceNode);
     }
     _deathPlaceNode->setData(place);
 }
@@ -369,12 +375,18 @@ void GIndiEntry::parseDeath(GNode * n) {
     if (n) {
         _deathNode = n;
         n = n->firstChild();
-        while (n && n->type() != TYPE_DATE) {
+        while (n) {
+            // Extract death date
+            if (n->type() == TYPE_DATE) {
+                _deathDateNode = n;
+            }
+            // Extract death place
+            else if (n->type() == TYPE_PLACE) {
+                _deathPlaceNode = n;
+            }
             n = n->next();
         }
     }
-    // Extract death date
-    _deathDateNode = n;
     // Convert date string to an object for calculation purposes
     _deathYear = GNode::parseDateNode(_deathDateNode);
 }

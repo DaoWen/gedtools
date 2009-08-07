@@ -178,6 +178,9 @@ void GFamily::setMarriagePlace(const QString & place) {
     // Create the place node if needed
     if (!_marriagePlaceNode) {
         _marriagePlaceNode = new GNode(ENTRY_PLACE);
+        // Add the new node into the tree
+        if (_marriageDateNode) _marriageDateNode->setNext(_marriagePlaceNode);
+        else _marriageNode->setFirstChild(_marriagePlaceNode);
     }
     _marriagePlaceNode->setData(place);
 }

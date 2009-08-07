@@ -1,18 +1,16 @@
 
 #include "MainWindow.h"
 #include "MainMenuBar.h"
-#include "PinyinMap.h"
+#include "TreeWindow.h"
+
+#include "GPinyinAppender.h"
 #include "GFamilyTreeModel.h"
 #include "GDateEstimator.h"
-#include "TreeWindow.h"
 
 //=== Constants ===//
 
-// First unicode point for Chinese characters
-const int CJK_CODEPOINT = 0x3400;
-
 // Program Version
-const char * MainWindow::VERSION_NUMBER = "1.5.1";
+const char * MainWindow::VERSION_NUMBER = "1.6.0";
 
 // File that disables auto updates
 const char * MainWindow::NO_UPDATE_FILE = "noUpdates";
@@ -179,67 +177,20 @@ void MainWindow::saveFile() {
 /* Append Hanyu Pinyin data */
 void MainWindow::appendPinyin() {
     // Todo: Separate this from the GUI
-    int incompleteCount = 0;
     try { // PinyinMap may throw an exception if there's an IO problem
-        PinyinMap pinyinMap;
-        GIndiMap & indiMap = _gedFile->indiMap();
-        GIndiMap::Iterator i, end = indiMap.end();
-        QString name, romanName, pinyin;
-        bool needSpace; // Don't append spaces between hanzi
-        bool hasHanzi; // If there are no hanzi then we don't need a romanized name
-        bool incomplete; // If this romanization has a "?" then it's incomplete
-        // Loop through every GIndiEntry in the GIndiMap
-        for (i=indiMap.begin();i!=end;++i) {
-            // Reset variables for this name entry
-            name = i.value()->name();
-            romanName = "";
-            hasHanzi = false;
-            needSpace = false;
-            incomplete = false;
-            // Loop through each character in their name to append Pinyin
-            for (int j=0;j<name.length();++j) {
-                // If it's a Hanzi then append pinyin for it
-                if (name[j] >= CJK_CODEPOINT) {
-                    // Append space if needed
-                    if (needSpace) romanName.append(' ');
-                    hasHanzi = true;
-                    // Find the pinyin entry for this hanzi
-                    pinyin = pinyinMap.lookup(name[j]);
-                    // If pinyin data is found then append it
-                    if (!pinyin.isNull()) {
-                        romanName.append(pinyin);
-                        needSpace = true;
-                    }
-                    // If there is no pinyin found then append "?"
-                    else {
-                        romanName.append('?');
-                        needSpace = true;
-                        incomplete = true;
-                    }
-                }
-                // Otherwise append whatever the character is
-                else {
-                    romanName.append(name[j]);
-                    needSpace = false;
-                }
-            }
-            // Update the romanized name entry if needed
-            if (hasHanzi) i.value()->setRomanizedName(romanName);
-            // If this entry was incomplete then increment the count
-            if (incomplete) ++incompleteCount;
-        }
+        // Append pinyin data to all individuals in the GIndiMap
+        GPinyinAppender pinyinAppender;
+        int incompleteCount = pinyinAppender.appendTo(_gedFile->indiMap());
         // Update the Model/View now that data has been changed
         _indiModel->resetViews();
-        // Display "?" count (number of hanzi without pinyin)
+        // Update status bar message
         QString statusMsg = tr("Pinyin added successfully!");
-        if (incompleteCount == 0) {
-            statusBar()->showMessage(statusMsg);
-        }
-        else {
+        // Display "?" count (number of hanzi without pinyin)
+        if (incompleteCount > 0) { // Display "?" count (hanzi w/o pinyin)
             statusMsg.append(tr(" Incomplete Entries: "));
             statusMsg.append(QString::number(incompleteCount));
-            statusBar()->showMessage(statusMsg);
         }
+        statusBar()->showMessage(statusMsg);
     }
     catch (QString msg) {
         QMessageBox::critical(this, tr("Error"), tr("Unable to read PinyinMap.dat"));

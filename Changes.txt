@@ -1,5 +1,12 @@
 GedTools - Version History
 
+1.6.0 - 7 August 2009
+* Changed GDateEstimator to only insert PLACE nodes if the
+  defaultPlace value is non-null and non-empty
+* Fixed GIndiEntry and GFamily so that new PLACE nodes are properly
+  appended to the GNode tree (now PACE data will be saved)
+* Fixed GIndiEntry::parseDeath() to parse PLACE nodes
+
 1.5.1 - 3 August 2009
 * Added a separate sorting algorithm for the number-type columns
   (e.g. ID, Birth Year and Death Year)

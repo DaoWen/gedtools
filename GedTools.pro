@@ -24,6 +24,7 @@ HEADERS = inc/GFile.h \
           inc/GFamilyTreeModel.h\
           inc/GNode.h \
           inc/GDateEstimator.h \
+          inc/GPinyinAppender.h \
           inc/PinyinMap.h \
           inc/MainWindow.h \
           inc/MainMenuBar.h \
@@ -39,6 +40,7 @@ SOURCES = src/GFile.cpp \
           src/GFamilyTreeModel.cpp\
           src/GNode.cpp \
           src/GDateEstimator.cpp \
+          src/GPinyinAppender.cpp \
           src/PinyinMap.cpp \
           src/MainWindow.cpp \
           src/MainMenuBar.cpp \
