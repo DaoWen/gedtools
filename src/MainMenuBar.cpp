@@ -95,6 +95,11 @@ MainMenuBar::MainMenuBar(MainWindow * mainWin) : QMenuBar(mainWin) {
     _websiteAct->setStatusTip(tr("Go to the GedTools web page"));
     connect(_websiteAct, SIGNAL(triggered()), mainWin, SLOT(launchWebsite()));
     _helpMenu->addAction(_websiteAct);
+    // Report a Bug
+    _bugReportAct = new QAction(tr("&Report Bugs"), this);
+    _bugReportAct->setStatusTip(tr("Go to the GedTools bug report page"));
+    connect(_bugReportAct, SIGNAL(triggered()), mainWin, SLOT(launchBugReport()));
+    _helpMenu->addAction(_bugReportAct);
     // Enable/Disable Auto Updates (toggle item)
     _enableUpdateAct = new QAction(tr("Enable &Automatic Update Checks"), this);
     _enableUpdateAct->setStatusTip(tr("Allow GedTools to automatically check for newer versions"));

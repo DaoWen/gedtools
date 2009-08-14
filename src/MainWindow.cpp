@@ -10,7 +10,7 @@
 //=== Constants ===//
 
 // Program Version
-const char * MainWindow::VERSION_NUMBER = "1.6.0";
+const char * MainWindow::VERSION_NUMBER = "1.7.0";
 
 // File that disables auto updates
 const char * MainWindow::NO_UPDATE_FILE = "noUpdates";
@@ -286,6 +286,13 @@ void MainWindow::switchLanguage(QAction * source) {
 /* Launch browser to view the GedTools website */
 void MainWindow::launchWebsite() {
     if (!QDesktopServices::openUrl(QUrl(tr("http://ouuuuch.phoenixteam.org/released/gedTools/")))) {
+        QMessageBox::critical(this, tr("Error"), tr("Failed to open web browser"));
+    }
+}
+
+/* Launch browser to view the GedTools bug report page */
+void MainWindow::launchBugReport() {
+    if (!QDesktopServices::openUrl(QUrl(tr("http://ouuuuch.phoenixteam.org/bugs/?prog=GedTools")))) {
         QMessageBox::critical(this, tr("Error"), tr("Failed to open web browser"));
     }
 }

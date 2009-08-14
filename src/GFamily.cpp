@@ -175,6 +175,8 @@ void GFamily::setMarriageYear(const QDate & year) {
 /* Sets the PLAC value for the MARR node
  */
 void GFamily::setMarriagePlace(const QString & place) {
+    // Append MARR node if null
+    if (!_marriageNode) appendMarriageNode();
     // Create the place node if needed
     if (!_marriagePlaceNode) {
         _marriagePlaceNode = new GNode(ENTRY_PLACE);
@@ -224,13 +226,11 @@ void GFamily::parseMembers(GNode * n) {
                 _childrenIDs.append(n->data());
                 n = n->next();
             }
-            // Children are the last item we need to
-            // parse (they're specified as being after
-            // the parents in the GEDCOM standard), so
-            // break out of the loop now.
-            break;
+            // The node pointer has already been moved,
+            // so jump back to the top of the loop
+            continue;
         }
-        else if (n->type() == TYPE_MARRIAGE) {
+        else if (!_marriageNode && n->type() == TYPE_MARRIAGE) {
             _marriageNode = n;
             GNode * m = n->firstChild();
             while (m) {

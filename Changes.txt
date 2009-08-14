@@ -1,5 +1,11 @@
 GedTools - Version History
 
+1.7.0 - 12 August 2009
+* Altered the GFamily::parseMembers() method to parse all child nodes
+  of the family, just in case nodes are not ordered exactly as outlined
+  in the GEDCOM specification
+* Added a "Report Bugs" option to the "Help" menu
+
 1.6.0 - 7 August 2009
 * Changed GDateEstimator to only insert PLACE nodes if the
   defaultPlace value is non-null and non-empty

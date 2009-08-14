@@ -27,12 +27,12 @@
 <context>
     <name>GIndiModel</name>
     <message>
-        <location filename="../src/GIndiModel.cpp" line="81"/>
+        <location filename="../src/GIndiModel.cpp" line="82"/>
         <source>Name</source>
         <translation>姓名</translation>
     </message>
     <message>
-        <location filename="../src/GIndiModel.cpp" line="84"/>
+        <location filename="../src/GIndiModel.cpp" line="85"/>
         <source>Romanized Name</source>
         <translation>羅馬字的姓名</translation>
     </message>
@@ -45,32 +45,32 @@
         <translation type="obsolete">死亡</translation>
     </message>
     <message>
-        <location filename="../src/GIndiModel.cpp" line="174"/>
+        <location filename="../src/GIndiModel.cpp" line="187"/>
         <source>Deceased</source>
         <translation>去世</translation>
     </message>
     <message>
-        <location filename="../src/GIndiModel.cpp" line="87"/>
+        <location filename="../src/GIndiModel.cpp" line="88"/>
         <source>Birth Date</source>
         <translation>出生日期</translation>
     </message>
     <message>
-        <location filename="../src/GIndiModel.cpp" line="90"/>
+        <location filename="../src/GIndiModel.cpp" line="91"/>
         <source>Birth Place</source>
         <translation>出生地點</translation>
     </message>
     <message>
-        <location filename="../src/GIndiModel.cpp" line="93"/>
+        <location filename="../src/GIndiModel.cpp" line="94"/>
         <source>Death Date</source>
         <translation>死亡日期</translation>
     </message>
     <message>
-        <location filename="../src/GIndiModel.cpp" line="96"/>
+        <location filename="../src/GIndiModel.cpp" line="97"/>
         <source>Death Place</source>
         <translation>死亡地點</translation>
     </message>
     <message>
-        <location filename="../src/GIndiModel.cpp" line="99"/>
+        <location filename="../src/GIndiModel.cpp" line="100"/>
         <source>Record #</source>
         <translation>紀錄號</translation>
     </message>
@@ -175,27 +175,37 @@
         <translation>中文</translation>
     </message>
     <message>
-        <location filename="../src/MainMenuBar.cpp" line="93"/>
+        <location filename="../src/MainMenuBar.cpp" line="92"/>
         <source>&amp;Help</source>
         <translation>說明</translation>
     </message>
     <message>
-        <location filename="../src/MainMenuBar.cpp" line="95"/>
+        <location filename="../src/MainMenuBar.cpp" line="94"/>
         <source>Visit GedTools &amp;Website</source>
         <translation>上GedTools的網站</translation>
     </message>
     <message>
-        <location filename="../src/MainMenuBar.cpp" line="96"/>
+        <location filename="../src/MainMenuBar.cpp" line="95"/>
         <source>Go to the GedTools web page</source>
         <translation>上GedTools的網站</translation>
     </message>
     <message>
-        <location filename="../src/MainMenuBar.cpp" line="107"/>
+        <location filename="../src/MainMenuBar.cpp" line="99"/>
+        <source>&amp;Report Bugs</source>
+        <translation>報告程式錯誤</translation>
+    </message>
+    <message>
+        <location filename="../src/MainMenuBar.cpp" line="100"/>
+        <source>Go to the GedTools bug report page</source>
+        <translation>上GedTools的網站以報告程式的錯誤</translation>
+    </message>
+    <message>
+        <location filename="../src/MainMenuBar.cpp" line="111"/>
         <source>&amp;About</source>
         <translation>關於本程式</translation>
     </message>
     <message>
-        <location filename="../src/MainMenuBar.cpp" line="108"/>
+        <location filename="../src/MainMenuBar.cpp" line="112"/>
         <source>Information about GedTools</source>
         <translation>關於ＧｅｄＴｏｏｌｓ的資料</translation>
     </message>
@@ -239,12 +249,12 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/MainMenuBar.cpp" line="100"/>
+        <location filename="../src/MainMenuBar.cpp" line="104"/>
         <source>Enable &amp;Automatic Update Checks</source>
         <translation>可以自動查詢最新版本</translation>
     </message>
     <message>
-        <location filename="../src/MainMenuBar.cpp" line="101"/>
+        <location filename="../src/MainMenuBar.cpp" line="105"/>
         <source>Allow GedTools to automatically check for newer versions</source>
         <translation>讓GedTools自動查詢新版本的資料</translation>
     </message>
@@ -252,23 +262,23 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/MainWindow.cpp" line="132"/>
+        <location filename="../src/MainWindow.cpp" line="131"/>
         <source>Open GEDCOM File</source>
         <translation>開啓ＧＥＤＣＯＭ的檔案</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="134"/>
+        <location filename="../src/MainWindow.cpp" line="133"/>
         <location filename="../src/MainWindow.cpp" line="165"/>
         <source>GEDCOM Files (*.ged)</source>
         <translation>GEDCOM檔案 (*.ged)</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="152"/>
+        <location filename="../src/MainWindow.cpp" line="151"/>
         <source>File opened.</source>
         <translation>開啓了檔案</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="155"/>
+        <location filename="../src/MainWindow.cpp" line="154"/>
         <source>Unable to open file:
 </source>
         <translation>無法開啓檔案：</translation>
@@ -289,55 +299,61 @@
         <translation>儲存失敗了</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="240"/>
+        <location filename="../src/MainWindow.cpp" line="187"/>
         <source>Pinyin added successfully!</source>
         <translation>附加拼音資料成功了</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="245"/>
+        <location filename="../src/MainWindow.cpp" line="190"/>
         <source> Incomplete Entries: </source>
         <translation>　不完整的紀錄：</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="251"/>
+        <location filename="../src/MainWindow.cpp" line="196"/>
         <source>Unable to read PinyinMap.dat</source>
         <translation>無法開啓PinyinMap.dat</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="269"/>
+        <location filename="../src/MainWindow.cpp" line="218"/>
         <source>No incomplete entries to display</source>
         <translation>沒有不完整的紀錄</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="155"/>
-        <location filename="../src/MainWindow.cpp" line="251"/>
-        <location filename="../src/MainWindow.cpp" line="317"/>
-        <location filename="../src/MainWindow.cpp" line="337"/>
+        <location filename="../src/MainWindow.cpp" line="154"/>
+        <location filename="../src/MainWindow.cpp" line="196"/>
+        <location filename="../src/MainWindow.cpp" line="265"/>
+        <location filename="../src/MainWindow.cpp" line="289"/>
+        <location filename="../src/MainWindow.cpp" line="296"/>
         <source>Error</source>
         <translation>錯誤</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="269"/>
+        <location filename="../src/MainWindow.cpp" line="218"/>
         <source>Notice</source>
         <translation>通知</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="47"/>
+        <location filename="../src/MainWindow.cpp" line="45"/>
         <source>Open a GEDCOM file to begin.</source>
         <translation>先開啓一個ＧＥＤＣＯＭ的檔案來開始</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="336"/>
+        <location filename="../src/MainWindow.cpp" line="288"/>
         <source>http://ouuuuch.phoenixteam.org/released/gedTools/</source>
         <translation>http://ouuuuch.phoenixteam.org/released/gedTools/tw/</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="355"/>
+        <location filename="../src/MainWindow.cpp" line="295"/>
+        <source>http://ouuuuch.phoenixteam.org/bugs/?prog=GedTools</source>
+        <translation>http://ouuuuch.phoenixteam.org/bugs/tw/?prog=GedTools</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="316"/>
         <source>About GedTools</source>
         <translation>關於ＧｅｄＴｏｏｌｓ</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="355"/>
+        <location filename="../src/MainWindow.cpp" line="316"/>
         <source>GedTools v%1
 Copyright © 2009 Nick Vrvilo
 http://ouuuuch.phoenixteam.org/
@@ -354,40 +370,41 @@ GedTools 是根據 GNU 通用公共授權 第三版
 http://www.gnu.org/copyleft/gpl.html</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="302"/>
+        <location filename="../src/MainWindow.cpp" line="252"/>
         <source>Enter Default Location</source>
         <translation>填寫默認地點</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="303"/>
+        <location filename="../src/MainWindow.cpp" line="253"/>
         <source>Automatically use this location to
 fill in blank birth, marriage and death places:</source>
         <translation>自動利用此地點以填寫空白的出生、婚姻、死亡地點：</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="314"/>
+        <location filename="../src/MainWindow.cpp" line="262"/>
         <source>%1 new dates were added</source>
         <translation>附加了%1個新的日期</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="34"/>
+        <location filename="../src/MainWindow.cpp" line="32"/>
         <source>GedTools</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="370"/>
+        <location filename="../src/MainWindow.cpp" line="333"/>
         <source>Update</source>
         <translation>更新</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="371"/>
+        <location filename="../src/MainWindow.cpp" line="334"/>
         <source>A new version of GedTools is available for download.
 Would you like to visit the GedTools website?</source>
         <translation>GedTools有新版本可以下載。
 您想開啓GedTools的網頁嗎？</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="337"/>
+        <location filename="../src/MainWindow.cpp" line="289"/>
+        <location filename="../src/MainWindow.cpp" line="296"/>
         <source>Failed to open web browser</source>
         <translation>開啓網路瀏覽器失敗</translation>
     </message>

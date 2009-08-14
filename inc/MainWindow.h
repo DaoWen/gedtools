@@ -122,6 +122,9 @@ public slots:
     /* Launch browser to view the GedTools website */
     void launchWebsite();
 
+    /* Launch browser to view the GedTools bug report page */
+    void launchBugReport();
+
     /* Enable/Disable automatic update checks */
     void setAutoUpdate(bool enabled);
 

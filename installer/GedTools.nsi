@@ -7,7 +7,7 @@
 
   ;Name and file
   Name "GedTools"
-  OutFile "GedTools-1_6_0.exe"
+  OutFile "GedTools-1_7_0.exe"
 
   ;Default installation folder
   InstallDir $PROGRAMFILES\GedTools
