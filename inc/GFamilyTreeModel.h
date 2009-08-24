@@ -15,6 +15,14 @@ Q_OBJECT // Qt Library Macro
 
 public:
 
+    //=== Constants ===//
+
+    // Column indecies
+    static const int NAME_COL  = 0;
+    static const int BIRTH_COL = 1;
+    static const int MARR_COL  = 2;
+    static const int ID_COL    = 3;
+
     //=== Constructor/Destructor ===//
 
     /* Constructor
@@ -41,7 +49,7 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
     /* Calculate the index of a given entry */
-    QModelIndex index(int row, int column, const QModelIndex &parent) const;
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
 
     /* Find the parent of a given index */
     QModelIndex GFamilyTreeModel::parent(const QModelIndex &index) const;
@@ -54,7 +62,7 @@ private:
     //=== Private Data Members ===//
 
     // Number of columns in the model (used for the columnCount() method)
-    static const int COL_COUNT = 3;
+    static const int COL_COUNT = 4;
 
     // Special node
     GFTNode * _root;

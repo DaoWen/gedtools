@@ -39,21 +39,23 @@ QVariant GFamilyTreeModel::data(const QModelIndex &index, int role) const {
     if (index.isValid() && role == Qt::DisplayRole) {
         GFTNode * n = static_cast<GFTNode *>(index.internalPointer());
         // Name
-        if (index.column() == 0) {
+        if (index.column() == NAME_COL) {
             value = n->famName;
         }
         // Birth
-        else if (index.column() == 1) {
-            QString place = n->famHead->birthPlace();
-            if (place.isNull()) place = "--";
-            // Year
-            QDate date = n->famHead->birthYear();
-            QString year = date.isValid() ? date.toString("yyyy") : "--";
-            // Value
-            value = QString("%1 (%2)").arg(place).arg(year);
+        else if (index.column() == BIRTH_COL) {
+            if (n->famHead) {
+                QString place = n->famHead->birthPlace();
+                if (place.isNull()) place = "--";
+                // Year
+                QDate date = n->famHead->birthYear();
+                QString year = date.isValid() ? date.toString("yyyy") : "--";
+                // Value
+                value = QString("%1 (%2)").arg(place).arg(year);
+            }
         }
         // Marriage
-        else {
+        else if (index.column() == MARR_COL) {
             // Not applicable if this is a single individual
             if (!n->thisFam) {
                 value = tr("N/A");
@@ -70,6 +72,14 @@ QVariant GFamilyTreeModel::data(const QModelIndex &index, int role) const {
                 value = QString("%1 (%2)").arg(place).arg(year);
             }
         }
+        // Record number
+        else {
+            if (n->famHead) {
+                QString id = n->famHead->id();
+                // Remove "@I @"
+                value = id.remove(id.length()-1, 1).remove(0, 2);
+            }
+        }
     }
     return value;
 }
@@ -80,14 +90,17 @@ QVariant GFamilyTreeModel::headerData(int section, Qt::Orientation orientation, 
     // Only horizontal DisplayRole headers
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         switch(section) {
-            case 0: // Name
+            case NAME_COL: // Name
                 value = tr("Name");
                 break;
-            case 1: // Birth date
+            case BIRTH_COL: // Birth
                 value = tr("Birth");
                 break;
-            case 2: // Marriage date
+            case MARR_COL: // Marriage
                 value = tr("Marriage");
+                break;
+            case ID_COL: // Record number
+                value = tr("Record #");
         }
     }
     return value;
@@ -97,15 +110,9 @@ QVariant GFamilyTreeModel::headerData(int section, Qt::Orientation orientation, 
 QModelIndex GFamilyTreeModel::index(int row, int column, const QModelIndex &parent) const {
     QModelIndex index;
     if (hasIndex(row, column, parent)) { // Verify valid cooridinate
-        // Get the parent and child GFTNodes
-        GFTNode * parentNode;
-        if (!parent.isValid()) { // Parent is root
-            parentNode = _root;
-        }
-        else { // Parent is another node
-            parentNode = nodeFromIndex(parent);
-        }
-        // Create the index
+        // Get the parent's GFTNode
+        GFTNode * parentNode = nodeFromIndex(parent);
+        // Create the index for this child GFTNode
         index = createIndex(row, column, parentNode->childFams->at(row));
     }
     return index;
