@@ -396,14 +396,6 @@ Would you like to visit the GedTools website?</source>
     </message>
 </context>
 <context>
-    <name>QObject</name>
-    <message>
-        <location filename="../src/GFamilyTree.cpp" line="109"/>
-        <source>Unknown</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>TreeWindow</name>
     <message>
         <location filename="../src/TreeWindow.cpp" line="15"/>

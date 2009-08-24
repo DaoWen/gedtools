@@ -3,6 +3,13 @@
 <context>
     <name>QDialogButtonBox</name>
     <message>
+        <location filename="../src/gui/dialogs/qmessagebox.cpp" line="+1866"/>
+        <location line="+464"/>
+        <location filename="../src/gui/widgets/qdialogbuttonbox.cpp" line="+561"/>
+        <source>OK</source>
+        <translation>確定</translation>
+    </message>
+    <message>
         <location filename="../src/gui/widgets/qdialogbuttonbox.cpp" line="534"/>
         <source>Cancel</source>
         <translation>取消</translation>

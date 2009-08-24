@@ -438,14 +438,6 @@ Would you like to visit the GedTools website?</source>
     </message>
 </context>
 <context>
-    <name>QObject</name>
-    <message>
-        <location filename="../src/GFamilyTree.cpp" line="109"/>
-        <source>Unknown</source>
-        <translation>不詳</translation>
-    </message>
-</context>
-<context>
     <name>TreeWindow</name>
     <message>
         <location filename="../src/TreeWindow.cpp" line="15"/>
@@ -477,7 +469,8 @@ Would you like to visit the GedTools website?</source>
         <source>Enter the record number of the
 individual whom you wish to locate in the tree:
 (Note: individuals may be found with their spouses)</source>
-        <translation>請打您想在樹狀表裡尋找的個人的紀錄號：\n（住意：個人紀錄有時候和配偶在一起）</translation>
+        <translation>請打您想在樹狀表裡尋找的個人的紀錄號：
+（住意：個人紀錄有時候和配偶在一起）</translation>
     </message>
     <message>
         <location filename="../src/TreeWindow.cpp" line="66"/>
