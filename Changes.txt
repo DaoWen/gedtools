@@ -1,5 +1,11 @@
 GedTools - Version History
 
+1.7.5 - 23 August 2009
+* Altered the GDateEstimator::updateBranchProjection() method to work
+  from the marriage date rather than parents' birth dates.
+* Added a "Record #" column to the TreeView, as well as functionality
+  to find individuals in the tree using their record numbers.
+
 1.7.0 - 12 August 2009
 * Altered the GFamily::parseMembers() method to parse all child nodes
   of the family, just in case nodes are not ordered exactly as outlined

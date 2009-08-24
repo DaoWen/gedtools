@@ -10,7 +10,7 @@
 //=== Constants ===//
 
 // Program Version
-const char * MainWindow::VERSION_NUMBER = "1.7.0";
+const char * MainWindow::VERSION_NUMBER = "1.7.5";
 
 // File that disables auto updates
 const char * MainWindow::NO_UPDATE_FILE = "noUpdates";
