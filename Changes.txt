@@ -1,10 +1,15 @@
 GedTools - Version History
 
+1.8.0 - 23 August 2009
+* Added support for parentless ("Unknown") families
+* Fixed bug introduced in last version where generation projection birth
+  years were set equal to the parents' marraige year (instead of +/- 1)
+
 1.7.5 - 23 August 2009
 * Altered the GDateEstimator::updateBranchProjection() method to work
-  from the marriage date rather than parents' birth dates.
+  from the marriage date rather than parents' birth dates
 * Added a "Record #" column to the TreeView, as well as functionality
-  to find individuals in the tree using their record numbers.
+  to find individuals in the tree using their record numbers
 
 1.7.0 - 12 August 2009
 * Altered the GFamily::parseMembers() method to parse all child nodes
