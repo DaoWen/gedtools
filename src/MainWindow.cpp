@@ -233,7 +233,7 @@ void MainWindow::viewTree() {
     if (!_trees) createFamilyTrees();
     // Create and display the gui elements in a model window
     GFamilyTreeModel * treeModel = new GFamilyTreeModel(*_trees);
-    TreeWindow tw(treeModel, this);
+    TreeWindow tw(treeModel, _gedFile, this);
     tw.exec(); // Hangs here until the new window is closed
     // Destroy the model when the window is closed
     delete treeModel;
