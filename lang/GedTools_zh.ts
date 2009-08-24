@@ -4,22 +4,27 @@
 <context>
     <name>GFamilyTreeModel</name>
     <message>
-        <location filename="../src/GFamilyTreeModel.cpp" line="84"/>
+        <location filename="../src/GFamilyTreeModel.cpp" line="94"/>
         <source>Name</source>
         <translation>姓名</translation>
     </message>
     <message>
-        <location filename="../src/GFamilyTreeModel.cpp" line="59"/>
+        <location filename="../src/GFamilyTreeModel.cpp" line="61"/>
         <source>N/A</source>
         <translation>不適用</translation>
     </message>
     <message>
-        <location filename="../src/GFamilyTreeModel.cpp" line="90"/>
+        <location filename="../src/GFamilyTreeModel.cpp" line="100"/>
         <source>Marriage</source>
         <translation>婚姻</translation>
     </message>
     <message>
-        <location filename="../src/GFamilyTreeModel.cpp" line="87"/>
+        <location filename="../src/GFamilyTreeModel.cpp" line="103"/>
+        <source>Record #</source>
+        <translation>紀錄號</translation>
+    </message>
+    <message>
+        <location filename="../src/GFamilyTreeModel.cpp" line="97"/>
         <source>Birth</source>
         <translation>出生</translation>
     </message>
@@ -433,21 +438,62 @@ Would you like to visit the GedTools website?</source>
     </message>
 </context>
 <context>
+    <name>QObject</name>
+    <message>
+        <location filename="../src/GFamilyTree.cpp" line="109"/>
+        <source>Unknown</source>
+        <translation>不詳</translation>
+    </message>
+</context>
+<context>
     <name>TreeWindow</name>
     <message>
-        <location filename="../src/TreeWindow.cpp" line="14"/>
+        <location filename="../src/TreeWindow.cpp" line="15"/>
         <source>Expand All</source>
         <translation>展開全部</translation>
     </message>
     <message>
-        <location filename="../src/TreeWindow.cpp" line="18"/>
+        <location filename="../src/TreeWindow.cpp" line="19"/>
         <source>Collapse All</source>
         <translation>摺疊全部</translation>
     </message>
     <message>
-        <location filename="../src/TreeWindow.cpp" line="24"/>
+        <location filename="../src/TreeWindow.cpp" line="23"/>
+        <source>Find Individual</source>
+        <translation>尋找個人紀錄</translation>
+    </message>
+    <message>
+        <location filename="../src/TreeWindow.cpp" line="29"/>
         <source>Family Tree</source>
         <translation>家族樹狀表</translation>
+    </message>
+    <message>
+        <location filename="../src/TreeWindow.cpp" line="50"/>
+        <source>Search for an individual</source>
+        <translation>尋找個人紀錄</translation>
+    </message>
+    <message>
+        <location filename="../src/TreeWindow.cpp" line="51"/>
+        <source>Enter the record number of the
+individual whom you wish to locate in the tree:
+(Note: individuals may be found with their spouses)</source>
+        <translation>請打您想在樹狀表裡尋找的個人的紀錄號：\n（住意：個人紀錄有時候和配偶在一起）</translation>
+    </message>
+    <message>
+        <location filename="../src/TreeWindow.cpp" line="66"/>
+        <location filename="../src/TreeWindow.cpp" line="73"/>
+        <source>Individual not found</source>
+        <translation>找不到該個人</translation>
+    </message>
+    <message>
+        <location filename="../src/TreeWindow.cpp" line="67"/>
+        <source>No individuals were found with record #%1</source>
+        <translation>找不到具有「%1」為紀錄號的個人</translation>
+    </message>
+    <message>
+        <location filename="../src/TreeWindow.cpp" line="74"/>
+        <source>No individuals were found in the tree with record #%1</source>
+        <translation>在樹狀表裡找不到具有「%1」為紀錄號的個人</translation>
     </message>
 </context>
 </TS>
