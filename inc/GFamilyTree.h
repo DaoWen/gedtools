@@ -58,7 +58,10 @@ public:
 
 };
 
-class GFamilyTree {
+class GFamilyTree : public QObject {
+
+Q_OBJECT // Qt Library Macro
+
 public:
 
     //=== Constructor/Destructor ===//

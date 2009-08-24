@@ -29,7 +29,8 @@ GFamilyTree::GFamilyTree(GFamily * rootFam, GFamilyMap & famMap, GIndiMap & indi
  : _famMap(famMap), _indiMap(indiMap) {
     QString famHeadId = rootFam->husband().isNull() ? rootFam->wife() : rootFam->husband();
     // The root node has a level of 0
-    GIndiEntry * head = *indiMap.find(famHeadId);
+    GIndiMap::Iterator i = indiMap.find(famHeadId);
+    GIndiEntry * head = (i == indiMap.end()) ? 0 : i.value();
     _root = buildBranch(rootFam, head, getSpouse(rootFam, head), 0, 0);
 }
 
@@ -67,17 +68,17 @@ GFTNode * GFamilyTree::buildBranch(GFamily * fam,
         QList<GFTNode *> * childFamilies = new QList<GFTNode *>();
         QStringList::ConstIterator i = fam->children().begin();
         QStringList::ConstIterator end = fam->children().end();
+        GIndiMap::ConstIterator foundChildIterator;
         // Child Family
         GFamilyMap::Iterator famIterator, famEnd = _famMap.end();
         GFamily * childFam;
         // Add all childrens' families to the list
         while (i != end) {
-            // Find this child's GIndiEntry
-            child = *(_indiMap.find(*i++));
-            // Find family for which this child is a parent
-            famIterator = _famMap.find(child->familyParent());
+            // Find this child's GIndiEntry (if any)
+            foundChildIterator = _indiMap.find(*i);
+            child = (foundChildIterator == _indiMap.end()) ? 0 : foundChildIterator.value();
             // No GFamily with this individual as a head
-            if (famIterator == famEnd) {
+            if (!child || (famIterator = _famMap.find(child->familyParent())) == famEnd) {
                 childFam = 0;
                 childSpouse = 0;
             }
@@ -87,6 +88,7 @@ GFTNode * GFamilyTree::buildBranch(GFamily * fam,
                 childSpouse = getSpouse(childFam, child);
             }
             childFamilies->append(buildBranch(childFam,child,childSpouse,n,level+1));
+            ++i;
         }
         n->childFams = childFamilies;
     }
@@ -99,8 +101,13 @@ GFTNode * GFamilyTree::buildBranch(GFamily * fam,
  */
 QString GFamilyTree::getFamilyName(GIndiEntry * head, GIndiEntry * spouse) {
     QString familyName;
-    familyName = head->name();
-    if (spouse) familyName.append(" & ").append(spouse->name());
+    if (head) {
+        familyName = head->name();
+        if (spouse) familyName.append(" & ").append(spouse->name());
+    }
+    else { // Parentless family
+        familyName = tr("Unknown");
+    }
     return familyName;
 }
 

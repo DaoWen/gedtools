@@ -2,6 +2,14 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="zh">
 <context>
+    <name>GFamilyTree</name>
+    <message>
+        <location filename="../src/GFamilyTree.cpp" line="109"/>
+        <source>Unknown</source>
+        <translation>不詳</translation>
+    </message>
+</context>
+<context>
     <name>GFamilyTreeModel</name>
     <message>
         <location filename="../src/GFamilyTreeModel.cpp" line="94"/>
