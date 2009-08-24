@@ -1,5 +1,5 @@
 
-#include <limits.h>
+#include <climits>
 #include "GIndiModel.h"
 
 //=== Constants ===//
