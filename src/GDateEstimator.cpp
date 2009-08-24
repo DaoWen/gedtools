@@ -80,8 +80,8 @@ int GDateEstimator::updateCouple(GFTNode * famNode) {
     // Todo: Single-parent families with no marriage date will automatically
     // have a marriage date appened anyway... Is there a way to fix that?
     int updated = 0; // Tells the caller how many updates were made
-    // Only check incomplete nodes
-    if (!famNode->headComplete) {
+    // Only check incomplete nodes with a head of family
+    if (famNode->famHead && !famNode->headComplete) {
         // Get relavent values from the famNode
         GIndiEntry * head = famNode->famHead;
         GIndiEntry * spouse = famNode->spouse;
@@ -462,14 +462,18 @@ int GDateEstimator::updateBranchProjection(GFTNode * n, bool incompleteRoot) {
     int updated = 0;
     // Found blank nodes below FamilyA
     if (!incompleteRoot && n->parentFam && !n->headComplete) {
-        // Only project upward from eldest child
+        // Only project downward to eldest child
         if (n->eldestSibling() == n) {
             updated += estimateBranchDown(n);
         }
     }
     else {
-        // Found a blank root
-        if (!n->headComplete) {
+        // Found parentless family without marriage date
+        if (!n->famHead && !n->thisFam->marriageYear().isValid()) {
+            incompleteRoot = true;
+        }
+        // Found a blank root (family has parents)
+        else if (n->famHead && !n->headComplete) {
             incompleteRoot = true;
         }
         // Found FamilyB below blank root
@@ -508,9 +512,8 @@ int GDateEstimator::estimateBranchDown(GFTNode * n) {
     // Get year from parent
     QDate birthYear = marriageFam->marriageYear();
     // 1 year between marriage and first child
-    birthYear.addYears(1);
     // Set eldest child's birth year
-    n->famHead->setBirthYear(birthYear);
+    n->famHead->setBirthYear(birthYear.addYears(1));
     ++updated;
     return updated;
 }
@@ -527,9 +530,8 @@ int GDateEstimator::estimateBranchUp(GFTNode * famB) {
     // Get year from eldest child
     QDate marriageYear = famB->famHead->birthYear();
     // 1 year between marriage and first child
-    marriageYear.addYears(-1);
     // Set parent's birth year
-    marriageFam->setMarriageYear(marriageYear);
+    marriageFam->setMarriageYear(marriageYear.addYears(-1));
     ++updated;
     return updated;
 }
