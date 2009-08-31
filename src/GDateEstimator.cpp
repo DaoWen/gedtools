@@ -112,8 +112,9 @@ int GDateEstimator::updateMarriage(GFTNode * famNode) {
     int updated = 0;
     QDate marriageYear;
     GIndiEntry * eldestChild=0;
-    if (famNode->childFams)
-    famNode->childFams->at(0)->famHead;
+    if (famNode->childFams && famNode->childFams->size() > 0) {
+        eldestChild=famNode->childFams->at(0)->famHead;
+    }
     // Use the eldest child's birthdate if possible
     if (eldestChild && eldestChild->birthYear().isValid()) {
         // Marriage year is 1 year before the oldest child is born
