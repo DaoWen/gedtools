@@ -25,7 +25,7 @@ private:
     QPushButton *  _collapseButton;
     QPushButton *  _searchButton;
 
-    QString findSpouseFromId(const QString searchId);
+    QString findSpouseFromId(const QString searchId, int * famCount);
 
 public slots:
 
