@@ -51,6 +51,7 @@ void TreeWindow::searchTree() {
       tr("Enter the record number of the\nindividual whom you wish to locate in the tree:"
       "\n(Note: individuals may be found with their spouses)"), 0, 0, INT_MAX, 1, &okPressed
     );
+    QString searchIdString = QString("@I%1@").arg(searchId);
     // Continue only if the user pressed OK
     if (okPressed) {
         // Search from the root's ID column
@@ -60,7 +61,8 @@ void TreeWindow::searchTree() {
         );
         // If no match is found, try searching for the spouse instead
         if (matches.size() == 0) {
-            QString spouseId = findSpouseFromId(QString("@I%1@").arg(searchId));
+            int famCount = 1;
+            QString spouseId = findSpouseFromId(searchIdString, &famCount);
             // No spouse found in indiMap
             if (spouseId.isEmpty()) {
                 QMessageBox::information(this, tr("Individual not found"),
@@ -68,14 +70,26 @@ void TreeWindow::searchTree() {
                 );
             }
             // Spouse not found in family tree
-            else if ((matches = _treeModel->match(start, Qt::DisplayRole,spouseId, 1,
-              Qt::MatchExactly | Qt::MatchRecursive)).size() == 0) {
-                QMessageBox::information(this, tr("Individual not found"),
-                  tr("No individuals were found in the tree with record #%1").arg(searchId)
-                );
-            }
-            else { // Found spouse
-                _treeView->setCurrentIndex(matches.first());
+            else {
+                GFTNode * spouseNode;
+                bool found = false;
+                // No matches for spouse
+                matches = _treeModel->match(start, Qt::DisplayRole,spouseId, famCount, Qt::MatchExactly | Qt::MatchRecursive);
+                foreach (QModelIndex i, matches) {
+                    spouseNode = (GFTNode*)i.internalPointer();
+                    // Spouse found
+                    if (spouseNode->spouse->id() == searchIdString) {
+                        _treeView->setCurrentIndex(i);
+                        found = true;
+                        break;
+                    }
+                }
+                // Unable to find spouse
+                if (!found) {
+                    QMessageBox::information(this, tr("Individual not found"),
+                      tr("No individuals were found in the tree with record #%1").arg(searchId)
+                    );
+                }
             }
         }
         else { // Found individual
@@ -84,7 +98,7 @@ void TreeWindow::searchTree() {
     }
 }
 
-QString TreeWindow::findSpouseFromId(const QString searchId) {
+QString TreeWindow::findSpouseFromId(const QString searchId, int * famCount) {
     QString spouseId;
     GIndiMap & indiMap = _gedFile->indiMap();
     // Find the individual
@@ -98,6 +112,12 @@ QString TreeWindow::findSpouseFromId(const QString searchId) {
             const GFamily * fam = f.value();
             // Find individual's spouse
             spouseId = fam->husband() == searchId ? fam->wife() : fam->husband();
+            i = indiMap.find(spouseId);
+            // Get the family count so we know how to search for this person
+            if (i != indiMap.end()) {
+                GIndiEntry & spouse = *i.value();
+                if (spouse.marriages()) *famCount = spouse.marriages()->size();
+            }
             // Remove "@I @"
             spouseId = spouseId.remove(spouseId.length()-1, 1).remove(0, 2);
         }
