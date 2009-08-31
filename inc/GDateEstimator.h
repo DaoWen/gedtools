@@ -59,7 +59,7 @@ private:
      * couple if relavent data is available
      * @return number of dates added
      */
-    int updateMarriage(GFamily * fam, GIndiEntry * head, GIndiEntry * spouse);
+    int updateMarriage(GFTNode * famNode);
 
     /* Estimates birth and death dates for an
      * individual if relavent data is available and needed

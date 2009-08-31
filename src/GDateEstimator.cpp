@@ -89,7 +89,7 @@ int GDateEstimator::updateCouple(GFTNode * famNode) {
         QDate marriageYear = fam ? fam->marriageYear() : QDate();
         // Estimate marriage year if null
         if (fam && marriageYear.isNull()) {
-            updated += updateMarriage(fam, head, spouse);
+            updated += updateMarriage(famNode);
         }
         // Update individuals' data
         updated += updateIndividual(head, fam, spouse);
@@ -107,31 +107,42 @@ int GDateEstimator::updateCouple(GFTNode * famNode) {
  * couple if relavent data is available
  * @return number of dates added
  */
-int GDateEstimator::updateMarriage(GFamily * fam, GIndiEntry * head, GIndiEntry * spouse) {
+int GDateEstimator::updateMarriage(GFTNode * famNode) {
     // Tells the caller how many updates were made
     int updated = 0;
     QDate marriageYear;
-    // Check head for valid birth year
-    GIndiEntry * indi = head;
-    QDate birthYear = head->birthYear();
-    // Otherwise check spouse for valid birth year
-    if (!birthYear.isValid() && spouse) {
-        indi = spouse;
-        birthYear = indi->birthYear();
+    GIndiEntry * eldestChild=0;
+    if (famNode->childFams)
+    famNode->childFams->at(0)->famHead;
+    // Use the eldest child's birthdate if possible
+    if (eldestChild && eldestChild->birthYear().isValid()) {
+        // Marriage year is 1 year before the oldest child is born
+        famNode->thisFam->setMarriageYear(eldestChild->birthYear().addYears(-1));
     }
-    // If this individual has a valid birth year
-    if (birthYear.isValid()) {
-        // Man's marriage year = birth year + 24
-        if (indi->sex() == GIndiEntry::MALE) {
-            marriageYear = birthYear.addYears(24);
+    // Otherwise use the couple's birthdates
+    else {
+        // Check head for valid birth year
+        GIndiEntry * indi = famNode->famHead;
+        QDate birthYear = indi->birthYear();
+        // Otherwise check spouse for valid birth year
+        if (!birthYear.isValid() && famNode->spouse) {
+            indi = famNode->spouse;
+            birthYear = indi->birthYear();
         }
-        // Woman's marriage year = birth year + 20
-        else {
-            marriageYear = birthYear.addYears(20);
+        // If this individual has a valid birth year
+        if (birthYear.isValid()) {
+            // Man's marriage year = birth year + 24
+            if (indi->sex() == GIndiEntry::MALE) {
+                marriageYear = birthYear.addYears(24);
+            }
+            // Woman's marriage year = birth year + 20
+            else {
+                marriageYear = birthYear.addYears(20);
+            }
+            famNode->thisFam->setMarriageYear(marriageYear);
+            // Tell the caller that updates have been made
+            ++updated;
         }
-        fam->setMarriageYear(marriageYear);
-        // Tell the caller that updates have been made
-        ++updated;
     }
     return updated;
 }
