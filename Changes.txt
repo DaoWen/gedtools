@@ -1,5 +1,12 @@
 GedTools - Version History
 
+1.8.4 - 31 August 2009
+* Added two rare characters to the pinyin database.
+* Fixed a bug in the search function of the TreeWindow for individuals
+  whose spouses have multiple marriages.
+* Fixed the updateMarriage() method so that marriages are not placed
+  after the birth of the first child after using estimateBranchBetween().
+
 1.8.0 - 23 August 2009
 * Added support for parentless ("Unknown") families
 * Fixed bug introduced in last version where generation projection birth
