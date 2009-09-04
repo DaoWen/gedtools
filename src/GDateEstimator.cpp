@@ -335,7 +335,7 @@ int GDateEstimator::estimateSiblingsBetween(int & sibA, int & sibB, const QList<
         birthGap += avgGap;
         childFams[i]->famHead->setBirthYear(startDate.addYears((int)birthGap));
         ++updated;
-        // Update individual so that headComplete is set
+        // Update individual so that all dates are updated
         updated += updateCouple(childFams[i]);
     }
     return updated;
@@ -354,7 +354,7 @@ int GDateEstimator::estimateSiblingsDown(int & sibA, const QList<GFTNode *> & ch
         birthDate = birthDate.addYears(2);
         childFams[i]->famHead->setBirthYear(birthDate);
         ++updated;
-        // Update individual so that headComplete is set
+        // Update individual so that all dates are updated
         updated += updateCouple(childFams[i]);
     }
     return updated;
@@ -373,7 +373,7 @@ int GDateEstimator::estimateSiblingsUp(int & sibB, const QList<GFTNode *> & chil
         birthDate = birthDate.addYears(-2);
         childFams[i]->famHead->setBirthYear(birthDate);
         ++updated;
-        // Update individual so that headComplete is set
+        // Update individual so that all dates are updated
         updated += updateCouple(childFams[i]);
     }
     return updated;
@@ -406,7 +406,7 @@ int GDateEstimator::updateBranchPairs(GFTNode * n, GFTNode * famA, bool passedIn
     }
     // If this node is incomplete then we've
     // found a gap between FamilyA and FamilyB
-    else if (!n->headComplete) {
+    else if (!n->hasBirthDate()) {
         passedIncomplete = true;
     }
     // Base case:
@@ -473,7 +473,7 @@ int GDateEstimator::estimateBranchBetween(GFTNode * famA, GFTNode * famB) {
 int GDateEstimator::updateBranchProjection(GFTNode * n, bool incompleteRoot) {
     int updated = 0;
     // Found blank nodes below FamilyA
-    if (!incompleteRoot && n->parentFam && !n->headComplete) {
+    if (!incompleteRoot && n->parentFam && !n->hasBirthDate()) {
         // Only project downward to eldest child
         if (n->eldestSibling() == n) {
             updated += estimateBranchDown(n);
@@ -485,7 +485,7 @@ int GDateEstimator::updateBranchProjection(GFTNode * n, bool incompleteRoot) {
             incompleteRoot = true;
         }
         // Found a blank root (family has parents)
-        else if (n->famHead && !n->headComplete) {
+        else if (n->famHead && !n->hasBirthDate()) {
             incompleteRoot = true;
         }
         // Found FamilyB below blank root
@@ -502,6 +502,8 @@ int GDateEstimator::updateBranchProjection(GFTNode * n, bool incompleteRoot) {
         // Only continue if this family has children
         // and it wasn't a blank branch below FamilyA
         if (n->childFams) {
+            // First make sure that all dates are set (not just birthday)
+            if (!n->headComplete) updated += updateCouple(n);
             // Recursively check/update all children
             QList<GFTNode *> & childFams = *(n->childFams);
             GFTNode * m;
@@ -518,7 +520,7 @@ int GDateEstimator::updateBranchProjection(GFTNode * n, bool incompleteRoot) {
  * @return number of dates added
  */
 int GDateEstimator::estimateBranchDown(GFTNode * n) {
-    if (n->headComplete) throw QString("Found complete node below FamilyA on projection");
+    if (n->hasBirthDate()) throw QString("Found complete node below FamilyA on projection");
     int updated = 0;
     GFamily * marriageFam = n->parentFam->thisFam;
     // Get year from parent
@@ -527,6 +529,8 @@ int GDateEstimator::estimateBranchDown(GFTNode * n) {
     // Set eldest child's birth year
     n->famHead->setBirthYear(birthYear.addYears(1));
     ++updated;
+    // Update individual so that all dates are updated
+    updated += updateCouple(n);
     return updated;
 }
 
@@ -537,7 +541,7 @@ int GDateEstimator::estimateBranchDown(GFTNode * n) {
 int GDateEstimator::estimateBranchUp(GFTNode * famB) {
     int updated = 0;
     GFTNode * n = famB->parentFam;
-    if (n->headComplete) throw QString("Found complete node above FamilyB on projection");
+    if (n->hasBirthDate()) throw QString("Found complete node above FamilyB on projection");
     GFamily * marriageFam = n->thisFam;
     // Get year from eldest child
     QDate marriageYear = famB->famHead->birthYear();
@@ -545,5 +549,7 @@ int GDateEstimator::estimateBranchUp(GFTNode * famB) {
     // Set parent's birth year
     marriageFam->setMarriageYear(marriageYear.addYears(-1));
     ++updated;
+    // Update individual so that all dates are updated
+    updated += updateCouple(n);
     return updated;
 }

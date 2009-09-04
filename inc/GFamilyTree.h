@@ -51,6 +51,11 @@ public:
     // Tells whether any dates are missing for this node
     bool headComplete, kidsComplete;
 
+    // Returns true if the head's birth date is set
+    inline bool hasBirthDate() {
+        return !famHead->birthDate().isEmpty();
+    }
+
     // Returns the oldest child of the parentFam
     inline GFTNode * eldestSibling() {
         return parentFam->childFams->at(0);
