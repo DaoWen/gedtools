@@ -68,7 +68,7 @@ GIndiEntry::GIndiEntry(GNode * n)
     parseIndiData(n->firstChild());
     // Individuals must have a name
     if (!_nameNode) {
-        throw QString("Bad Individual: No Name");
+        throw QString("Bad Individual: %1 (No Name)").arg(id());
     }
 }
 
@@ -213,7 +213,7 @@ void GIndiEntry::setRomanizedName(const QString & romanName) {
  */
 void GIndiEntry::setBirthYear(const QDate & year) {
     if (!year.isValid()) {
-        throw QString("Attempted to set an invalid birth date.");
+        throw QString("Attempted to set an invalid birth date for: %1").arg(id());
     }
     // Update internal date value
     _birthYear = year;
