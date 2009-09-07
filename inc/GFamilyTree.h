@@ -53,7 +53,7 @@ public:
 
     // Returns true if the head's birth date is set
     inline bool hasBirthDate() {
-        return !famHead->birthDate().isEmpty();
+        return famHead && !famHead->birthDate().isEmpty();
     }
 
     // Returns the oldest child of the parentFam
