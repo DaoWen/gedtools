@@ -88,16 +88,24 @@ int GDateEstimator::updateCouple(GFTNode * famNode) {
         GFamily * fam = famNode->thisFam;
         QDate marriageYear = fam ? fam->marriageYear() : QDate();
         // Estimate marriage year if null
-        if (fam && marriageYear.isNull()) {
+        // Only estimate once children's birthdates are done
+        if (fam && marriageYear.isNull() && famNode->kidsComplete) {
             updated += updateMarriage(famNode);
         }
         // Update individuals' data
         updated += updateIndividual(head, fam, spouse);
         if (spouse) updated += updateIndividual(spouse, fam, head);
         // Check if this family is complete or not
-        // (if the head's birth year is set then so is everything else)
-        if (head->birthYear().isValid()) {
+        // (if the marriage year is set then so is everything else,
+        //  or if there is no family then the head's birth date)
+        if ((fam && fam->marriageYear().isValid()) || (!fam && head->birthYear().isValid())) {
             famNode->headComplete = true;
+        }
+    }
+    // Families without children don't need to update children
+    if (!famNode->kidsComplete) {
+        if (!famNode->childFams || famNode->childFams->size() == 0) {
+            famNode->kidsComplete = true;
         }
     }
     return updated;
@@ -392,7 +400,7 @@ int GDateEstimator::updateBranchPairs(GFTNode * n, GFTNode * famA, bool passedIn
     // Only find FamilyB if an incomplete was passed
     if (passedIncomplete) {
         // Find FamilyB with a reference birth date
-        if (n->headComplete) {
+        if (n->hasBirthDate()) {
             // If FamilyA was found earlier, then fill in
             // the gaps, but only if famB is the eldest child
             if (famA && n->eldestSibling() == n) updated += estimateBranchBetween(famA, n);
@@ -418,7 +426,7 @@ int GDateEstimator::updateBranchPairs(GFTNode * n, GFTNode * famA, bool passedIn
         foreach (m, childFams) {
             // Check every round to see if this has become
             // a complete node and can be used as FamilyA
-            if (n != famA && n->headComplete) {
+            if (n != famA && n->hasBirthDate()) {
                 famA = n;
                 passedIncomplete = false;
                 // Update all siblings of famA so that there
@@ -504,7 +512,10 @@ int GDateEstimator::updateBranchProjection(GFTNode * n, bool incompleteRoot) {
         // and it wasn't a blank branch below FamilyA
         if (n->childFams) {
             // First make sure that all dates are set (not just birthday)
-            if (!n->headComplete) updated += updateCouple(n);
+            if (!n->headComplete) {
+                updated += updateMarriage(n);
+                updated += updateCouple(n);
+            }
             // Recursively check/update all children
             QList<GFTNode *> & childFams = *(n->childFams);
             GFTNode * m;
