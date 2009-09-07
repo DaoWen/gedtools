@@ -1,5 +1,12 @@
 GedTools - Version History
 
+1.9.0 - 7 September 2009
+* Restructured several methods in GDateEstimator so that marriage dates
+  will not be estimated as being after the first child's birth date.
+* Altered estimation for marriage dates of individuals with multiple
+  spouses to include a 5-year gap between marriages, and removed the code
+  for simply making each wife 5 years younger than the previous.
+
 1.8.4 - 31 August 2009
 * Added two rare characters to the pinyin database.
 * Fixed a bug in the search function of the TreeWindow for individuals
