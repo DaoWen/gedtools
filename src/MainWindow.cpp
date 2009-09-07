@@ -46,6 +46,11 @@ MainWindow::MainWindow() : _gedFile(0), _indiModel(0), _filteredModel(0), _trees
     if (!QFile(NO_UPDATE_FILE).exists()) {
         checkForUpdates();
     }
+    QStringList args = qApp->arguments();
+    // Open file if one was passed in
+    if (args.size() > 1) {
+        openFile(args.at(1));
+    }
 }
 
 /* Destructor
@@ -123,15 +128,8 @@ void MainWindow::checkForUpdates() {
     checker->check();
 }
 
-//=== Menu Action Methods ===//
-
 /* Open a GEDCOM file */
-void MainWindow::openFile() {
-    QString fileName = QFileDialog::getOpenFileName(
-      this, tr("Open GEDCOM File"),
-      QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation),
-      tr("GEDCOM Files (*.ged)")
-    );
+void MainWindow::openFile(QString fileName) {
     if (!fileName.isEmpty()) {
         try { // GFile may throw an exception on bad GEDCOM files
             // Attempt to open the new file and parse the data
@@ -154,6 +152,18 @@ void MainWindow::openFile() {
             QMessageBox::critical(this, tr("Error"), tr("Unable to open file:\n").append(fileName));
         }
     }
+}
+
+//=== Menu Action Methods ===//
+
+/* Prompt the user to choose a GEDCOM file and open it */
+void MainWindow::openFileFromDialog() {
+    QString fileName = QFileDialog::getOpenFileName(
+      this, tr("Open GEDCOM File"),
+      QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation),
+      tr("GEDCOM Files (*.ged)")
+    );
+    openFile(fileName);
 }
 
 /* Save current GEDCOM file */

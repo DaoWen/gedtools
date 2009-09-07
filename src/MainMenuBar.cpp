@@ -14,7 +14,7 @@ MainMenuBar::MainMenuBar(MainWindow * mainWin) : QMenuBar(mainWin) {
     _openAct = new QAction(tr("&Open"), this);
     _openAct->setShortcut(tr("Ctrl+O"));
     _openAct->setStatusTip(tr("Open a GEDCOM file for processing"));
-    connect(_openAct, SIGNAL(triggered()), mainWin, SLOT(openFile()));
+    connect(_openAct, SIGNAL(triggered()), mainWin, SLOT(openFileFromDialog()));
     _fileMenu->addAction(_openAct);
     // Save
     _saveAct = new QAction(tr("&Save"), this);
