@@ -91,12 +91,15 @@ private:
      */
     void checkForUpdates();
 
+    /* Open a GEDCOM file */
+    void openFile(QString fileName);
+
 public slots:
 
     //=== Menu Action Methods ===//
 
-    /* Open a GEDCOM file */
-    void openFile();
+    /* Prompt the user to choose a GEDCOM file and open it */
+    void openFileFromDialog();
 
     /* Save current GEDCOM file */
     void saveFile();
