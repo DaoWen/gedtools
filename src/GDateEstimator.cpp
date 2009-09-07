@@ -36,32 +36,42 @@ int GDateEstimator::estimateMissingDates() {
                 // Clear SIBLING flag
                 updateStatus &= PROJECTION | PAIR;
                 // Siblings / Individuals
+                ups = 0;
                 foreach (t, _trees) {
                     newUpdates = updateChildren(t->root());
                     if (newUpdates > 0) {
                         totalUpdated += newUpdates;
                         updateStatus = SIBLING | PAIR | PROJECTION;
+                        ups += newUpdates;
                     }
                 }
+                cout << "INDI (" << ups << ")" << endl;
             } while ((updateStatus & SIBLING) > NONE);
             // Branch Pairs
+            ups = 0;
             foreach (t, _trees) {
                 newUpdates = updateBranchPairs(t->root());
                 if (newUpdates > 0) {
                     totalUpdated += newUpdates;
                     updateStatus = PAIR | PROJECTION;
+                    ups += newUpdates;
                 }
             }
+            cout << "PAIR (" << ups << ")" << endl;
         } while ((updateStatus & PAIR) > NONE);
         // Projecting Branches
+        ups = 0;
         foreach (t, _trees) {
             newUpdates = updateBranchProjection(t->root());
             if (newUpdates > 0) {
                 totalUpdated += newUpdates;
                 updateStatus = PROJECTION;
+                ups += newUpdates;
             }
         }
-    } while ((updateStatus & PROJECTION) > NONE);
+        cout << "PROJ (" << ups << ")" << endl;
+        ++x;
+    } while ((updateStatus & PROJECTION) > NONE && x < 5);
     return totalUpdated;
 }
 
@@ -140,13 +150,25 @@ int GDateEstimator::updateMarriage(GFTNode * famNode) {
         }
         // Otherwise use the couple's birthdates
         else {
+            // Calculate offset for 2nd, 3rd, ... marriages
+            int offset = 0;
+            const QStringList * marriages = indi->marriages();
+            if (marriages) {
+                // Each marriage is 5 years after the previous
+                // Todo: Figure out a good way to estimate these gaps relative
+                // to any that are already defined. Otherwise, we could have problems
+                // where the first marriage is estimated at 30 years after the husband's
+                // birth date because of generation averaging, but then the second marriage
+                // is set at 29 years because of this equation...
+                offset = 5 * marriages->indexOf(famNode->thisFam->id());
+            }
             // Man's marriage year = birth year + 24
             if (indi->sex() == GIndiEntry::MALE) {
-                marriageYear = birthYear.addYears(24);
+                marriageYear = birthYear.addYears(24+offset);
             }
             // Woman's marriage year = birth year + 20
             else {
-                marriageYear = birthYear.addYears(20);
+                marriageYear = birthYear.addYears(20+offset);
             }
         }
         famNode->thisFam->setMarriageYear(marriageYear);
@@ -173,18 +195,7 @@ int GDateEstimator::updateIndividual(GIndiEntry * indi, GFamily * fam, GIndiEntr
         }
         // Woman's birth year = marriage year - 20
         else {
-            // Single parent or first wife
-            if (!spouse || spouse->familyParent() == indi->familyParent()) {
-                birthYear = marriageYear.addYears(-20);
-            }
-            // Second, third, ...
-            else {
-                const QStringList * marriages = spouse->marriages();
-                if (!marriages) throw QString("Null marriages list");
-                // Each wife is 5 years younger than the last
-                int yearsYounger = marriages->indexOf(indi->familyParent()) * 5;
-                birthYear = marriageYear.addYears(yearsYounger-20);
-            }
+            birthYear = marriageYear.addYears(-20);
         }
         indi->setBirthYear(birthYear);
         // Tell the caller that updates have been made
@@ -457,6 +468,9 @@ int GDateEstimator::estimateBranchBetween(GFTNode * famA, GFTNode * famB) {
     double avgGap = (double)(yearA - yearB) / levelGap;
     // Offset for younger children since the generation
     // gaps should be based on the eldest child
+    // Todo: Make this work correctly by keeping track of sibling offsets
+    // in the updateBranchPairs() method so that we can actually make
+    // each generation gap (parents to eldest child) the same
     int sibOffset;
     // Fill in the gaps
     famB = famB->parentFam;
@@ -513,7 +527,7 @@ int GDateEstimator::updateBranchProjection(GFTNode * n, bool incompleteRoot) {
         if (n->childFams) {
             // First make sure that all dates are set (not just birthday)
             if (!n->headComplete) {
-                updated += updateMarriage(n);
+                if (n->famHead) updated += updateMarriage(n);
                 updated += updateCouple(n);
             }
             // Recursively check/update all children
@@ -543,6 +557,7 @@ int GDateEstimator::estimateBranchDown(GFTNode * n) {
     ++updated;
     // Update individual so that all dates are updated
     updated += updateCouple(n);
+    cout << "D:" << (n->famHead ? n->famHead->id().toStdString() : n->thisFam->id().toStdString()) << endl;
     return updated;
 }
 
@@ -563,5 +578,6 @@ int GDateEstimator::estimateBranchUp(GFTNode * famB) {
     ++updated;
     // Update individual so that all dates are updated
     updated += updateCouple(n);
+    cout << "U:" << (famB->famHead ? famB->famHead->id().toStdString() : famB->thisFam->id().toStdString()) << endl;
     return updated;
 }
