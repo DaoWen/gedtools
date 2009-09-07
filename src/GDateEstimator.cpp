@@ -111,27 +111,27 @@ int GDateEstimator::updateMarriage(GFTNode * famNode) {
     // Tells the caller how many updates were made
     int updated = 0;
     QDate marriageYear;
-    GIndiEntry * eldestChild=0;
-    if (famNode->childFams && famNode->childFams->size() > 0) {
-        eldestChild=famNode->childFams->at(0)->famHead;
+    // Check head for valid birth year
+    GIndiEntry * indi = famNode->famHead;
+    QDate birthYear = indi->birthYear();
+    // Otherwise check spouse for valid birth year
+    if (!birthYear.isValid() && famNode->spouse) {
+        indi = famNode->spouse;
+        birthYear = indi->birthYear();
     }
-    // Use the eldest child's birthdate if possible
-    if (eldestChild && eldestChild->birthYear().isValid()) {
-        // Marriage year is 1 year before the oldest child is born
-        famNode->thisFam->setMarriageYear(eldestChild->birthYear().addYears(-1));
-    }
-    // Otherwise use the couple's birthdates
-    else {
-        // Check head for valid birth year
-        GIndiEntry * indi = famNode->famHead;
-        QDate birthYear = indi->birthYear();
-        // Otherwise check spouse for valid birth year
-        if (!birthYear.isValid() && famNode->spouse) {
-            indi = famNode->spouse;
-            birthYear = indi->birthYear();
+    // If this individual has a valid birth year
+    if (birthYear.isValid()) {
+        GIndiEntry * eldestChild = 0;
+        if (famNode->childFams && famNode->childFams->size() > 0) {
+            eldestChild = famNode->childFams->at(0)->famHead;
         }
-        // If this individual has a valid birth year
-        if (birthYear.isValid()) {
+        // Use the eldest child's birthdate if possible
+        if (eldestChild && eldestChild->birthYear().isValid()) {
+            // Marriage year is 1 year before the oldest child is born
+            marriageYear = eldestChild->birthYear().addYears(-1);
+        }
+        // Otherwise use the couple's birthdates
+        else {
             // Man's marriage year = birth year + 24
             if (indi->sex() == GIndiEntry::MALE) {
                 marriageYear = birthYear.addYears(24);
@@ -140,10 +140,10 @@ int GDateEstimator::updateMarriage(GFTNode * famNode) {
             else {
                 marriageYear = birthYear.addYears(20);
             }
-            famNode->thisFam->setMarriageYear(marriageYear);
-            // Tell the caller that updates have been made
-            ++updated;
         }
+        famNode->thisFam->setMarriageYear(marriageYear);
+        // Tell the caller that updates have been made
+        ++updated;
     }
     return updated;
 }
@@ -457,6 +457,7 @@ int GDateEstimator::estimateBranchBetween(GFTNode * famA, GFTNode * famB) {
         sibOffset = famB->parentFam->childFams->indexOf(famB) * 2;
         famB->famHead->setBirthYear(startYear.addYears((int)yearGap+sibOffset));
         famB = famB->parentFam;
+        updated += updateSiblings(famB);
         ++updated;
     }
     return updated;
