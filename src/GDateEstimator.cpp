@@ -36,42 +36,32 @@ int GDateEstimator::estimateMissingDates() {
                 // Clear SIBLING flag
                 updateStatus &= PROJECTION | PAIR;
                 // Siblings / Individuals
-                ups = 0;
                 foreach (t, _trees) {
                     newUpdates = updateChildren(t->root());
                     if (newUpdates > 0) {
                         totalUpdated += newUpdates;
                         updateStatus = SIBLING | PAIR | PROJECTION;
-                        ups += newUpdates;
                     }
                 }
-                cout << "INDI (" << ups << ")" << endl;
             } while ((updateStatus & SIBLING) > NONE);
             // Branch Pairs
-            ups = 0;
             foreach (t, _trees) {
                 newUpdates = updateBranchPairs(t->root());
                 if (newUpdates > 0) {
                     totalUpdated += newUpdates;
                     updateStatus = PAIR | PROJECTION;
-                    ups += newUpdates;
                 }
             }
-            cout << "PAIR (" << ups << ")" << endl;
         } while ((updateStatus & PAIR) > NONE);
         // Projecting Branches
-        ups = 0;
         foreach (t, _trees) {
             newUpdates = updateBranchProjection(t->root());
             if (newUpdates > 0) {
                 totalUpdated += newUpdates;
                 updateStatus = PROJECTION;
-                ups += newUpdates;
             }
         }
-        cout << "PROJ (" << ups << ")" << endl;
-        ++x;
-    } while ((updateStatus & PROJECTION) > NONE && x < 5);
+    } while ((updateStatus & PROJECTION) > NONE);
     return totalUpdated;
 }
 
@@ -557,7 +547,6 @@ int GDateEstimator::estimateBranchDown(GFTNode * n) {
     ++updated;
     // Update individual so that all dates are updated
     updated += updateCouple(n);
-    cout << "D:" << (n->famHead ? n->famHead->id().toStdString() : n->thisFam->id().toStdString()) << endl;
     return updated;
 }
 
@@ -578,6 +567,5 @@ int GDateEstimator::estimateBranchUp(GFTNode * famB) {
     ++updated;
     // Update individual so that all dates are updated
     updated += updateCouple(n);
-    cout << "U:" << (famB->famHead ? famB->famHead->id().toStdString() : famB->thisFam->id().toStdString()) << endl;
     return updated;
 }
