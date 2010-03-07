@@ -52,7 +52,7 @@ public:
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
 
     /* Find the parent of a given index */
-    QModelIndex GFamilyTreeModel::parent(const QModelIndex &index) const;
+    QModelIndex parent(const QModelIndex &index) const;
 
     /* Returns the number of data entries in the model */
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
