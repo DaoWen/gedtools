@@ -32,7 +32,7 @@ GIndiModel::~GIndiModel() {
 //=== Accessors ===//
 
 /* Returns the number fields per data entry in the model */
-int GIndiModel::columnCount(const QModelIndex &parent) const {
+int GIndiModel::columnCount(const QModelIndex &/*parent*/) const {
     return COL_COUNT;
 }
 
@@ -104,7 +104,7 @@ QVariant GIndiModel::headerData(int section, Qt::Orientation orientation, int ro
 }
 
 /* Returns the number of data entries in the model */
-int GIndiModel::rowCount(const QModelIndex &parent) const {
+int GIndiModel::rowCount(const QModelIndex &/*parent*/) const {
     return _indiList->size();
 }
 

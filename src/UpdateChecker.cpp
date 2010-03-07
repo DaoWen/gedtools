@@ -91,8 +91,8 @@ void UpdateChecker::requestFinished(QNetworkReply * reply) {
     int nv1 = versionExp.cap(1).toInt();
     int nv2 = versionExp.cap(2).toInt();
     int nv3 = versionExp.cap(3).toInt();
-    _hasUpdate = (_v1 < nv1) || (_v1 == nv1) && (_v2 < nv2);
-    _hasMinorUpdate = _hasUpdate || (_v2 == nv2) && (_v3 < nv3);
+    _hasUpdate = (_v1 < nv1) || ((_v1 == nv1) && (_v2 < nv2));
+    _hasMinorUpdate = _hasUpdate || ((_v2 == nv2) && (_v3 < nv3));
     // Finished!
     _finished = true;
     // Emit a signal so that users know that the request has

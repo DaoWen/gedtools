@@ -136,7 +136,7 @@ bool GFamily::isTreeRoot(GIndiMap & indiMap) const {
 /* If this family contains no children then
  * it must be a leaf in the family tree
  */
-bool GFamily::isTreeLeaf(GIndiMap & indiMap) const {
+bool GFamily::isTreeLeaf(GIndiMap &/*indiMap*/) const {
     return _childrenIDs.size() == 0;
 }
 

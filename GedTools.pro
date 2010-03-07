@@ -2,9 +2,12 @@
 # Configuration #
 #################
 TEMPLATE = app
-CONFIG += qt
+CONFIG += qt warn_on
 QT += network
 TARGET = GedTools
+# Qt doesn't add the -W flag by default
+QMAKE_CXXFLAGS_DEBUG += -W
+QMAKE_CXXFLAGS_RELEASE += -W
 
 #########################
 # Windows Resource File #

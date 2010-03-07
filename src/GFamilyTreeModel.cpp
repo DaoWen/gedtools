@@ -28,7 +28,7 @@ GFamilyTreeModel::~GFamilyTreeModel() {
 //=== Accessors ===//
 
 /* Returns the number fields per data entry in the model */
-int GFamilyTreeModel::columnCount(const QModelIndex &parent) const {
+int GFamilyTreeModel::columnCount(const QModelIndex &/*parent*/) const {
     return COL_COUNT;
 }
 
