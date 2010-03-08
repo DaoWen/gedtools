@@ -1,5 +1,5 @@
-GedTools v1.9.0
-Copyright © 2009 Nick Vrvilo
+GedTools v1.10.0
+Copyright © 2009-2010 Nick Vrvilo
 http://ouuuuch.phoenixteam.org/
 
 GedTools is distributed under the GNU General Public License version 3

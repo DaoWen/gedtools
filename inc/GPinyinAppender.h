@@ -26,7 +26,7 @@ public:
      * GIndiMap's individual entries
      * @return incomplete ("?") entry count
      */
-    int appendTo(GIndiMap & indiMap);
+    int appendTo(GIndiMap & indiMap, bool replaceOldEntries);
 
 private:
 

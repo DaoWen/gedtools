@@ -1,5 +1,10 @@
 GedTools - Version History
 
+1.10.0 - 7 March 2010
+* Added option to choose whether or not to replace existing pinyin
+  entries when using the Append Pinyin functionality.
+* Updated the date estimation algorithm to fix an error.
+
 1.9.0 - 7 September 2009
 * Restructured several methods in GDateEstimator so that marriage dates
   will not be estimated as being after the first child's birth date.

@@ -24,7 +24,7 @@ GPinyinAppender::~GPinyinAppender() {
  * GIndiMap's individual entries
  * @return incomplete ("?") entry count
  */
-int GPinyinAppender::appendTo(GIndiMap & indiMap) {
+int GPinyinAppender::appendTo(GIndiMap & indiMap, bool replaceOldEntries) {
     // Define loop variables
     QString name; // Chinese name of individual
     QString romanName; // Romanized name of individual
@@ -33,11 +33,15 @@ int GPinyinAppender::appendTo(GIndiMap & indiMap) {
     bool hasHanzi; // If there are no hanzi then we don't need a romanized name
     bool incomplete; // If this romanization has a "?" then it's incomplete
     int incompleteCount = 0; // Total number of incomplete ("?") entries
+    GIndiEntry * individual;
     GIndiMap::Iterator i, end = indiMap.end();
     // Loop through every GIndiEntry in the GIndiMap
     for (i=indiMap.begin();i!=end;++i) {
+        individual = i.value();
+        // Don't replace old pinyin if that option is specified
+        if (!replaceOldEntries && !individual->romanizedName().isEmpty()) continue;
         // Reset variables for this name entry
-        name = i.value()->name();
+        name = individual->name();
         romanName = "";
         hasHanzi = false;
         needSpace = false;
@@ -70,7 +74,7 @@ int GPinyinAppender::appendTo(GIndiMap & indiMap) {
             }
         }
         // Update the romanized name entry if needed
-        if (hasHanzi) i.value()->setRomanizedName(romanName);
+        if (hasHanzi) individual->setRomanizedName(romanName);
         // If this entry was incomplete then increment the count
         if (incomplete) ++incompleteCount;
     }

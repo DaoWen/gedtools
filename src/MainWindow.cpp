@@ -10,7 +10,7 @@
 //=== Constants ===//
 
 // Program Version
-const char * MainWindow::VERSION_NUMBER = "1.9.0";
+const char * MainWindow::VERSION_NUMBER = "1.10.0";
 
 // File that disables auto updates
 const char * MainWindow::NO_UPDATE_FILE = "noUpdates";
@@ -190,7 +190,12 @@ void MainWindow::appendPinyin() {
     try { // PinyinMap may throw an exception if there's an IO problem
         // Append pinyin data to all individuals in the GIndiMap
         GPinyinAppender pinyinAppender;
-        int incompleteCount = pinyinAppender.appendTo(_gedFile->indiMap());
+        int response = QMessageBox::information(
+          this, tr("Replace Pinyin"),
+          tr("Do you want to replace existing pinyin entries?"
+          ), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes
+        );
+        int incompleteCount = pinyinAppender.appendTo(_gedFile->indiMap(), response == QMessageBox::Yes);
         // Update the Model/View now that data has been changed
         _indiModel->resetViews();
         // Update status bar message
@@ -325,7 +330,7 @@ void MainWindow::setAutoUpdate(bool enabled) {
 void MainWindow::displayAbout() {
     QMessageBox::about(this, tr("About GedTools"), QString(tr(
         "GedTools v%1\n"
-        "Copyright \xA9 2009 Nick Vrvilo\n"
+        "Copyright \xA9 2009-2010 Nick Vrvilo\n"
         "http://ouuuuch.phoenixteam.org/\n\n"
         "GedTools is distributed under the GNU General Public License version 3\n"
         "See the accompanying gpl-3.0.txt for details, or visit\n"

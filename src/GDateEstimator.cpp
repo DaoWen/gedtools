@@ -521,17 +521,6 @@ int GDateEstimator::updateBranchUpProjection(GFTNode * n, bool incompleteRoot) {
         else if (n->famHead && !n->hasMarriageDate()) {
             incompleteRoot = true;
         }
-        // The following case is now covered by the updateMarriage() method:
-        // Found FamilyB below blank root
-        //else if (incompleteRoot) {
-        //    // Only project upward from eldest child
-        //    if (n->eldestSibling() == n) {
-        //        // Project upward from this node
-        //        updated += estimateBranchUp(n);
-        //    }
-        //    // This is not an empty node
-        //    incompleteRoot = false;
-        //}
         // Base case:
         // Only continue if this family has children
         // and it wasn't a blank branch below FamilyA
