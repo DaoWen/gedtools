@@ -56,6 +56,11 @@ public:
         return famHead && !famHead->birthDate().isEmpty();
     }
 
+    // Returns true if the head's birth date is set
+    inline bool hasMarriageDate() {
+        return thisFam && !thisFam->marriageDate().isEmpty();
+    }
+
     // Returns the oldest child of the parentFam
     inline GFTNode * eldestSibling() {
         return parentFam->childFams->at(0);

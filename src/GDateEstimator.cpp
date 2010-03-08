@@ -22,7 +22,8 @@ int GDateEstimator::estimateMissingDates() {
     const int NONE = 0;
     const int SIBLING = 1;
     const int PAIR = 2;
-    const int PROJECTION = 4;
+    const int UP_PROJECTION = 4;
+    const int DOWN_PROJECTION = 8;
     int updateStatus;
     int totalUpdated = 0, newUpdates;
     GFamilyTree * t;
@@ -30,38 +31,50 @@ int GDateEstimator::estimateMissingDates() {
         // Clear all flags
         updateStatus = NONE;
         do {
-            // Clear SIBLING and PAIR flags
-            updateStatus &= PROJECTION;
+            // Clear UP_PROJECTION, SIBLING and PAIR flags
+            updateStatus &= DOWN_PROJECTION;
             do {
-                // Clear SIBLING flag
-                updateStatus &= PROJECTION | PAIR;
-                // Siblings / Individuals
+                // Clear SIBLING and PAIR flags
+                updateStatus &= DOWN_PROJECTION | UP_PROJECTION;
+                do {
+                    // Clear SIBLING flag
+                    updateStatus &= DOWN_PROJECTION | UP_PROJECTION | PAIR;
+                    // Siblings / Individuals
+                    foreach (t, _trees) {
+                        newUpdates = updateChildren(t->root());
+                        if (newUpdates > 0) {
+                            totalUpdated += newUpdates;
+                            updateStatus = DOWN_PROJECTION | SIBLING | PAIR | UP_PROJECTION;
+                        }
+                    }
+                } while ((updateStatus & SIBLING) > NONE);
+                // Branch Pairs
                 foreach (t, _trees) {
-                    newUpdates = updateChildren(t->root());
+                    newUpdates = updateBranchPairs(t->root());
                     if (newUpdates > 0) {
                         totalUpdated += newUpdates;
-                        updateStatus = SIBLING | PAIR | PROJECTION;
+                        updateStatus = DOWN_PROJECTION | PAIR | UP_PROJECTION;
                     }
                 }
-            } while ((updateStatus & SIBLING) > NONE);
-            // Branch Pairs
+            } while ((updateStatus & PAIR) > NONE);
+            // Projecting Branches Upward
             foreach (t, _trees) {
-                newUpdates = updateBranchPairs(t->root());
+                newUpdates = updateBranchUpProjection(t->root());
                 if (newUpdates > 0) {
                     totalUpdated += newUpdates;
-                    updateStatus = PAIR | PROJECTION;
+                    updateStatus = DOWN_PROJECTION | UP_PROJECTION;
                 }
             }
-        } while ((updateStatus & PAIR) > NONE);
-        // Projecting Branches
+        } while ((updateStatus & UP_PROJECTION) > NONE);
+        // Projecting Branches Downward
         foreach (t, _trees) {
-            newUpdates = updateBranchProjection(t->root());
+            newUpdates = updateMarriages(t->root());
             if (newUpdates > 0) {
                 totalUpdated += newUpdates;
-                updateStatus = PROJECTION;
+                updateStatus = DOWN_PROJECTION;
             }
         }
-    } while ((updateStatus & PROJECTION) > NONE);
+    } while ((updateStatus & DOWN_PROJECTION) > NONE);
     return totalUpdated;
 }
 
@@ -80,6 +93,12 @@ int GDateEstimator::updateCouple(GFTNode * famNode) {
     // Todo: Single-parent families with no marriage date will automatically
     // have a marriage date appened anyway... Is there a way to fix that?
     int updated = 0; // Tells the caller how many updates were made
+    // Families without children don't need to update children
+    if (!famNode->kidsComplete) {
+        if (!famNode->childFams || famNode->childFams->size() == 0) {
+            famNode->kidsComplete = true;
+        }
+    }
     // Only check incomplete nodes with a head of family
     if (famNode->famHead && !famNode->headComplete) {
         // Get relavent values from the famNode
@@ -89,7 +108,7 @@ int GDateEstimator::updateCouple(GFTNode * famNode) {
         QDate marriageYear = fam ? fam->marriageYear() : QDate();
         // Estimate marriage year if null
         // Only estimate once children's birthdates are done
-        if (fam && marriageYear.isNull() && famNode->kidsComplete) {
+        if (fam && (famNode->kidsComplete || famNode->childFams->at(0)->headComplete)) {
             updated += updateMarriage(famNode);
         }
         // Update individuals' data
@@ -102,12 +121,6 @@ int GDateEstimator::updateCouple(GFTNode * famNode) {
             famNode->headComplete = true;
         }
     }
-    // Families without children don't need to update children
-    if (!famNode->kidsComplete) {
-        if (!famNode->childFams || famNode->childFams->size() == 0) {
-            famNode->kidsComplete = true;
-        }
-    }
     return updated;
 }
 
@@ -118,28 +131,35 @@ int GDateEstimator::updateCouple(GFTNode * famNode) {
 int GDateEstimator::updateMarriage(GFTNode * famNode) {
     // Tells the caller how many updates were made
     int updated = 0;
-    QDate marriageYear;
-    // Check head for valid birth year
-    GIndiEntry * indi = famNode->famHead;
-    QDate birthYear = indi->birthYear();
-    // Otherwise check spouse for valid birth year
-    if (!birthYear.isValid() && famNode->spouse) {
-        indi = famNode->spouse;
-        birthYear = indi->birthYear();
-    }
-    // If this individual has a valid birth year
-    if (birthYear.isValid()) {
+    GFamily * fam = famNode->thisFam;
+    // Only update the marriage isn't already set
+    if (fam && fam->marriageDate().isEmpty()) {
+        QDate marriageYear;
         GIndiEntry * eldestChild = 0;
+        // Check eldest child
         if (famNode->childFams && famNode->childFams->size() > 0) {
             eldestChild = famNode->childFams->at(0)->famHead;
         }
+        // Check head for valid birth year
+        GIndiEntry * indi = famNode->famHead;
+        QDate birthYear = indi->birthYear();
+        // Otherwise check spouse for valid birth year
+        if (!birthYear.isValid() && famNode->spouse) {
+            indi = famNode->spouse;
+            birthYear = indi->birthYear();
+        }
+        // Update marriage date from eldest child
         // Use the eldest child's birthdate if possible
         if (eldestChild && eldestChild->birthYear().isValid()) {
             // Marriage year is 1 year before the oldest child is born
             marriageYear = eldestChild->birthYear().addYears(-1);
+            fam->setMarriageYear(marriageYear);
+            // Tell the caller that updates have been made
+            ++updated;
         }
         // Otherwise use the couple's birthdates
-        else {
+        // If this individual has a valid birth year
+        else if (birthYear.isValid()) {
             // Calculate offset for 2nd, 3rd, ... marriages
             int offset = 0;
             const QStringList * marriages = indi->marriages();
@@ -150,7 +170,7 @@ int GDateEstimator::updateMarriage(GFTNode * famNode) {
                 // where the first marriage is estimated at 30 years after the husband's
                 // birth date because of generation averaging, but then the second marriage
                 // is set at 29 years because of this equation...
-                offset = 5 * marriages->indexOf(famNode->thisFam->id());
+                offset = 5 * marriages->indexOf(fam->id());
             }
             // Man's marriage year = birth year + 24
             if (indi->sex() == GIndiEntry::MALE) {
@@ -160,10 +180,10 @@ int GDateEstimator::updateMarriage(GFTNode * famNode) {
             else {
                 marriageYear = birthYear.addYears(20+offset);
             }
+            fam->setMarriageYear(marriageYear);
+            // Tell the caller that updates have been made
+            ++updated;
         }
-        famNode->thisFam->setMarriageYear(marriageYear);
-        // Tell the caller that updates have been made
-        ++updated;
     }
     return updated;
 }
@@ -172,7 +192,7 @@ int GDateEstimator::updateMarriage(GFTNode * famNode) {
  * individual if relavent data is available and needed
  * @return number of dates added to this node
  */
-int GDateEstimator::updateIndividual(GIndiEntry * indi, GFamily * fam, GIndiEntry * spouse) {
+int GDateEstimator::updateIndividual(GIndiEntry * indi, GFamily * fam, GIndiEntry */*spouse*/) {
     // Tells the caller how many updates were made
     int updated = 0;
     QDate birthYear = indi->birthYear();
@@ -479,11 +499,11 @@ int GDateEstimator::estimateBranchBetween(GFTNode * famA, GFTNode * famB) {
     //---   Single References   ---//
     //-----------------------------//
 
-/* Recursively estimate birth dates for family heads found above or below a
+/* Recursively estimate birth dates for family heads found above a
  * reference family with a date in the tree, projecting 25 years per generation
  * @return number of dates added
  */
-int GDateEstimator::updateBranchProjection(GFTNode * n, bool incompleteRoot) {
+int GDateEstimator::updateBranchUpProjection(GFTNode * n, bool incompleteRoot) {
     int updated = 0;
     // Found blank nodes below FamilyA
     if (!incompleteRoot && n->parentFam && !n->hasBirthDate()) {
@@ -498,34 +518,53 @@ int GDateEstimator::updateBranchProjection(GFTNode * n, bool incompleteRoot) {
             incompleteRoot = true;
         }
         // Found a blank root (family has parents)
-        else if (n->famHead && !n->hasBirthDate()) {
+        else if (n->famHead && !n->hasMarriageDate()) {
             incompleteRoot = true;
         }
+        // The following case is now covered by the updateMarriage() method:
         // Found FamilyB below blank root
-        else if (incompleteRoot) {
-            // Only project upward from eldest child
-            if (n->eldestSibling() == n) {
-                // Project upward from this node
-                updated += estimateBranchUp(n);
-            }
-            // This is not an empty node
-            incompleteRoot = false;
-        }
+        //else if (incompleteRoot) {
+        //    // Only project upward from eldest child
+        //    if (n->eldestSibling() == n) {
+        //        // Project upward from this node
+        //        updated += estimateBranchUp(n);
+        //    }
+        //    // This is not an empty node
+        //    incompleteRoot = false;
+        //}
         // Base case:
         // Only continue if this family has children
         // and it wasn't a blank branch below FamilyA
         if (n->childFams) {
             // First make sure that all dates are set (not just birthday)
             if (!n->headComplete) {
-                if (n->famHead) updated += updateMarriage(n);
+                //if (n->famHead) updated += updateMarriage(n);
                 updated += updateCouple(n);
             }
             // Recursively check/update all children
             QList<GFTNode *> & childFams = *(n->childFams);
             GFTNode * m;
             foreach (m, childFams) {
-                updated += updateBranchProjection(m, incompleteRoot);
+                updated += updateBranchUpProjection(m, incompleteRoot);
             }
+        }
+    }
+    return updated;
+}
+
+/* Recursively estimate marriage dates for couples
+ * whose eldest child has a blank birth date.
+ * @return number of dates added
+ */
+int GDateEstimator::updateMarriages(GFTNode * n) {
+    int updated = 0;
+    if (n->famHead && n->thisFam) updated += updateMarriage(n);
+    if (n->childFams) {
+        // Recursively check/update all children
+        QList<GFTNode *> & childFams = *(n->childFams);
+        GFTNode * m;
+        foreach (m, childFams) {
+            updated += updateMarriages(m);
         }
     }
     return updated;
@@ -557,7 +596,7 @@ int GDateEstimator::estimateBranchDown(GFTNode * n) {
 int GDateEstimator::estimateBranchUp(GFTNode * famB) {
     int updated = 0;
     GFTNode * n = famB->parentFam;
-    if (n->hasBirthDate()) throw QString("Found complete node above FamilyB on projection");
+    if (n->hasBirthDate()) throw QString("Found complete node above FamilyB on projection: ").append(n->famHead->id());
     GFamily * marriageFam = n->thisFam;
     // Get year from eldest child
     QDate marriageYear = famB->famHead->birthYear();

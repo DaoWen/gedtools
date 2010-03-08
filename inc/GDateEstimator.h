@@ -116,11 +116,17 @@ private:
 
     //--- Single References ---//
 
-    /* Recursively estimate birth dates for family heads found above or below a
+    /* Recursively estimate birth dates for family heads found above a
      * reference family with a date in the tree, projecting 25 years per generation
      * @return number of dates added
      */
-    int updateBranchProjection(GFTNode * n, bool incompleteRoot = false);
+    int updateBranchUpProjection(GFTNode * n, bool incompleteRoot = false);
+
+    /* Recursively estimate marriage dates for couples
+     * whose eldest child has a blank birth date.
+     * @return number of dates added
+     */
+    int updateMarriages(GFTNode * n);
 
     /* Estimate birth dates for this node from parent
      * Assumes that this node is an eldest child
