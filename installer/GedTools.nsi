@@ -83,6 +83,7 @@ Section
     File ..\PinyinMap.dat
     File ..\Readme.txt
     File mingwm10.dll
+    File libgcc_s_dw2-1.dll
     File QtCore4.dll
     File QtGui4.dll
     File QtNetwork4.dll
@@ -109,6 +110,7 @@ Section "Uninstall"
     Delete $INSTDIR\GedTools.exe
     Delete $INSTDIR\gpl-3.0.txt
     Delete $INSTDIR\mingwm10.dll
+    Delete $INSTDIR\libgcc_s_dw2-1.dll
     Delete $INSTDIR\PinyinMap.dat
     Delete $INSTDIR\QtCore4.dll
     Delete $INSTDIR\QtGui4.dll
