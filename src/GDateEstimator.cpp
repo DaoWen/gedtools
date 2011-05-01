@@ -85,7 +85,7 @@ int GDateEstimator::estimateMissingDates() {
     //----------------------//
 
 /* Estimates birth, marriage, and death dates for a
- * couple if relavent data is available and needed.
+ * couple if relevent data is available and needed.
  * famNode->complete is set true if no more dates are needed
  * @return number of dates added
  */
@@ -101,7 +101,7 @@ int GDateEstimator::updateCouple(GFTNode * famNode) {
     }
     // Only check incomplete nodes with a head of family
     if (famNode->famHead && !famNode->headComplete) {
-        // Get relavent values from the famNode
+        // Get relevent values from the famNode
         GIndiEntry * head = famNode->famHead;
         GIndiEntry * spouse = famNode->spouse;
         GFamily * fam = famNode->thisFam;
@@ -125,7 +125,7 @@ int GDateEstimator::updateCouple(GFTNode * famNode) {
 }
 
 /* Estimates marriage date for a
- * couple if relavent data is available
+ * couple if relevent data is available
  * @return number of dates added
  */
 int GDateEstimator::updateMarriage(GFTNode * famNode) {
@@ -189,7 +189,7 @@ int GDateEstimator::updateMarriage(GFTNode * famNode) {
 }
 
 /* Estimates birth and death dates for an
- * individual if relavent data is available and needed
+ * individual if relevent data is available and needed
  * @return number of dates added to this node
  */
 int GDateEstimator::updateIndividual(GIndiEntry * indi, GFamily * fam, GIndiEntry */*spouse*/) {
