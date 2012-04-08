@@ -192,7 +192,7 @@ int GDateEstimator::updateMarriage(GFTNode * famNode) {
  * individual if relevent data is available and needed
  * @return number of dates added to this node
  */
-int GDateEstimator::updateIndividual(GIndiEntry * indi, GFamily * fam, GIndiEntry */*spouse*/) {
+int GDateEstimator::updateIndividual(GIndiEntry * indi, GFamily * fam, GIndiEntry * /*spouse*/) {
     // Tells the caller how many updates were made
     int updated = 0;
     QDate birthYear = indi->birthYear();
