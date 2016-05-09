@@ -5,9 +5,10 @@ TEMPLATE = app
 CONFIG += qt warn_on
 QT += network
 TARGET = GedTools
-# Qt doesn't add the -W flag by default
-QMAKE_CXXFLAGS_DEBUG += -W
-QMAKE_CXXFLAGS_RELEASE += -W
+
+# Disable warnings in Qt header files
+# (treat all Qt headers as system header files)
+#QMAKE_CXXFLAGS += -isystem $$[QT_INSTALL_HEADERS]
 
 #########################
 # Windows Resource File #
