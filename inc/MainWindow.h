@@ -26,10 +26,10 @@ public:
     //=== Constants ===//
 
     // Program Version
-    static const char * VERSION_NUMBER;
+    static const char VERSION_NUMBER[];
 
     // File that disables auto updates
-    static const char * NO_UPDATE_FILE;
+    static const char NO_UPDATE_FILE[];
 
     //=== Constructor/Destructor ===//
 

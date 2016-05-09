@@ -40,8 +40,8 @@ const char TYPE_FAMC[] = "FAMC";
 //=== Static Constants ===//
 
 // Male and Female values corresponding to sex
-const char * GIndiEntry::MALE = "M";
-const char * GIndiEntry::FEMALE = "F";
+const char GIndiEntry::MALE[] = "M";
+const char GIndiEntry::FEMALE[] = "F";
 
 //=== Constructors ===//
 

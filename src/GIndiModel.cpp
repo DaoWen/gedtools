@@ -4,7 +4,7 @@
 
 //=== Constants ===//
 
-const char * EMPTY_VALUE = "--";
+const char EMPTY_VALUE[] = "--";
 
 //=== Constructor/Destructor ===//
 

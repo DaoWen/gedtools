@@ -18,8 +18,8 @@ public:
     //=== Static Constants ===//
 
     // Male and Female values corresponding to sex
-    static const char * MALE;
-    static const char * FEMALE;
+    static const char MALE[];
+    static const char FEMALE[];
 
     //=== Constructors ===//
 
