@@ -127,6 +127,7 @@ bool GIndiModel::setData(const QModelIndex &index, const QVariant &value, int ro
 void GIndiModel::sort(int column, Qt::SortOrder order) {
     // Only sort valid columns
     if (column >= 0 && column < COL_COUNT) {
+        invalidateViews();
         switch (column) {
             case ID_COL: // These columns are sorted as integers
             case BIRTH_DATE_COL:
@@ -142,13 +143,18 @@ void GIndiModel::sort(int column, Qt::SortOrder order) {
                 qSort(_indiList->begin(), _indiList->end(), cmp);
             }
         }
-        reset(); // Notify views that data has changed
+        revalidateViews();
     }
 }
 
+/* Notify all views that internal data is changing */
+void GIndiModel::invalidateViews() {
+    beginResetModel();
+}
+
 /* Notify all views that internal data has been changed */
-void GIndiModel::resetViews() {
-    reset();
+void GIndiModel::revalidateViews() {
+    endResetModel();
 }
 
 //=== Private Helper Methods ===//

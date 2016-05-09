@@ -195,9 +195,10 @@ void MainWindow::appendPinyin() {
           tr("Do you want to replace existing pinyin entries?"
           ), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes
         );
+        _indiModel->invalidateViews();
         int incompleteCount = pinyinAppender.appendTo(_gedFile->indiMap(), response == QMessageBox::Yes);
         // Update the Model/View now that data has been changed
-        _indiModel->resetViews();
+        _indiModel->revalidateViews();
         // Update status bar message
         QString statusMsg = tr("Pinyin added successfully!");
         // Display "?" count (number of hanzi without pinyin)
@@ -271,6 +272,7 @@ void MainWindow::estimateDates() {
     if (okPressed) {
         // Estimate the dates
         GDateEstimator estimator(*_trees, defaultLocation);
+        _indiModel->invalidateViews();
         try {
             int datesAdded = estimator.estimateMissingDates();
             // Alert the user as to how many dates were appened
@@ -280,7 +282,7 @@ void MainWindow::estimateDates() {
             QMessageBox::critical(this, tr("Error"), e);
         }
         // Update the Model/View now that data has been changed
-        _indiModel->resetViews();
+        _indiModel->revalidateViews();
     }
 }
 

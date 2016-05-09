@@ -68,8 +68,11 @@ public:
     /* Sort column data */
     void sort(int column, Qt::SortOrder order = Qt::AscendingOrder);
 
+    /* Notify all views that internal data is changing */
+    void invalidateViews();
+
     /* Notify all views that internal data has been changed */
-    void resetViews();
+    void revalidateViews();
 
 private:
 
