@@ -105,8 +105,8 @@ int GDateEstimator::updateCouple(GFTNode * famNode) {
         GIndiEntry * head = famNode->famHead;
         GIndiEntry * spouse = famNode->spouse;
         GFamily * fam = famNode->thisFam;
-        QDate marriageYear = fam ? fam->marriageYear() : QDate();
         // Estimate marriage year if null
+        //QDate marriageYear = fam ? fam->marriageYear() : QDate();
         // Only estimate once children's birthdates are done
         if (fam && (famNode->kidsComplete || famNode->childFams->at(0)->headComplete)) {
             updated += updateMarriage(famNode);
