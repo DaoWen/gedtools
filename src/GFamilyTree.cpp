@@ -5,18 +5,18 @@
 
 /* Empty Constructor */
 GFTNode::GFTNode()
- : thisFam(0), famHead(0), spouse(0), parentFam(0), childFams(0), level(-1),
-   upperDate(0), lowerDate(0), headComplete(false), kidsComplete(false) {}
+ : thisFam(0), famHead(0), spouse(0), parentFam(0), naturalChildFams(0), allChildFams(0),
+   level(-1), upperDate(0), lowerDate(0), headComplete(false), kidsComplete(false) {}
 
 /* Constructor */
 GFTNode::GFTNode(GFamily * thisFamily, GIndiEntry * familyHead, GIndiEntry * familySpouse,
   const QString & familyName,GFTNode * parentFamily, int lvl)
  : thisFam(thisFamily), famHead(familyHead), spouse(familySpouse), famName(familyName), parentFam(parentFamily),
-   childFams(0), level(lvl), upperDate(0), lowerDate(0), headComplete(false), kidsComplete(false) {}
+   naturalChildFams(0), allChildFams(0), level(lvl), upperDate(0), lowerDate(0), headComplete(false), kidsComplete(false) {}
 
 /* Destructor */
 GFTNode::~GFTNode() {
-    delete childFams;
+    delete naturalChildFams;
 }
 
 //=== Constructor/Destructor ===//
@@ -66,6 +66,7 @@ GFTNode * GFamilyTree::buildBranch(GFamily * fam,
         GIndiEntry * child, * childSpouse;
         // Child Family List & Iterators
         QList<GFTNode *> * childFamilies = new QList<GFTNode *>();
+        QList<GFTNode *> * allChildFamilies = new QList<GFTNode *>();
         QStringList::ConstIterator i = fam->children().begin();
         QStringList::ConstIterator end = fam->children().end();
         GIndiMap::ConstIterator foundChildIterator;
@@ -87,10 +88,16 @@ GFTNode * GFamilyTree::buildBranch(GFamily * fam,
                 childFam = *famIterator;
                 childSpouse = getSpouse(childFam, child);
             }
-            childFamilies->append(buildBranch(childFam,child,childSpouse,n,level+1));
+            // Track this child family
+            allChildFamilies->append(buildBranch(childFam,child,childSpouse,n,level+1));
+            // Filter adopted child families (not used for date estimations)
+            if (!child->adopted()) {
+                childFamilies->append(allChildFamilies->last());
+            }
             ++i;
         }
-        n->childFams = childFamilies;
+        n->naturalChildFams = childFamilies;
+        n->allChildFams = allChildFamilies;
     }
     return n;
 }
@@ -127,8 +134,8 @@ GIndiEntry * GFamilyTree::getSpouse(GFamily * fam, GIndiEntry * head) {
 
 /* Recursively destroy a branch of the tree */
 void GFamilyTree::deleteBranch(GFTNode * n) {
-    if (n->childFams) {
-        foreach (GFTNode * child, *n->childFams) {
+    if (n->naturalChildFams) {
+        foreach (GFTNode * child, *n->naturalChildFams) {
             deleteBranch(child);
         }
     }

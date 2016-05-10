@@ -37,8 +37,11 @@ public:
     // Family where this individual is a child
     GFTNode * parentFam;
 
-    // Pointers to all childrens' families
-    QList<GFTNode *> * childFams;
+    // Pointers to natural childrens' families
+    QList<GFTNode *> * naturalChildFams;
+
+    // Pointers to all childrens' families (including adopted)
+    QList<GFTNode *> * allChildFams;
 
     // How deep is this node in the tree (starts at 0)
     int level;
@@ -63,7 +66,7 @@ public:
 
     // Returns the oldest child of the parentFam
     inline GFTNode * eldestSibling() {
-        return parentFam->childFams->at(0);
+        return parentFam->naturalChildFams->at(0);
     }
 
 };

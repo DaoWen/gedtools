@@ -95,7 +95,7 @@ int GDateEstimator::updateCouple(GFTNode * famNode) {
     int updated = 0; // Tells the caller how many updates were made
     // Families without children don't need to update children
     if (!famNode->kidsComplete) {
-        if (!famNode->childFams || famNode->childFams->size() == 0) {
+        if (!famNode->naturalChildFams || famNode->naturalChildFams->size() == 0) {
             famNode->kidsComplete = true;
         }
     }
@@ -108,7 +108,7 @@ int GDateEstimator::updateCouple(GFTNode * famNode) {
         // Estimate marriage year if null
         //QDate marriageYear = fam ? fam->marriageYear() : QDate();
         // Only estimate once children's birthdates are done
-        if (fam && (famNode->kidsComplete || famNode->childFams->at(0)->headComplete)) {
+        if (fam && (famNode->kidsComplete || famNode->naturalChildFams->at(0)->headComplete)) {
             updated += updateMarriage(famNode);
         }
         // Update individuals' data
@@ -137,8 +137,8 @@ int GDateEstimator::updateMarriage(GFTNode * famNode) {
         QDate marriageYear;
         GIndiEntry * eldestChild = 0;
         // Check eldest child
-        if (famNode->childFams && famNode->childFams->size() > 0) {
-            eldestChild = famNode->childFams->at(0)->famHead;
+        if (famNode->naturalChildFams && famNode->naturalChildFams->size() > 0) {
+            eldestChild = famNode->naturalChildFams->at(0)->famHead;
         }
         // Check head for valid birth year
         GIndiEntry * indi = famNode->famHead;
@@ -247,13 +247,13 @@ int GDateEstimator::updateChildren(GFTNode * n) {
     int updated = 0;
     // Update this node
     updated += updateCouple(n);
-    if (n->childFams) {
+    if (n->naturalChildFams) {
         // Update siblings
         if (!n->kidsComplete) {
             updated += updateSiblings(n);
         }
         // Recursively update children
-        QList<GFTNode *> & childFams = *(n->childFams);
+        QList<GFTNode *> & childFams = *(n->naturalChildFams);
         GFTNode * m;
         foreach (m, childFams) {
             updated += updateChildren(m);
@@ -271,7 +271,7 @@ int GDateEstimator::updateSiblings(GFTNode * famNode) {
     int updated = 0;
     // Variables for the loop below
     int sibA, sibB;
-    QList<GFTNode *> & childFams = *(famNode->childFams);
+    QList<GFTNode *> & childFams = *(famNode->naturalChildFams);
     for (;;) { // Loop until this hits one of the two break statements at bottom
         // Find upper & lower sibling references
         findSiblingRefs(sibA, sibB, childFams);
@@ -440,9 +440,9 @@ int GDateEstimator::updateBranchPairs(GFTNode * n, GFTNode * famA, bool passedIn
     }
     // Base case:
     // Only continue if this family has children
-    if (n->childFams) {
+    if (n->naturalChildFams) {
         // Recursively check/update all children
-        QList<GFTNode *> & childFams = *(n->childFams);
+        QList<GFTNode *> & childFams = *(n->naturalChildFams);
         GFTNode * m;
         foreach (m, childFams) {
             // Check every round to see if this has become
@@ -486,7 +486,7 @@ int GDateEstimator::estimateBranchBetween(GFTNode * famA, GFTNode * famB) {
     famB = famB->parentFam;
     while (famB != famA) {
         yearGap += avgGap;
-        sibOffset = famB->parentFam->childFams->indexOf(famB) * 2;
+        sibOffset = famB->parentFam->naturalChildFams->indexOf(famB) * 2;
         famB->famHead->setBirthYear(startYear.addYears((int)yearGap+sibOffset));
         famB = famB->parentFam;
         updated += updateSiblings(famB);
@@ -524,14 +524,14 @@ int GDateEstimator::updateBranchUpProjection(GFTNode * n, bool incompleteRoot) {
         // Base case:
         // Only continue if this family has children
         // and it wasn't a blank branch below FamilyA
-        if (n->childFams) {
+        if (n->naturalChildFams) {
             // First make sure that all dates are set (not just birthday)
             if (!n->headComplete) {
                 //if (n->famHead) updated += updateMarriage(n);
                 updated += updateCouple(n);
             }
             // Recursively check/update all children
-            QList<GFTNode *> & childFams = *(n->childFams);
+            QList<GFTNode *> & childFams = *(n->naturalChildFams);
             GFTNode * m;
             foreach (m, childFams) {
                 updated += updateBranchUpProjection(m, incompleteRoot);
@@ -548,9 +548,9 @@ int GDateEstimator::updateBranchUpProjection(GFTNode * n, bool incompleteRoot) {
 int GDateEstimator::updateMarriages(GFTNode * n) {
     int updated = 0;
     if (n->famHead && n->thisFam) updated += updateMarriage(n);
-    if (n->childFams) {
+    if (n->naturalChildFams) {
         // Recursively check/update all children
-        QList<GFTNode *> & childFams = *(n->childFams);
+        QList<GFTNode *> & childFams = *(n->naturalChildFams);
         GFTNode * m;
         foreach (m, childFams) {
             updated += updateMarriages(m);
