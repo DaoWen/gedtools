@@ -8,17 +8,17 @@
 // (move the ones in GIndiEntry.cpp too)
 
 // Level-0 family records have this data entry
-const char DATA_FAM[] = "FAM";
+static const char DATA_FAM[] = "FAM";
 // Level-1 parent and children attribute types
-const char TYPE_HUSBAND[] = "HUSB";
-const char TYPE_WIFE[] = "WIFE";
-const char TYPE_CHILD[] = "CHIL";
-const char TYPE_MARRIAGE[] = "MARR";
-const char ENTRY_MARRIAGE[] = "1 MARR";
-const char TYPE_DATE[] = "DATE";
-const char ENTRY_DATE[] = "2 DATE";
-const char TYPE_PLACE[] = "PLAC";
-const char ENTRY_PLACE[] = "2 PLAC";
+static const char TYPE_HUSBAND[] = "HUSB";
+static const char TYPE_WIFE[] = "WIFE";
+static const char TYPE_CHILD[] = "CHIL";
+static const char TYPE_MARRIAGE[] = "MARR";
+static const char ENTRY_MARRIAGE[] = "1 MARR";
+static const char TYPE_DATE[] = "DATE";
+static const char ENTRY_DATE[] = "2 DATE";
+static const char TYPE_PLACE[] = "PLAC";
+static const char ENTRY_PLACE[] = "2 PLAC";
 
 //=== Constructor/Destructor ===//
 

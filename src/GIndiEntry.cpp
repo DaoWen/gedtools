@@ -7,35 +7,40 @@
 // (move the ones in GFamily.cpp too)
 
 // Level-0 individual records have this data entry
-const char DATA_INDI[] = "INDI";
+static const char DATA_INDI[] = "INDI";
 // Level-2 death dates sometimes have this data entry
-const char DATA_DECEASED[] = "DECEASED";
+static const char DATA_DECEASED[] = "DECEASED";
 // Level-1 name attributes have this type
-const char TYPE_NAME[] = "NAME";
+static const char TYPE_NAME[] = "NAME";
 // Level-2 romanized name attributes have this type
-const char TYPE_ROMANIZED_NAME[] = "ROMN";
+static const char TYPE_ROMANIZED_NAME[] = "ROMN";
 // Level-1 sex attributes have this type
-const char TYPE_SEX[] = "SEX";
+static const char TYPE_SEX[] = "SEX";
 // Level-1 birth entry (empty)
-const char ENTRY_BIRTH[] = "1 BIRT";
+static const char ENTRY_BIRTH[] = "1 BIRT";
 // Level-1 birth attributes have this type
-const char TYPE_BIRTH[] = "BIRT";
+static const char TYPE_BIRTH[] = "BIRT";
 // Level-1 death entry (empty)
-const char ENTRY_DEATH[] = "1 DEAT";
+static const char ENTRY_DEATH[] = "1 DEAT";
 // Level-1 death attributes have this type
-const char TYPE_DEATH[] = "DEAT";
+static const char TYPE_DEATH[] = "DEAT";
 // Level-2 date entry
-const char ENTRY_DATE[] = "2 DATE";
+static const char ENTRY_DATE[] = "2 DATE";
 // Level-2 place entry
-const char ENTRY_PLACE[] = "2 PLAC";
+static const char ENTRY_PLACE[] = "2 PLAC";
 // Level-2 date attributes have this type
-const char TYPE_DATE[] = "DATE";
+static const char TYPE_DATE[] = "DATE";
 // Level-2 place attributes have this type
-const char TYPE_PLACE[] = "PLAC";
+static const char TYPE_PLACE[] = "PLAC";
 // Level-1 family (spouse) attributes have this type
-const char TYPE_FAMS[] = "FAMS";
+static const char TYPE_FAMS[] = "FAMS";
 // Level-1 family (child) attributes have this type
-const char TYPE_FAMC[] = "FAMC";
+static const char TYPE_FAMC[] = "FAMC";
+// Level-2 family (child) pedigree property type
+static const char TYPE_PEDI[] = "PEDI";
+// Level-2 pedigree property "adopted" value
+static const char PROP_ADOPTED[] = "adopted";
+
 
 //=== Static Constants ===//
 
