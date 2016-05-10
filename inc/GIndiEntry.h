@@ -88,6 +88,11 @@ public:
      */
     bool deceased() const;
 
+    /* Returns true if the individual's
+     * family pedigree property is "adopted"
+     */
+    bool adopted() const;
+
     /* Get a copy of the family (child) ID
      *  string value in the GNode data tree
      */
@@ -144,6 +149,9 @@ private:
 
     // Date objects for performing missing date estimates
     QDate _birthYear, _deathYear;
+
+    // Is this person adopted?
+    bool _adopted;
 
     //=== Private Helper Methods ===//
 

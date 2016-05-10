@@ -59,7 +59,8 @@ const char GIndiEntry::FEMALE[] = "F";
 GIndiEntry::GIndiEntry(GNode * n)
  : _indiNode(0), _nameNode(0), _romanNode(0), _sexNode(0), _birthNode(0),
    _birthDateNode(0), _birthPlaceNode(0), _deathNode(0), _deathDateNode(0),
-   _deathPlaceNode(0), _famsNode(0), _famcNode(0), _marriages(0) {
+   _deathPlaceNode(0), _famsNode(0), _famcNode(0), _marriages(0),
+   _adopted(false) {
     // Validate that this is an individual record
     if (!n) {
         throw QString("Null Pointer to Individual");
@@ -160,6 +161,13 @@ QString GIndiEntry::deathPlace() const {
  */
 bool GIndiEntry::deceased() const {
     return _deathDateNode && _deathDateNode->data() == DATA_DECEASED;
+}
+
+/* Returns true if the individual's
+ * family pedigree property is "adopted"
+ */
+bool GIndiEntry::adopted() const {
+    return _adopted;
 }
 
 /* Get a copy of the family (child) ID
@@ -311,6 +319,15 @@ void GIndiEntry::parseIndiData(GNode * n) {
         // Family (Child)
         else if (!_famcNode && n->type() == TYPE_FAMC) {
             _famcNode = n;
+            // Check adoption status
+            GNode * m = n->firstChild();
+            while (m) {
+                if (m->type() == TYPE_PEDI && m->data() == PROP_ADOPTED) {
+                    _adopted = true;
+                    break;
+                }
+                m = m->next();
+            }
         }
         // Family (Parent)
         else if (n->type() == TYPE_FAMS) {
