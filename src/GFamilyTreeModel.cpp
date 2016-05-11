@@ -10,10 +10,10 @@
 GFamilyTreeModel::GFamilyTreeModel(QList<GFamilyTree *> & familyTrees) {
     // Create empty root node
     _root = new GFTNode();
-    _root->naturalChildFams = new QList<GFTNode *>();
+    _root->allChildFams = new QList<GFTNode *>();
     // Add all family trees to the root node
     foreach (GFamilyTree * t, familyTrees) {
-        _root->naturalChildFams->append(t->root());
+        _root->allChildFams->append(t->root());
     }
 }
 
@@ -113,7 +113,7 @@ QModelIndex GFamilyTreeModel::index(int row, int column, const QModelIndex &pare
         // Get the parent's GFTNode
         GFTNode * parentNode = nodeFromIndex(parent);
         // Create the index for this child GFTNode
-        index = createIndex(row, column, parentNode->naturalChildFams->at(row));
+        index = createIndex(row, column, parentNode->allChildFams->at(row));
     }
     return index;
 }
@@ -130,7 +130,7 @@ QModelIndex GFamilyTreeModel::parent(const QModelIndex &index) const {
             // Parent of family roots is null, so set it to _root if that's the case
             GFTNode * granparentNode = parentNode->parentFam ? parentNode->parentFam : _root;
             // Calculate the row number of the parent
-            int row = granparentNode->naturalChildFams->indexOf(parentNode);
+            int row = granparentNode->allChildFams->indexOf(parentNode);
             // Only col=0 indecies have children
             pIndex = createIndex(row, 0, parentNode);
         }
@@ -144,8 +144,8 @@ int GFamilyTreeModel::rowCount(const QModelIndex &parent) const {
     GFTNode * parentNode = nodeFromIndex(parent);
     // Tree leaves have no childFams list
     // because they have no children
-    if (parentNode && parentNode->naturalChildFams) {
-        count = parentNode->naturalChildFams->size();
+    if (parentNode && parentNode->allChildFams) {
+        count = parentNode->allChildFams->size();
     }
     return count;
 }
