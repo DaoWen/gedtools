@@ -95,7 +95,7 @@ int GDateEstimator::updateCouple(GFTNode * famNode) {
     int updated = 0; // Tells the caller how many updates were made
     // Families without children don't need to update children
     if (!famNode->kidsComplete) {
-        if (!famNode->naturalChildFams || famNode->naturalChildFams->size() == 0) {
+        if (!famNode->allChildFams || famNode->allChildFams->size() == 0) {
             famNode->kidsComplete = true;
         }
     }
@@ -108,7 +108,7 @@ int GDateEstimator::updateCouple(GFTNode * famNode) {
         // Estimate marriage year if null
         //QDate marriageYear = fam ? fam->marriageYear() : QDate();
         // Only estimate once children's birthdates are done
-        if (fam && (famNode->kidsComplete || famNode->naturalChildFams->at(0)->headComplete)) {
+        if (fam && (famNode->kidsComplete || famNode->allChildFams->at(0)->headComplete)) {
             updated += updateMarriage(famNode);
         }
         // Update individuals' data
@@ -247,13 +247,13 @@ int GDateEstimator::updateChildren(GFTNode * n) {
     int updated = 0;
     // Update this node
     updated += updateCouple(n);
-    if (n->naturalChildFams) {
+    if (n->allChildFams) {
         // Update siblings
         if (!n->kidsComplete) {
             updated += updateSiblings(n);
         }
         // Recursively update children
-        QList<GFTNode *> & childFams = *(n->naturalChildFams);
+        QList<GFTNode *> & childFams = *(n->allChildFams);
         GFTNode * m;
         foreach (m, childFams) {
             updated += updateChildren(m);
@@ -548,9 +548,9 @@ int GDateEstimator::updateBranchUpProjection(GFTNode * n, bool incompleteRoot) {
 int GDateEstimator::updateMarriages(GFTNode * n) {
     int updated = 0;
     if (n->famHead && n->thisFam) updated += updateMarriage(n);
-    if (n->naturalChildFams) {
+    if (n->allChildFams) {
         // Recursively check/update all children
-        QList<GFTNode *> & childFams = *(n->naturalChildFams);
+        QList<GFTNode *> & childFams = *(n->allChildFams);
         GFTNode * m;
         foreach (m, childFams) {
             updated += updateMarriages(m);
