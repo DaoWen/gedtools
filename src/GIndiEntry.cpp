@@ -317,16 +317,22 @@ void GIndiEntry::parseIndiData(GNode * n) {
             parseDeath(n);
         }
         // Family (Child)
-        else if (!_famcNode && n->type() == TYPE_FAMC) {
-            _famcNode = n;
+        else if (n->type() == TYPE_FAMC) {
             // Check adoption status
             GNode * m = n->firstChild();
+            bool isAdoptiveFam = false;
+            // Check other properties under family
             while (m) {
                 if (m->type() == TYPE_PEDI && m->data() == PROP_ADOPTED) {
-                    _adopted = true;
+                    isAdoptiveFam = true;
                     break;
                 }
                 m = m->next();
+            }
+            // Prefer natural family in the family tree
+            if (!_famcNode || !isAdoptiveFam) {
+                _famcNode = n;
+                _adopted = isAdoptiveFam;
             }
         }
         // Family (Parent)
