@@ -271,7 +271,7 @@ void MainWindow::estimateDates() {
     // Continue only if the user pressed OK
     if (okPressed) {
         // Estimate the dates
-        GDateEstimator estimator(*_trees, defaultLocation);
+        GDateEstimator estimator(*_trees, defaultLocation, _menuBar->usingAdoptedRelations());
         _indiModel->invalidateViews();
         try {
             int datesAdded = estimator.estimateMissingDates();

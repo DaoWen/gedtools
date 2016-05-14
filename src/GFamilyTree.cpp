@@ -16,6 +16,7 @@ GFTNode::GFTNode(GFamily * thisFamily, GIndiEntry * familyHead, GIndiEntry * fam
 
 /* Destructor */
 GFTNode::~GFTNode() {
+    delete allChildFams;
     delete naturalChildFams;
 }
 

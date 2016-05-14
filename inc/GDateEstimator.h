@@ -17,7 +17,7 @@ public:
     //=== Constructor/Destructor ===//
 
     /* Constructor */
-    GDateEstimator(GFTList & trees, const QString & defaultPlace = QString());
+    GDateEstimator(GFTList & trees, const QString & defaultPlace, bool useAdoptions);
 
     /* Destructor */
     ~GDateEstimator();
@@ -40,6 +40,9 @@ private:
 
     // Default location of birth, marriage and death
     const QString & _defaultPlace;
+
+    // Use adoptive relations while estimating?
+    const bool _useAdoptions;
 
     // Current date (used to check if an individual is dead)
     QDate _currentYear;

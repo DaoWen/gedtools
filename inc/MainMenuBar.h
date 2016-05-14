@@ -36,6 +36,9 @@ public:
      */
     void clearFilterToggle();
 
+    /* Should adoptive relations being used? */
+    bool usingAdoptedRelations();
+
 private:
 
     //=== Private Data Members ===//
@@ -54,6 +57,7 @@ private:
     // Family Tree Menu
     QMenu * _toolsMenu;
     QAction * _viewTreeAct;
+    QAction * _useAdoptionsToggleAct;
     QAction * _estimateDatesAct;
 
     // Language Menu

@@ -66,7 +66,14 @@ public:
 
     // Returns the oldest child of the parentFam
     inline GFTNode * eldestSibling() {
-        return parentFam->naturalChildFams->at(0);
+        return parentFam->naturalChildFams->isEmpty()
+                ? parentFam->allChildFams->at(0)
+                : parentFam->naturalChildFams->at(0);
+    }
+
+    // Get list of children, depending on whether adoptions should be included
+    inline QList<GFTNode *> * getKids(bool includeAdoptions) {
+        return includeAdoptions ? allChildFams : naturalChildFams;
     }
 
 };

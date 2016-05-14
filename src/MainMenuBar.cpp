@@ -7,7 +7,6 @@
  * main window of the GUI
  */
 MainMenuBar::MainMenuBar(MainWindow * mainWin) : QMenuBar(mainWin) {
-// TODO: Split this into sub-functions or something
 // File Menu
     _fileMenu = addMenu(tr("&File"));
     // Open
@@ -55,6 +54,13 @@ MainMenuBar::MainMenuBar(MainWindow * mainWin) : QMenuBar(mainWin) {
     _viewTreeAct->setEnabled(false); // Enable after a file is opened
     connect(_viewTreeAct, SIGNAL(triggered()), mainWin, SLOT(viewTree()));
     _toolsMenu->addAction(_viewTreeAct);
+    // Use adoptions?
+    _useAdoptionsToggleAct = new QAction(tr("Use &Adoptive Relations"), this);
+    _useAdoptionsToggleAct->setCheckable(true);
+    _useAdoptionsToggleAct->setChecked(true);
+    _useAdoptionsToggleAct->setStatusTip(tr("Use adoptive relationships in the family tree when estimating dates."));
+    _useAdoptionsToggleAct->setShortcut(tr("Ctrl+U"));
+    _toolsMenu->addAction(_useAdoptionsToggleAct);
     // Estimate Missing Dates
     _estimateDatesAct = new QAction(tr("Estimate Missing Dates"), this);
     _estimateDatesAct->setStatusTip(tr("Calculate estimated values for missing dates"));
@@ -134,4 +140,9 @@ void MainMenuBar::enableLockedItems() {
     _filterIncompleteAct->setEnabled(true);
     _viewTreeAct->setEnabled(true);
     _estimateDatesAct->setEnabled(true);
+}
+
+/* Should adoptive relations being used? */
+bool MainMenuBar::usingAdoptedRelations() {
+    return _useAdoptionsToggleAct->isChecked();
 }
