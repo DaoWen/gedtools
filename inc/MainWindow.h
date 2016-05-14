@@ -28,6 +28,9 @@ public:
     // Program Version
     static const char VERSION_NUMBER[];
 
+    // Most recent copyright year
+    static const char COPYRIGHT_YEAR[];
+
     // File that disables auto updates
     static const char NO_UPDATE_FILE[];
 

@@ -11,6 +11,7 @@
 
 // Program Version
 const char MainWindow::VERSION_NUMBER[] = "1.10.0";
+const char MainWindow::COPYRIGHT_YEAR[] = "2016";
 
 // File that disables auto updates
 const char MainWindow::NO_UPDATE_FILE[] = "noUpdates";
@@ -332,12 +333,12 @@ void MainWindow::setAutoUpdate(bool enabled) {
 void MainWindow::displayAbout() {
     QMessageBox::about(this, tr("About GedTools"), QString(tr(
         "GedTools v%1\n"
-        "Copyright \xA9 2009-2010 Nick Vrvilo\n"
+        "Copyright \xA9 2009-%2 Nick Vrvilo\n"
         "http://ouuuuch.phoenixteam.org/\n\n"
         "GedTools is distributed under the GNU General Public License version 3\n"
         "See the accompanying gpl-3.0.txt for details, or visit\n"
         "http://www.gnu.org/copyleft/gpl.html"
-    )).arg(VERSION_NUMBER));
+    )).arg(VERSION_NUMBER, COPYRIGHT_YEAR));
 }
 
 //=== Other Actions ===//
