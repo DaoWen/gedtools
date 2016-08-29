@@ -52,7 +52,8 @@ SOURCES = src/GFile.cpp \
           src/UpdateChecker.cpp \
           src/Main.cpp
 TRANSLATIONS = lang/GedTools_en.ts \
-               lang/GedTools_zh.ts
+               lang/GedTools_zh.ts \
+               lang/qt_zh.ts
 INCLUDEPATH += inc/
 DEPENDPATH += inc/
 OBJECTS_DIR = obj/
