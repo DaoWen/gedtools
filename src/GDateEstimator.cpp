@@ -5,8 +5,10 @@
 
 /* Constructor */
 GDateEstimator::GDateEstimator(GFTList & trees, const QString & defaultPlace,
+                               const QString & estimatedDatePrefix,
                                bool useAdoptions, bool useDeceasedOver110)
  : _trees(trees), _defaultPlace(defaultPlace),
+   _estimatedDatePrefix(estimatedDatePrefix),
    _useAdoptions(useAdoptions), _useDeceasedOver110(useDeceasedOver110),
    _currentYear(QDate::currentDate()) {}
 
@@ -157,7 +159,7 @@ int GDateEstimator::updateMarriage(GFTNode * famNode) {
         if (eldestChild && eldestChild->birthYear().isValid()) {
             // Marriage year is 1 year before the oldest child is born
             marriageYear = eldestChild->birthYear().addYears(-1);
-            fam->setMarriageYear(marriageYear);
+            fam->setMarriageYear(marriageYear, _estimatedDatePrefix);
             // Tell the caller that updates have been made
             ++updated;
         }
@@ -184,7 +186,7 @@ int GDateEstimator::updateMarriage(GFTNode * famNode) {
             else {
                 marriageYear = birthYear.addYears(20+offset);
             }
-            fam->setMarriageYear(marriageYear);
+            fam->setMarriageYear(marriageYear, _estimatedDatePrefix);
             // Tell the caller that updates have been made
             ++updated;
         }
@@ -211,7 +213,7 @@ int GDateEstimator::updateIndividual(GIndiEntry * indi, GFamily * fam, GIndiEntr
         else {
             birthYear = marriageYear.addYears(-20);
         }
-        indi->setBirthYear(birthYear);
+        indi->setBirthYear(birthYear, _estimatedDatePrefix);
         // Tell the caller that updates have been made
         ++updated;
     }
@@ -366,7 +368,7 @@ int GDateEstimator::estimateSiblingsBetween(int & sibA, int & sibB, const QList<
     // Estimate birth years for all siblings between sibA & sibB
     for (int i=sibA+1; i<sibB; ++i) {
         birthGap += avgGap;
-        childFams[i]->famHead->setBirthYear(startDate.addYears((int)birthGap));
+        childFams[i]->famHead->setBirthYear(startDate.addYears((int)birthGap), _estimatedDatePrefix);
         ++updated;
         // Update individual so that all dates are updated
         updated += updateCouple(childFams[i]);
@@ -385,7 +387,7 @@ int GDateEstimator::estimateSiblingsDown(int & sibA, const QList<GFTNode *> & ch
     for (int i=sibA+1; i<childFams.size(); ++i) {
         // 2 years between sibling births
         birthDate = birthDate.addYears(2);
-        childFams[i]->famHead->setBirthYear(birthDate);
+        childFams[i]->famHead->setBirthYear(birthDate, _estimatedDatePrefix);
         ++updated;
         // Update individual so that all dates are updated
         updated += updateCouple(childFams[i]);
@@ -404,7 +406,7 @@ int GDateEstimator::estimateSiblingsUp(int & sibB, const QList<GFTNode *> & chil
     for (int i=sibB-1; i>-1; --i) {
         // 2 years between sibling births
         birthDate = birthDate.addYears(-2);
-        childFams[i]->famHead->setBirthYear(birthDate);
+        childFams[i]->famHead->setBirthYear(birthDate, _estimatedDatePrefix);
         ++updated;
         // Update individual so that all dates are updated
         updated += updateCouple(childFams[i]);
@@ -491,7 +493,7 @@ int GDateEstimator::estimateBranchBetween(GFTNode * famA, GFTNode * famB) {
     while (famB != famA) {
         yearGap += avgGap;
         sibOffset = famB->parentFam->getKids(_useAdoptions)->indexOf(famB) * 2;
-        famB->famHead->setBirthYear(startYear.addYears((int)yearGap+sibOffset));
+        famB->famHead->setBirthYear(startYear.addYears((int)yearGap+sibOffset), _estimatedDatePrefix);
         famB = famB->parentFam;
         updated += updateSiblings(famB);
         ++updated;
@@ -575,7 +577,7 @@ int GDateEstimator::estimateBranchDown(GFTNode * n) {
     QDate birthYear = marriageFam->marriageYear();
     // 1 year between marriage and first child
     // Set eldest child's birth year
-    n->famHead->setBirthYear(birthYear.addYears(1));
+    n->famHead->setBirthYear(birthYear.addYears(1), _estimatedDatePrefix);
     ++updated;
     // Update individual so that all dates are updated
     updated += updateCouple(n);
@@ -595,7 +597,7 @@ int GDateEstimator::estimateBranchUp(GFTNode * famB) {
     QDate marriageYear = famB->famHead->birthYear();
     // 1 year between marriage and first child
     // Set parent's birth year
-    marriageFam->setMarriageYear(marriageYear.addYears(-1));
+    marriageFam->setMarriageYear(marriageYear.addYears(-1), _estimatedDatePrefix);
     ++updated;
     // Update individual so that all dates are updated
     updated += updateCouple(n);

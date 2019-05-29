@@ -145,7 +145,7 @@ bool GFamily::isTreeLeaf(GIndiMap &/*indiMap*/) const {
 /* Sets a couple's estimated marriage
  * year and updates the MARR node value
  */
-void GFamily::setMarriageYear(const QDate & year) {
+void GFamily::setMarriageYear(const QDate & year, const QString & prefix) {
     if (!year.isValid()) {
         throw QString("Attempted to set an invalid marriage date.");
     }
@@ -158,7 +158,7 @@ void GFamily::setMarriageYear(const QDate & year) {
         _marriageDateNode = new GNode(ENTRY_DATE);
     }
     // Build the date entry string
-    QString dateString("EST ");
+    QString dateString(prefix);
     if (year.year() < 0) {
         // Remove the "-" from the front and add "BC"
         dateString.append(year.toString("yyyy BC").mid(1));

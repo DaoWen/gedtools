@@ -68,6 +68,13 @@ MainMenuBar::MainMenuBar(MainWindow * mainWin) : QMenuBar(mainWin) {
     _useDeceasedOver110ToggleAct->setStatusTip(tr("Automatically add DECEASED annotation to indivudals over 110 years old."));
     _useDeceasedOver110ToggleAct->setShortcut(tr("Ctrl+D"));
     _toolsMenu->addAction(_useDeceasedOver110ToggleAct);
+    // Mark estimated dates with EST annotation
+    _markingEstimated = new QAction(tr("&Mark estimated dates with \"EST\""), this);
+    _markingEstimated->setCheckable(true);
+    _markingEstimated->setChecked(false);
+    _markingEstimated->setStatusTip(tr("Mark estimated dates with \"EST\" rather than \"ABT\"."));
+    _markingEstimated->setShortcut(tr("Ctrl+M"));
+    _toolsMenu->addAction(_markingEstimated);
     // Estimate Missing Dates
     _estimateDatesAct = new QAction(tr("Estimate Missing Dates"), this);
     _estimateDatesAct->setStatusTip(tr("Calculate estimated values for missing dates"));
@@ -157,4 +164,12 @@ bool MainMenuBar::usingAdoptedRelations() {
 /* Should add DECEASED annotation for people over 110 years old? */
 bool MainMenuBar::usingDeceasedOver110() {
     return _useDeceasedOver110ToggleAct->isChecked();
+}
+
+
+/* Should add EST annotation for estimated dates?
+ * Using ABT otherwise.
+ */
+bool MainMenuBar::markingEstimated() {
+    return _markingEstimated->isChecked();
 }

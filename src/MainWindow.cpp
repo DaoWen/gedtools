@@ -274,7 +274,8 @@ void MainWindow::estimateDates() {
         // Estimate the dates
         const bool adoptOpt = _menuBar->usingAdoptedRelations();
         const bool deceasedOpt = _menuBar->usingDeceasedOver110();
-        GDateEstimator estimator(*_trees, defaultLocation, adoptOpt, deceasedOpt);
+        const QString datePrefix = _menuBar->markingEstimated() ? "EST " : "ABT ";
+        GDateEstimator estimator(*_trees, defaultLocation, datePrefix, adoptOpt, deceasedOpt);
         _indiModel->invalidateViews();
         try {
             int datesAdded = estimator.estimateMissingDates();

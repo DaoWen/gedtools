@@ -42,6 +42,12 @@ public:
     /* Should add DECEASED annotation for people over 110 years old? */
     bool usingDeceasedOver110();
 
+    /* Should add EST annotation for estimated dates?
+     * Using ABT otherwise.
+     */
+    bool markingEstimated();
+
+
 private:
 
     //=== Private Data Members ===//
@@ -62,6 +68,7 @@ private:
     QAction * _viewTreeAct;
     QAction * _useAdoptionsToggleAct;
     QAction * _useDeceasedOver110ToggleAct;
+    QAction * _markingEstimated;
     QAction * _estimateDatesAct;
 
     // Language Menu

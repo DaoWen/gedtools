@@ -206,49 +206,64 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/MainMenuBar.cpp" line="79"/>
+        <location filename="../src/MainMenuBar.cpp" line="72"/>
+        <source>&amp;Mark estimated dates with &quot;EST&quot;</source>
+        <translation>估計的日期用《估計》的附註</translation>
+    </message>
+    <message>
+        <location filename="../src/MainMenuBar.cpp" line="75"/>
+        <source>Mark estimated dates with &quot;EST&quot; rather than &quot;ABT&quot;.</source>
+        <translation>估計的日期用《估計》的附註，而不用《大約》的附註</translation>
+    </message>
+    <message>
+        <location filename="../src/MainMenuBar.cpp" line="76"/>
+        <source>Ctrl+M</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/MainMenuBar.cpp" line="86"/>
         <source>&amp;Language</source>
         <translation>語言</translation>
     </message>
     <message>
-        <location filename="../src/MainMenuBar.cpp" line="83"/>
-        <location filename="../src/MainMenuBar.cpp" line="96"/>
+        <location filename="../src/MainMenuBar.cpp" line="90"/>
+        <location filename="../src/MainMenuBar.cpp" line="103"/>
         <source>English</source>
         <comment>Current Language Name</comment>
         <translation>中文</translation>
     </message>
     <message>
-        <location filename="../src/MainMenuBar.cpp" line="105"/>
+        <location filename="../src/MainMenuBar.cpp" line="112"/>
         <source>&amp;Help</source>
         <translation>說明</translation>
     </message>
     <message>
-        <location filename="../src/MainMenuBar.cpp" line="107"/>
+        <location filename="../src/MainMenuBar.cpp" line="114"/>
         <source>Visit GedTools &amp;Website</source>
         <translation>上GedTools的網站</translation>
     </message>
     <message>
-        <location filename="../src/MainMenuBar.cpp" line="108"/>
+        <location filename="../src/MainMenuBar.cpp" line="115"/>
         <source>Go to the GedTools web page</source>
         <translation>上GedTools的網站</translation>
     </message>
     <message>
-        <location filename="../src/MainMenuBar.cpp" line="112"/>
+        <location filename="../src/MainMenuBar.cpp" line="119"/>
         <source>&amp;Report Bugs</source>
         <translation>報告程式錯誤</translation>
     </message>
     <message>
-        <location filename="../src/MainMenuBar.cpp" line="113"/>
+        <location filename="../src/MainMenuBar.cpp" line="120"/>
         <source>Go to the GedTools bug report page</source>
         <translation>上GedTools的網站以報告程式的錯誤</translation>
     </message>
     <message>
-        <location filename="../src/MainMenuBar.cpp" line="124"/>
+        <location filename="../src/MainMenuBar.cpp" line="131"/>
         <source>&amp;About</source>
         <translation>關於本程式</translation>
     </message>
     <message>
-        <location filename="../src/MainMenuBar.cpp" line="125"/>
+        <location filename="../src/MainMenuBar.cpp" line="132"/>
         <source>Information about GedTools</source>
         <translation>關於ＧｅｄＴｏｏｌｓ的資料</translation>
     </message>
@@ -277,27 +292,27 @@
         <translation>家族樹狀表</translation>
     </message>
     <message>
-        <location filename="../src/MainMenuBar.cpp" line="72"/>
+        <location filename="../src/MainMenuBar.cpp" line="79"/>
         <source>Estimate Missing Dates</source>
         <translation>推算年代</translation>
     </message>
     <message>
-        <location filename="../src/MainMenuBar.cpp" line="73"/>
+        <location filename="../src/MainMenuBar.cpp" line="80"/>
         <source>Calculate estimated values for missing dates</source>
         <translation>估計空白的日期</translation>
     </message>
     <message>
-        <location filename="../src/MainMenuBar.cpp" line="74"/>
+        <location filename="../src/MainMenuBar.cpp" line="81"/>
         <source>Ctrl+E</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/MainMenuBar.cpp" line="117"/>
+        <location filename="../src/MainMenuBar.cpp" line="124"/>
         <source>Enable &amp;Automatic Update Checks</source>
         <translation>可以自動查詢最新版本</translation>
     </message>
     <message>
-        <location filename="../src/MainMenuBar.cpp" line="118"/>
+        <location filename="../src/MainMenuBar.cpp" line="125"/>
         <source>Allow GedTools to automatically check for newer versions</source>
         <translation>讓GedTools自動查詢新版本的資料</translation>
     </message>
@@ -372,7 +387,7 @@
         <translation>沒有不完整的紀錄</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="336"/>
+        <location filename="../src/MainWindow.cpp" line="337"/>
         <source>GedTools v%1
 Copyright © 2009-%2 Nick Vrvilo
 http://ouuuuch.phoenixteam.org/
@@ -393,9 +408,9 @@ http://www.gnu.org/copyleft/gpl.html {1
     <message>
         <location filename="../src/MainWindow.cpp" line="153"/>
         <location filename="../src/MainWindow.cpp" line="213"/>
-        <location filename="../src/MainWindow.cpp" line="285"/>
-        <location filename="../src/MainWindow.cpp" line="309"/>
-        <location filename="../src/MainWindow.cpp" line="316"/>
+        <location filename="../src/MainWindow.cpp" line="286"/>
+        <location filename="../src/MainWindow.cpp" line="310"/>
+        <location filename="../src/MainWindow.cpp" line="317"/>
         <source>Error</source>
         <translation>錯誤</translation>
     </message>
@@ -410,17 +425,17 @@ http://www.gnu.org/copyleft/gpl.html {1
         <translation>先開啓一個ＧＥＤＣＯＭ的檔案來開始</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="308"/>
+        <location filename="../src/MainWindow.cpp" line="309"/>
         <source>http://ouuuuch.phoenixteam.org/released/gedTools/</source>
         <translation>http://ouuuuch.phoenixteam.org/released/gedTools/tw/</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="315"/>
+        <location filename="../src/MainWindow.cpp" line="316"/>
         <source>http://ouuuuch.phoenixteam.org/bugs/?prog=GedTools</source>
         <translation>http://ouuuuch.phoenixteam.org/bugs/tw/?prog=GedTools</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="336"/>
+        <location filename="../src/MainWindow.cpp" line="337"/>
         <source>About GedTools</source>
         <translation>關於ＧｅｄＴｏｏｌｓ</translation>
     </message>
@@ -452,7 +467,7 @@ fill in blank birth, marriage and death places:</source>
         <translation>自動利用此地點以填寫空白的出生、婚姻、死亡地點：</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="282"/>
+        <location filename="../src/MainWindow.cpp" line="283"/>
         <source>%1 new dates were added</source>
         <translation>附加了%1個新的日期</translation>
     </message>
@@ -478,20 +493,20 @@ GedTools 是根據 GNU 通用公共授權 第三版
 http://www.gnu.org/copyleft/gpl.html</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="353"/>
+        <location filename="../src/MainWindow.cpp" line="354"/>
         <source>Update</source>
         <translation>更新</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="354"/>
+        <location filename="../src/MainWindow.cpp" line="355"/>
         <source>A new version of GedTools is available for download.
 Would you like to visit the GedTools website?</source>
         <translation>GedTools有新版本可以下載。
 您想開啓GedTools的網頁嗎？</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="309"/>
-        <location filename="../src/MainWindow.cpp" line="316"/>
+        <location filename="../src/MainWindow.cpp" line="310"/>
+        <location filename="../src/MainWindow.cpp" line="317"/>
         <source>Failed to open web browser</source>
         <translation>開啓網路瀏覽器失敗</translation>
     </message>

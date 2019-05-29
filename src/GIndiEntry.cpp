@@ -224,7 +224,7 @@ void GIndiEntry::setRomanizedName(const QString & romanName) {
 /* Sets an individual's estimated birth
  * year and updates the BIRT DATE node value
  */
-void GIndiEntry::setBirthYear(const QDate & year) {
+void GIndiEntry::setBirthYear(const QDate & year, const QString & prefix) {
     if (!year.isValid()) {
         throw QString("Attempted to set an invalid birth date for: %1").arg(id());
     }
@@ -237,7 +237,7 @@ void GIndiEntry::setBirthYear(const QDate & year) {
         _birthDateNode = new GNode(ENTRY_DATE);
     }
     // Build the date entry string
-    QString dateString("EST ");
+    QString dateString(prefix);
     if (year.year() < 0) {
         // Remove the "-" from the front and add "BC"
         dateString.append(year.toString("yyyy BC").mid(1));

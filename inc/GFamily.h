@@ -77,7 +77,7 @@ public:
     /* Sets a couple's estimated marriage
      * year and updates the MARR DATE node value
      */
-    void setMarriageYear(const QDate & year);
+    void setMarriageYear(const QDate & year, const QString & datePrefix);
 
     /* Sets the PLAC value for the MARR node
      */

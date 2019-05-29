@@ -120,7 +120,7 @@ public:
     /* Sets an individual's estimated birth
      * year and updates the BIRT DATE node value
      */
-    void setBirthYear(const QDate & year);
+    void setBirthYear(const QDate & year, const QString & datePrefix);
 
     /* Sets the PLAC value for the BIRT node
      */

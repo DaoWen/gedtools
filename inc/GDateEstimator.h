@@ -17,7 +17,9 @@ public:
     //=== Constructor/Destructor ===//
 
     /* Constructor */
-    GDateEstimator(GFTList & trees, const QString & defaultPlace, bool useAdoptions, bool useDeceasedOver110);
+    GDateEstimator(GFTList & trees, const QString & defaultPlace,
+                   const QString & estimatedDatePrefix,
+                   bool useAdoptions, bool useDeceasedOver110);
 
     /* Destructor */
     ~GDateEstimator();
@@ -40,6 +42,10 @@ private:
 
     // Default location of birth, marriage and death
     const QString & _defaultPlace;
+
+    // Prefix to add to estimated dates
+    // e.g., "ABT " or "EST "
+    const QString & _estimatedDatePrefix;
 
     // Use adoptive relations while estimating?
     const bool _useAdoptions;
