@@ -10,8 +10,8 @@
 //=== Constants ===//
 
 // Program Version
-const char MainWindow::VERSION_NUMBER[] = "1.11.0";
-const char MainWindow::COPYRIGHT_YEAR[] = "2016";
+const char MainWindow::VERSION_NUMBER[] = "2019.05.28";
+const char MainWindow::COPYRIGHT_YEAR[] = "2019";
 
 // File that disables auto updates
 const char MainWindow::NO_UPDATE_FILE[] = "noUpdates";

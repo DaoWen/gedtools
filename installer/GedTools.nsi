@@ -7,7 +7,7 @@
 
   ;Name and file
   Name "GedTools"
-  OutFile "GedTools-1_11_0-win32-installer.exe"
+  OutFile "GedTools-20190528-win32-installer.exe"
 
   ;Default installation folder
   InstallDir $PROGRAMFILES\GedTools
@@ -81,7 +81,7 @@ Section
     File ..\bin\GedTools.exe
     File ..\gpl-3.0.txt
     File ..\PinyinMap.dat
-    File ..\Readme.txt
+    File ..\Readme.md
     File mingwm10.dll
     File libgcc_s_dw2-1.dll
     File QtCore4.dll
@@ -115,7 +115,7 @@ Section "Uninstall"
     Delete $INSTDIR\QtCore4.dll
     Delete $INSTDIR\QtGui4.dll
     Delete $INSTDIR\QtNetwork4.dll
-    Delete $INSTDIR\Readme.txt
+    Delete $INSTDIR\Readme.md
     Delete $INSTDIR\Changes.txt
     Delete $INSTDIR\lang\GedTools_en.qm
     Delete $INSTDIR\lang\GedTools_zh.qm

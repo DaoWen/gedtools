@@ -32,9 +32,7 @@ bool UpdateChecker::finished() const {
     return _finished;
 }
 
-/* Has major update
- * True if a non-minor version change has been made
- * (Numbers before the first two dots have changed)
+/* A newer release is available than the current version
  */
 bool UpdateChecker::hasUpdate() const {
     return _hasUpdate;
@@ -81,6 +79,14 @@ void UpdateChecker::check() {
 
 //=== Network Action Slots ===//
 
+/* Returns true if newVer is newer (greater) than oldVer.
+ * Returns ifEqual when oldVer and newVer are equal.
+ * You can chain calls in the ifEqual positon.
+ */
+static inline bool cmpVer(int oldVer, int newVer, bool ifEqual = false) {
+    return (oldVer == newVer) ? ifEqual : (oldVer < newVer);
+}
+
 /* Called when the Network Manager has finished its request
  */
 void UpdateChecker::requestFinished(QNetworkReply * reply) {
@@ -91,8 +97,8 @@ void UpdateChecker::requestFinished(QNetworkReply * reply) {
     int nv1 = versionExp.cap(1).toInt();
     int nv2 = versionExp.cap(2).toInt();
     int nv3 = versionExp.cap(3).toInt();
-    _hasUpdate = (_v1 < nv1) || ((_v1 == nv1) && (_v2 < nv2));
-    _hasMinorUpdate = _hasUpdate || ((_v2 == nv2) && (_v3 < nv3));
+    _hasUpdate = cmpVer(_v1, nv1, cmpVer(_v2, nv2, cmpVer(_v3, nv3)));
+    _hasMinorUpdate = _hasUpdate;
     // Finished!
     _finished = true;
     // Emit a signal so that users know that the request has

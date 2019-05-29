@@ -1,5 +1,12 @@
 GedTools - Version History
 
+2019.05.28 - 28 May 2019
+* Changed versioning scheme to YYYY.MM.DD (release date) format.
+* Added toggle for auto-marking people over 110 years as DECEASED,
+  now disabled by default.
+* Added toggle for tagging calculated dates using ABT ("about") or EST
+  ("estimated"), with the less accurate but more common ABT as default.
+
 1.11.0 - 14 May 2016
 * Added option to choose whether or not to use adoptive relationships
   when estimating missing dates in a family tree.
