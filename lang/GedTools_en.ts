@@ -183,44 +183,59 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainMenuBar.cpp" line="76"/>
-        <location filename="../src/MainMenuBar.cpp" line="89"/>
+        <location filename="../src/MainMenuBar.cpp" line="65"/>
+        <source>Use &amp;Deceased after 110</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/MainMenuBar.cpp" line="68"/>
+        <source>Automatically add DECEASED annotation to indivudals over 110 years old.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/MainMenuBar.cpp" line="69"/>
+        <source>Ctrl+D</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/MainMenuBar.cpp" line="83"/>
+        <location filename="../src/MainMenuBar.cpp" line="96"/>
         <source>English</source>
         <comment>Current Language Name</comment>
         <translation>English</translation>
     </message>
     <message>
-        <location filename="../src/MainMenuBar.cpp" line="98"/>
+        <location filename="../src/MainMenuBar.cpp" line="105"/>
         <source>&amp;Help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainMenuBar.cpp" line="100"/>
+        <location filename="../src/MainMenuBar.cpp" line="107"/>
         <source>Visit GedTools &amp;Website</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainMenuBar.cpp" line="101"/>
+        <location filename="../src/MainMenuBar.cpp" line="108"/>
         <source>Go to the GedTools web page</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainMenuBar.cpp" line="105"/>
+        <location filename="../src/MainMenuBar.cpp" line="112"/>
         <source>&amp;Report Bugs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainMenuBar.cpp" line="106"/>
+        <location filename="../src/MainMenuBar.cpp" line="113"/>
         <source>Go to the GedTools bug report page</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainMenuBar.cpp" line="117"/>
+        <location filename="../src/MainMenuBar.cpp" line="124"/>
         <source>&amp;About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainMenuBar.cpp" line="118"/>
+        <location filename="../src/MainMenuBar.cpp" line="125"/>
         <source>Information about GedTools</source>
         <translation type="unfinished"></translation>
     </message>
@@ -245,32 +260,32 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainMenuBar.cpp" line="65"/>
+        <location filename="../src/MainMenuBar.cpp" line="72"/>
         <source>Estimate Missing Dates</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainMenuBar.cpp" line="66"/>
+        <location filename="../src/MainMenuBar.cpp" line="73"/>
         <source>Calculate estimated values for missing dates</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainMenuBar.cpp" line="67"/>
+        <location filename="../src/MainMenuBar.cpp" line="74"/>
         <source>Ctrl+E</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainMenuBar.cpp" line="111"/>
+        <location filename="../src/MainMenuBar.cpp" line="118"/>
         <source>Allow GedTools to automatically check for newer versions</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainMenuBar.cpp" line="72"/>
+        <location filename="../src/MainMenuBar.cpp" line="79"/>
         <source>&amp;Language</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainMenuBar.cpp" line="110"/>
+        <location filename="../src/MainMenuBar.cpp" line="117"/>
         <source>Enable &amp;Automatic Update Checks</source>
         <translation type="unfinished"></translation>
     </message>
@@ -301,9 +316,9 @@
     <message>
         <location filename="../src/MainWindow.cpp" line="153"/>
         <location filename="../src/MainWindow.cpp" line="213"/>
-        <location filename="../src/MainWindow.cpp" line="283"/>
-        <location filename="../src/MainWindow.cpp" line="307"/>
-        <location filename="../src/MainWindow.cpp" line="314"/>
+        <location filename="../src/MainWindow.cpp" line="285"/>
+        <location filename="../src/MainWindow.cpp" line="309"/>
+        <location filename="../src/MainWindow.cpp" line="316"/>
         <source>Error</source>
         <translation type="unfinished"></translation>
     </message>
@@ -364,22 +379,22 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="306"/>
+        <location filename="../src/MainWindow.cpp" line="308"/>
         <source>http://ouuuuch.phoenixteam.org/released/gedTools/</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="313"/>
+        <location filename="../src/MainWindow.cpp" line="315"/>
         <source>http://ouuuuch.phoenixteam.org/bugs/?prog=GedTools</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="334"/>
+        <location filename="../src/MainWindow.cpp" line="336"/>
         <source>About GedTools</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="334"/>
+        <location filename="../src/MainWindow.cpp" line="336"/>
         <source>GedTools v%1
 Copyright © 2009-%2 Nick Vrvilo
 http://ouuuuch.phoenixteam.org/
@@ -401,7 +416,7 @@ fill in blank birth, marriage and death places:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="280"/>
+        <location filename="../src/MainWindow.cpp" line="282"/>
         <source>%1 new dates were added</source>
         <translation type="unfinished"></translation>
     </message>
@@ -411,19 +426,19 @@ fill in blank birth, marriage and death places:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="351"/>
+        <location filename="../src/MainWindow.cpp" line="353"/>
         <source>Update</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="352"/>
+        <location filename="../src/MainWindow.cpp" line="354"/>
         <source>A new version of GedTools is available for download.
 Would you like to visit the GedTools website?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="307"/>
-        <location filename="../src/MainWindow.cpp" line="314"/>
+        <location filename="../src/MainWindow.cpp" line="309"/>
+        <location filename="../src/MainWindow.cpp" line="316"/>
         <source>Failed to open web browser</source>
         <translation type="unfinished"></translation>
     </message>

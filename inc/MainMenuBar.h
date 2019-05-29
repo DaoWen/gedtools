@@ -39,6 +39,9 @@ public:
     /* Should adoptive relations being used? */
     bool usingAdoptedRelations();
 
+    /* Should add DECEASED annotation for people over 110 years old? */
+    bool usingDeceasedOver110();
+
 private:
 
     //=== Private Data Members ===//
@@ -58,6 +61,7 @@ private:
     QMenu * _toolsMenu;
     QAction * _viewTreeAct;
     QAction * _useAdoptionsToggleAct;
+    QAction * _useDeceasedOver110ToggleAct;
     QAction * _estimateDatesAct;
 
     // Language Menu

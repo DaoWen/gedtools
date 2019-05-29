@@ -17,7 +17,7 @@ public:
     //=== Constructor/Destructor ===//
 
     /* Constructor */
-    GDateEstimator(GFTList & trees, const QString & defaultPlace, bool useAdoptions);
+    GDateEstimator(GFTList & trees, const QString & defaultPlace, bool useAdoptions, bool useDeceasedOver110);
 
     /* Destructor */
     ~GDateEstimator();
@@ -43,6 +43,9 @@ private:
 
     // Use adoptive relations while estimating?
     const bool _useAdoptions;
+
+    // Add DECEASED annotation for people over 110 years old?
+    const bool _useDeceasedOver110;
 
     // Current date (used to check if an individual is dead)
     QDate _currentYear;

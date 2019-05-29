@@ -272,7 +272,9 @@ void MainWindow::estimateDates() {
     // Continue only if the user pressed OK
     if (okPressed) {
         // Estimate the dates
-        GDateEstimator estimator(*_trees, defaultLocation, _menuBar->usingAdoptedRelations());
+        const bool adoptOpt = _menuBar->usingAdoptedRelations();
+        const bool deceasedOpt = _menuBar->usingDeceasedOver110();
+        GDateEstimator estimator(*_trees, defaultLocation, adoptOpt, deceasedOpt);
         _indiModel->invalidateViews();
         try {
             int datesAdded = estimator.estimateMissingDates();

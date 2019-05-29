@@ -61,6 +61,13 @@ MainMenuBar::MainMenuBar(MainWindow * mainWin) : QMenuBar(mainWin) {
     _useAdoptionsToggleAct->setStatusTip(tr("Use adoptive relationships in the family tree when estimating dates."));
     _useAdoptionsToggleAct->setShortcut(tr("Ctrl+U"));
     _toolsMenu->addAction(_useAdoptionsToggleAct);
+    // Add DECEASED annotation for people over 110 years old?
+    _useDeceasedOver110ToggleAct = new QAction(tr("Use &Deceased after 110"), this);
+    _useDeceasedOver110ToggleAct->setCheckable(true);
+    _useDeceasedOver110ToggleAct->setChecked(false);
+    _useDeceasedOver110ToggleAct->setStatusTip(tr("Automatically add DECEASED annotation to indivudals over 110 years old."));
+    _useDeceasedOver110ToggleAct->setShortcut(tr("Ctrl+D"));
+    _toolsMenu->addAction(_useDeceasedOver110ToggleAct);
     // Estimate Missing Dates
     _estimateDatesAct = new QAction(tr("Estimate Missing Dates"), this);
     _estimateDatesAct->setStatusTip(tr("Calculate estimated values for missing dates"));
@@ -145,4 +152,9 @@ void MainMenuBar::enableLockedItems() {
 /* Should adoptive relations being used? */
 bool MainMenuBar::usingAdoptedRelations() {
     return _useAdoptionsToggleAct->isChecked();
+}
+
+/* Should add DECEASED annotation for people over 110 years old? */
+bool MainMenuBar::usingDeceasedOver110() {
+    return _useDeceasedOver110ToggleAct->isChecked();
 }

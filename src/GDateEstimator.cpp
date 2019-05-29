@@ -4,9 +4,11 @@
 //=== Constructor/Destructor ===//
 
 /* Constructor */
-GDateEstimator::GDateEstimator(GFTList & trees, const QString & defaultPlace, bool useAdoptions)
+GDateEstimator::GDateEstimator(GFTList & trees, const QString & defaultPlace,
+                               bool useAdoptions, bool useDeceasedOver110)
  : _trees(trees), _defaultPlace(defaultPlace),
-   _useAdoptions(useAdoptions), _currentYear(QDate::currentDate()) {}
+   _useAdoptions(useAdoptions), _useDeceasedOver110(useDeceasedOver110),
+   _currentYear(QDate::currentDate()) {}
 
 /* Destructor */
 GDateEstimator::~GDateEstimator() {}
@@ -214,7 +216,7 @@ int GDateEstimator::updateIndividual(GIndiEntry * indi, GFamily * fam, GIndiEntr
         ++updated;
     }
     // Calculate whether or not the individual is dead
-    if (indi->deathDate().isNull() && birthYear.isValid()) {
+    if (_useDeceasedOver110 && indi->deathDate().isNull() && birthYear.isValid()) {
         // Over 110 years old => they're dead
         if (birthYear.addYears(110) < _currentYear) {
             indi->setDeceased();
