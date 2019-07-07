@@ -1,2 +1,5 @@
+*.exe
+*.dll
+
 /GedTools.pro.user
 /lang/*.qm
