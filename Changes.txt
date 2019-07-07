@@ -1,5 +1,10 @@
 GedTools - Version History
 
+2019.07.07
+* Corrected behavior for the DECEASED toggle to only disable creating
+  a DATE node with value DECEASED; i.e., the DEAT node is still created
+  when the DECEASED date annotation is disabled.
+
 2019.05.28 - 28 May 2019
 * Changed versioning scheme to YYYY.MM.DD (release date) format.
 * Added toggle for auto-marking people over 110 years as DECEASED,
