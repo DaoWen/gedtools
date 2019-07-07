@@ -218,12 +218,14 @@ int GDateEstimator::updateIndividual(GIndiEntry * indi, GFamily * fam, GIndiEntr
         ++updated;
     }
     // Calculate whether or not the individual is dead
-    if (_useDeceasedOver110 && indi->deathDate().isNull() && birthYear.isValid()) {
+    if (indi->deathDate().isNull() && birthYear.isValid()) {
         // Over 110 years old => they're dead
         if (birthYear.addYears(110) < _currentYear) {
-            indi->setDeceased();
+            indi->setDeceased(_useDeceasedOver110);
             // Tell the caller that updates have been made
-            ++updated;
+            if (_useDeceasedOver110) {
+                ++updated;
+            }
         }
     }
     // Fill in any empty PLAC nodes if default place is set
@@ -231,7 +233,7 @@ int GDateEstimator::updateIndividual(GIndiEntry * indi, GFamily * fam, GIndiEntr
         if (indi->birthPlace().isEmpty() && !indi->birthDate().isEmpty()) {
             indi->setBirthPlace(_defaultPlace);
         }
-        if (indi->deathPlace().isEmpty() && !indi->deathDate().isEmpty()) {
+        if (indi->dead() && indi->deathPlace().isEmpty()) {
             indi->setDeathPlace(_defaultPlace);
         }
         if (fam && fam->marriagePlace().isEmpty() && !fam->marriageDate().isEmpty()) {

@@ -88,6 +88,10 @@ public:
      */
     bool deceased() const;
 
+    /* Returns true if the individual has any death information
+     */
+    bool dead() const;
+
     /* Returns true if the individual's
      * family pedigree property is "adopted"
      */
@@ -126,10 +130,10 @@ public:
      */
     void setBirthPlace(const QString & place);
 
-    /* Sets an individual's death
-     * date value to "DECEASED"
+    /* Sets an individual's death node,
+     * and optionally the date value to "DECEASED"
      */
-    void setDeceased();
+    void setDeceased(bool annotate);
 
     /* Sets the PLAC value for the DEAT node
      */

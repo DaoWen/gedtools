@@ -163,6 +163,12 @@ bool GIndiEntry::deceased() const {
     return _deathDateNode && _deathDateNode->data() == DATA_DECEASED;
 }
 
+/* Returns true if the individual has any death information
+ */
+bool GIndiEntry::dead() const {
+    return _deathNode;
+}
+
 /* Returns true if the individual's
  * family pedigree property is "adopted"
  */
@@ -264,19 +270,21 @@ void GIndiEntry::setBirthPlace(const QString & place) {
     _birthPlaceNode->setData(place);
 }
 
-/* Sets an individual's death
- * date value to "DECEASED"
+/* Sets an individual's death node,
+ * and optionally the date value to "DECEASED"
  */
-void GIndiEntry::setDeceased() {
+void GIndiEntry::setDeceased(bool annotate) {
     // Create DEAT node if needed
     if (!_deathNode) appendDeathNode();
-    // Create the DATE node if needed
-    if (!_deathDateNode) {
-        _deathDateNode = new GNode(ENTRY_DATE);
+    // Optionally create the DATE node if needed
+    if (annotate) {
+        if (!_deathDateNode) {
+            _deathDateNode = new GNode(ENTRY_DATE);
+        }
+        _deathDateNode->setData(DATA_DECEASED);
+        _deathNode->setFirstChild(_deathDateNode);
+        _deathDateNode->setNext(_deathPlaceNode);
     }
-    _deathDateNode->setData(DATA_DECEASED);
-    _deathNode->setFirstChild(_deathDateNode);
-    _deathDateNode->setNext(_deathPlaceNode);
 }
 
 /* Sets the PLAC value for the DEAT node
