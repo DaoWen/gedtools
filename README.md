@@ -15,7 +15,7 @@ Please see the accompanying `LICENSE` file for more information.
 GedTools was built using Qt by Nokia version 4.7.3.
 The Qt SDK 1.1 (with Qt 4.7.3) can be obtained from the following wiki page:
 
-<https://wiki.qt.io/Qt_Versions#Qt_SDKs_providing_major_4.x_versions>
+<https://wiki.qt.io/Qt_4_versions>
 
 The links on the above wiki page currently point to platform-specific
 binary installers, suffixed with `v1_1`, hosted on the following FTP mirror:
