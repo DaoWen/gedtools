@@ -1,5 +1,10 @@
 GedTools - Version History
 
+2021.11.28
+* Added 14 characters to the pinyin database
+* Fixed bug where full-width punctuation was changed to '?' in ROMN field
+* Increased call stack size for Windows builds
+
 2019.07.07
 * Corrected behavior for the DECEASED toggle to only disable creating
   a DATE node with value DECEASED; i.e., the DEAT node is still created
