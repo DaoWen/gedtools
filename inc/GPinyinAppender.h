@@ -33,7 +33,10 @@ private:
     //=== Constants ===//
 
     // First unicode point for Chinese characters
-    static const int CJK_CODEPOINT;
+    static const int CJK_CODEPOINT_A;
+
+    // Last unicode point for Chinese characters
+    static const int CJK_CODEPOINT_Z;
 
     //=== Private Data Members ===//
 

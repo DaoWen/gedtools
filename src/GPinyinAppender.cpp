@@ -4,7 +4,14 @@
 //=== Constants ===//
 
 // First unicode point for Chinese characters
-const int GPinyinAppender::CJK_CODEPOINT = 0x3400;
+// Note that PinyinMap.dat does not contain
+// any characters before this codepoint.
+const int GPinyinAppender::CJK_CODEPOINT_A = 0x3400;
+
+// Last unicode point for Chinese characters
+// Note that PinyinMap.dat does not contain
+// any characters after this codepoint.
+const int GPinyinAppender::CJK_CODEPOINT_Z = 0x9FFF;
 
 //=== Constructor/Destructor ===//
 
@@ -49,7 +56,7 @@ int GPinyinAppender::appendTo(GIndiMap & indiMap, bool replaceOldEntries) {
         // Loop through each character in their name to append Pinyin
         for (int j=0;j<name.length();++j) {
             // If it's a Hanzi then try to append pinyin for it
-            if (name[j] >= CJK_CODEPOINT) {
+            if (CJK_CODEPOINT_A <= name[j] && name[j] <= CJK_CODEPOINT_Z) {
                 // Append space if needed
                 if (needSpace) romanName.append(' ');
                 hasHanzi = true;
