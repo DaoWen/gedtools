@@ -12,7 +12,7 @@ Please see the accompanying `LICENSE` file for more information.
 
 ### Obtaining the Qt SDK
 
-GedTools was built using Qt by Nokia version 4.7.3.
+GedTools was written using Qt by Nokia version 4.7.3.
 The Qt SDK 1.1 (with Qt 4.7.3) can be obtained from the following wiki page:
 
 <https://wiki.qt.io/Qt_4_versions>
@@ -21,6 +21,14 @@ The links on the above wiki page currently point to platform-specific
 binary installers, suffixed with `v1_1`, hosted on the following FTP mirror:
 
 <ftp://ftp.informatik.hu-berlin.de/pub/Linux/Qt/QT/qtsdk/>
+
+If you don't need the full SDK (including the Qt Createor IDE),
+then you can also download one of the 4.7.4 distributions:
+
+<https://download.qt.io/archive/qt/4.7/>
+
+The latest Windows builds use a built-from-source 64-bit Qt runtime
+using the qt-everywhere-opensource-src-4.7.4 distribution.
 
 ### Compiling the Project
 
@@ -34,7 +42,7 @@ configured for your specific platform:
 
 You can then use the generated makefile with `make` to compile the project:
 
-    make
+    make release
 
 ### Compiling the User Interface Translations
 
