@@ -3,3 +3,9 @@
 
 /GedTools.pro.user
 /lang/*.qm
+
+/Makefile
+/bin/
+/data/
+/moc/
+/obj/
