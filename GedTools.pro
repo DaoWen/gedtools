@@ -10,6 +10,13 @@ TARGET = GedTools
 # (treat all Qt headers as system header files)
 #QMAKE_CXXFLAGS += -isystem $$[QT_INSTALL_HEADERS]
 
+# Windows default stack size of 1MB is too small!
+# Linux pthreads have 8MB stacks by default.
+# Bump it up to 16MB to be safe (we don't make many threads anyway).
+# https://doc.qt.io/archives/qt-4.8/qmake-variable-reference.html#qmake-lflags-windows
+# https://stackoverflow.com/a/3565282/1427124
+QMAKE_LFLAGS_WINDOWS += -Wl,--stack,16000000
+
 #########################
 # Windows Resource File #
 #########################
