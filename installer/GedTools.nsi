@@ -35,35 +35,37 @@ LangString CloseGedToolsMsg ${LANG_TRADCHINESE} \
 ; CheckAppRunning Macro
 ; Reference:
 ; http://nsis.sourceforge.net/Talk:Check_whether_your_application_is_running_during_uninstallation
+; https://nsis.sourceforge.io/NsProcess_plugin
 !macro CheckAppRunning
-  StrCpy $0 "GedTools.exe"
   DetailPrint "Searching for running instances of GedTools.exe"
-  KillProc::FindProcesses
-  StrCmp $1 "-1" wooops
-  Goto AppRunning
- 
+  nsProcess::_FindProcess "GedTools.exe"
+  Pop $R0
+  IntCmp $R0 0 AppRunning
+  Goto AppNotRunning
+
   AppRunning:
-    DetailPrint "-> Found $0 instances running"
-    StrCmp $0 "0" AppNotRunning
+    DetailPrint "-> Found GedTools.exe running"
     MessageBox MB_ICONQUESTION|MB_YESNO|MB_DEFBUTTON1 "$(CloseGedToolsMsg)" IDYES KillApp
     DetailPrint "Installation Aborted!"
     Abort
   KillApp:
     DetailPrint "Killing all running instances of GedTools.exe"
-    StrCpy $0 "GedTools.exe"
-    KillProc::KillProcesses
-    StrCmp $1 "-1" wooops
-    DetailPrint "-> Killed $0 processes, failed to kill $1 processes"
+    nsProcess::_KillProcess "GedTools.exe"
+    Pop $R0
+    DetailPrint "-> Killing GedTools process returned code $R0"
+    IntCmp $R0 0 KillSuccess
+	Goto KillFail
+  KillSuccess:
     sleep 1500
     Goto End
-  wooops:
+  KillFail:
     DetailPrint "-> Error in KillProc"
     Abort
   AppNotRunning:
     DetailPrint "No running instances of GedTools.exe found"
   End:
 !macroend
-  
+
 ;--------------------------------
 ; Installer
 Section
@@ -82,8 +84,9 @@ Section
     File ..\gpl-3.0.txt
     File ..\PinyinMap.dat
     File ..\Readme.md
-    File mingwm10.dll
-    File libgcc_s_dw2-1.dll
+    File libgcc_s_seh-1.dll
+    File libstdc++-6.dll
+    File libwinpthread-1.dll
     File QtCore4.dll
     File QtGui4.dll
     File QtNetwork4.dll
@@ -109,8 +112,9 @@ Section "Uninstall"
     Delete $INSTDIR\uninstall.exe
     Delete $INSTDIR\GedTools.exe
     Delete $INSTDIR\gpl-3.0.txt
-    Delete $INSTDIR\mingwm10.dll
-    Delete $INSTDIR\libgcc_s_dw2-1.dll
+    Delete $INSTDIR\libgcc_s_seh-1.dll
+    Delete $INSTDIR\libstdc++-6.dll
+    Delete $INSTDIR\libwinpthread-1.dll
     Delete $INSTDIR\PinyinMap.dat
     Delete $INSTDIR\QtCore4.dll
     Delete $INSTDIR\QtGui4.dll
