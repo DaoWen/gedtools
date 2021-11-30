@@ -7,7 +7,7 @@
 
   ;Name and file
   Name "GedTools"
-  OutFile "GedTools-20211128-win64-installer.exe"
+  OutFile "GedTools-20211128-win32-installer.exe"
 
   ;Default installation folder
   InstallDir $PROGRAMFILES\GedTools
@@ -84,7 +84,7 @@ Section
     File ..\gpl-3.0.txt
     File ..\PinyinMap.dat
     File ..\Readme.md
-    File libgcc_s_seh-1.dll
+    File libgcc_s_dw2-1.dll
     File libstdc++-6.dll
     File libwinpthread-1.dll
     File QtCore4.dll
@@ -112,7 +112,7 @@ Section "Uninstall"
     Delete $INSTDIR\uninstall.exe
     Delete $INSTDIR\GedTools.exe
     Delete $INSTDIR\gpl-3.0.txt
-    Delete $INSTDIR\libgcc_s_seh-1.dll
+    Delete $INSTDIR\libgcc_s_dw2-1.dll
     Delete $INSTDIR\libstdc++-6.dll
     Delete $INSTDIR\libwinpthread-1.dll
     Delete $INSTDIR\PinyinMap.dat
