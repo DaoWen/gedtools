@@ -1,0 +1,108 @@
+Apply this patch in the root of the qt-everywhere-opensource-src-4.7.4 directory
+to get it to build without errors with recent versions of MinGW.
+Tested with the following MinGW toolchains:
+  * i686-8.1.0-posix-dwarf-rt_v6-rev0
+  * x86_64-8.1.0-posix-seh-rt_v6-rev0
+Apply with the following command:
+  patch -p1 -i qt474fixup.patch
+Since `patch` isn't a powershell command, you might need to use the one
+that comes with Git for Windows, running it from the git-bash shell:
+  https://git-scm.com/download/win
+Configure Qt for building with the following command:
+  .\configure.exe -fast -release -no-libtiff -no-script -no-scripttools -no-webkit
+Run parallel build (after configuring) with the following command:
+  mingw32-make.exe -j 16
+diff -r -u a/mkspecs/win32-g++/qmake.conf b/mkspecs/win32-g++/qmake.conf
+--- a/mkspecs/win32-g++/qmake.conf	2021-11-29 20:37:06.566526700 -0600
++++ b/mkspecs/win32-g++/qmake.conf	2021-11-29 20:37:06.580526700 -0600
+@@ -47,8 +47,8 @@
+ 
+ QMAKE_RUN_CC		= $(CC) -c $(CFLAGS) $(INCPATH) -o $obj $src
+ QMAKE_RUN_CC_IMP	= $(CC) -c $(CFLAGS) $(INCPATH) -o $@ $<
+-QMAKE_RUN_CXX		= $(CXX) -c $(CXXFLAGS) $(INCPATH) -o $obj $src
+-QMAKE_RUN_CXX_IMP	= $(CXX) -c $(CXXFLAGS) $(INCPATH) -o $@ $<
++QMAKE_RUN_CXX		= $(CXX) -c -std=gnu++0x $(CXXFLAGS) $(INCPATH) -o $obj $src
++QMAKE_RUN_CXX_IMP	= $(CXX) -c -std=gnu++0x $(CXXFLAGS) $(INCPATH) -o $@ $<
+ 
+ QMAKE_LINK		= g++
+ QMAKE_LINK_C		= gcc
+diff -r -u a/src/corelib/kernel/qsharedmemory_win.cpp b/src/corelib/kernel/qsharedmemory_win.cpp
+--- a/src/corelib/kernel/qsharedmemory_win.cpp	2021-11-29 20:37:06.601525100 -0600
++++ b/src/corelib/kernel/qsharedmemory_win.cpp	2021-11-29 20:37:06.618015100 -0600
+@@ -103,7 +103,7 @@
+         if (safeKey.isEmpty()) {
+             error = QSharedMemory::KeyError;
+             errorString = QSharedMemory::tr("%1: unable to make key").arg(function);
+-            return false;
++            return 0;
+         }
+ #ifndef Q_OS_WINCE
+         hand = OpenFileMapping(FILE_MAP_ALL_ACCESS, false, (wchar_t*)safeKey.utf16());
+@@ -114,7 +114,7 @@
+ #endif
+         if (!hand) {
+             setErrorString(function);
+-            return false;
++            return 0;
+         }
+     }
+     return hand;
+diff -r -u a/src/corelib/tools/qsimd.cpp b/src/corelib/tools/qsimd.cpp
+--- a/src/corelib/tools/qsimd.cpp	2021-11-29 20:37:06.635074300 -0600
++++ b/src/corelib/tools/qsimd.cpp	2021-11-29 20:37:06.651074900 -0600
+@@ -285,7 +285,7 @@
+     uint features = MMX|SSE|SSE2|CMOV;
+     uint feature_result = 0;
+ 
+-#if defined (Q_OS_WIN64)
++#if defined (Q_OS_WIN64) && ! defined (__MINGW64__)
+     {
+        int info[4];
+        __cpuid(info, 1);
+diff -r -u a/src/gui/widgets/qdialogbuttonbox.cpp b/src/gui/widgets/qdialogbuttonbox.cpp
+--- a/src/gui/widgets/qdialogbuttonbox.cpp	2021-11-29 20:37:06.671072700 -0600
++++ b/src/gui/widgets/qdialogbuttonbox.cpp	2021-11-29 20:37:06.687071500 -0600
+@@ -211,7 +211,7 @@
+     return QDialogButtonBox::InvalidRole;
+ }
+ 
+-static const int layouts[2][5][14] =
++static const unsigned int layouts[2][5][14] =
+ {
+     // Qt::Horizontal
+     {
+@@ -406,7 +406,7 @@
+             tmpPolicy = 4;  // Mac modeless
+     }
+ 
+-    const int *currentLayout = layouts[orientation == Qt::Vertical][tmpPolicy];
++    const unsigned int *currentLayout = layouts[orientation == Qt::Vertical][tmpPolicy];
+ 
+     if (center)
+         buttonLayout->addStretch();
+diff -r -u a/src/xmlpatterns/api/qcoloroutput_p.h b/src/xmlpatterns/api/qcoloroutput_p.h
+--- a/src/xmlpatterns/api/qcoloroutput_p.h	2021-11-29 20:37:06.706071900 -0600
++++ b/src/xmlpatterns/api/qcoloroutput_p.h	2021-11-29 20:37:06.722074600 -0600
+@@ -70,8 +70,8 @@
+             ForegroundShift = 10,
+             BackgroundShift = 20,
+             SpecialShift    = 20,
+-            ForegroundMask  = ((1 << ForegroundShift) - 1) << ForegroundShift,
+-            BackgroundMask  = ((1 << BackgroundShift) - 1) << BackgroundShift
++            ForegroundMask  = 0x1f << ForegroundShift,
++            BackgroundMask  = 0x7 << BackgroundShift
+         };
+ 
+     public:
+diff -r -u a/tools/designer/src/lib/shared/previewmanager.cpp b/tools/designer/src/lib/shared/previewmanager.cpp
+--- a/tools/designer/src/lib/shared/previewmanager.cpp	2021-11-29 20:37:06.746071700 -0600
++++ b/tools/designer/src/lib/shared/previewmanager.cpp	2021-11-29 20:37:06.769071500 -0600
+@@ -809,7 +809,7 @@
+ {
+     typedef PreviewManagerPrivate::PreviewDataList PreviewDataList;
+     if (d->m_previews.empty())
+-        return false;
++        return 0;
+ 
+     // find matching window
+     const PreviewDataList::const_iterator cend =  d->m_previews.constEnd();
