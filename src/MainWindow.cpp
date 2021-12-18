@@ -89,6 +89,7 @@ void MainWindow::createFamilyTrees() {
             _trees->append(new GFamilyTree(f,famMap,indiMap));
         }
     }
+    _indiMap = &indiMap;
 }
 
 /* Deletes the _trees variable and its elements */
@@ -275,7 +276,7 @@ void MainWindow::estimateDates() {
         const bool adoptOpt = _menuBar->usingAdoptedRelations();
         const bool deceasedOpt = _menuBar->usingDeceasedOver110();
         const QString datePrefix = _menuBar->markingEstimated() ? "EST " : "ABT ";
-        GDateEstimator estimator(*_trees, defaultLocation, datePrefix, adoptOpt, deceasedOpt);
+        GDateEstimator estimator(*_trees, *_indiMap, defaultLocation, datePrefix, adoptOpt, deceasedOpt);
         _indiModel->invalidateViews();
         try {
             int datesAdded = estimator.estimateMissingDates();

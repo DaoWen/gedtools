@@ -4,11 +4,12 @@
 //=== Constructor/Destructor ===//
 
 /* Constructor */
-GDateEstimator::GDateEstimator(GFTList & trees, const QString & defaultPlace,
+GDateEstimator::GDateEstimator(GFTList & trees, GIndiMap & indiMap,
+                               const QString & defaultPlace,
                                const QString & estimatedDatePrefix,
                                bool useAdoptions, bool useDeceasedOver110)
- : _trees(trees), _defaultPlace(defaultPlace),
-   _estimatedDatePrefix(estimatedDatePrefix),
+ : _trees(trees), _indiMap(indiMap),
+   _defaultPlace(defaultPlace), _estimatedDatePrefix(estimatedDatePrefix),
    _useAdoptions(useAdoptions), _useDeceasedOver110(useDeceasedOver110),
    _currentYear(QDate::currentDate()) {}
 
@@ -32,6 +33,8 @@ int GDateEstimator::estimateMissingDates() {
     int updateStatus;
     int totalUpdated = 0, newUpdates;
     GFamilyTree * t;
+
+    // process trees
     do {
         // Clear all flags
         updateStatus = NONE;
@@ -80,6 +83,16 @@ int GDateEstimator::estimateMissingDates() {
             }
         }
     } while ((updateStatus & DOWN_PROJECTION) > NONE);
+
+    // fixup individals that have no family links
+    // (adding default places and death nodes)
+    GIndiEntry * i;
+    foreach (i, _indiMap) {
+        if (i->familyParent().isEmpty() && i->familyChild().isEmpty()) {
+            totalUpdated += updateIndividual(i, 0);
+        }
+    }
+
     return totalUpdated;
 }
 
@@ -117,8 +130,8 @@ int GDateEstimator::updateCouple(GFTNode * famNode) {
             updated += updateMarriage(famNode);
         }
         // Update individuals' data
-        updated += updateIndividual(head, fam, spouse);
-        if (spouse) updated += updateIndividual(spouse, fam, head);
+        updated += updateIndividual(head, fam);
+        if (spouse) updated += updateIndividual(spouse, fam);
         // Check if this family is complete or not
         // (if the marriage year is set then so is everything else,
         //  or if there is no family then the head's birth date)
@@ -198,7 +211,7 @@ int GDateEstimator::updateMarriage(GFTNode * famNode) {
  * individual if relevent data is available and needed
  * @return number of dates added to this node
  */
-int GDateEstimator::updateIndividual(GIndiEntry * indi, GFamily * fam, GIndiEntry * /*spouse*/) {
+int GDateEstimator::updateIndividual(GIndiEntry * indi, GFamily * fam) {
     // Tells the caller how many updates were made
     int updated = 0;
     QDate birthYear = indi->birthYear();
@@ -232,12 +245,15 @@ int GDateEstimator::updateIndividual(GIndiEntry * indi, GFamily * fam, GIndiEntr
     if (!_defaultPlace.isEmpty() && birthYear.isValid()) {
         if (indi->birthPlace().isEmpty() && !indi->birthDate().isEmpty()) {
             indi->setBirthPlace(_defaultPlace);
+            ++updated;
         }
         if (indi->dead() && indi->deathPlace().isEmpty()) {
             indi->setDeathPlace(_defaultPlace);
+            ++updated;
         }
         if (fam && fam->marriagePlace().isEmpty() && !fam->marriageDate().isEmpty()) {
             fam->setMarriagePlace(_defaultPlace);
+            ++updated;
         }
     }
     return updated;

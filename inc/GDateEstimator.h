@@ -2,6 +2,7 @@
 #define V_GDATE_ESTIMATOR_H
 
 #include "GFamilyTree.h"
+#include "GIndiMap.h"
 
 /* GDateEstimator: Utility class for estimating missing
  * dates in a group of GFamilyTrees created from the
@@ -17,7 +18,8 @@ public:
     //=== Constructor/Destructor ===//
 
     /* Constructor */
-    GDateEstimator(GFTList & trees, const QString & defaultPlace,
+    GDateEstimator(GFTList & trees, GIndiMap & indiMap,
+                   const QString & defaultPlace,
                    const QString & estimatedDatePrefix,
                    bool useAdoptions, bool useDeceasedOver110);
 
@@ -39,6 +41,9 @@ private:
 
     // List of GFamilyTrees to work with
     GFTList & _trees;
+
+    // All individuals in the input data
+    GIndiMap & _indiMap;
 
     // Default location of birth, marriage and death
     const QString & _defaultPlace;
@@ -77,7 +82,7 @@ private:
      * individual if relevent data is available and needed
      * @return number of dates added to this node
      */
-    int updateIndividual(GIndiEntry * indi, GFamily * fam, GIndiEntry * spouse);
+    int updateIndividual(GIndiEntry * indi, GFamily * fam);
 
     //--- Siblings ---//
 

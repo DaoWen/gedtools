@@ -4,6 +4,7 @@
 #include <QtGui>
 #include <QtCore>
 #include "GFile.h"
+#include "GIndiMap.h"
 #include "GIndiModel.h"
 #include "GFamilyTree.h"
 #include "MainMenuBar.h"
@@ -56,6 +57,9 @@ private:
 
     // Data from GEDCOM file opened by the user
     GFile * _gedFile;
+
+    // All individuals in the input data
+    GIndiMap * _indiMap;
 
     // Model for displaying individual's data in _tableView
     GIndiModel * _indiModel;
