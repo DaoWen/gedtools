@@ -1,0 +1,17 @@
+#!/bin/bash
+
+docker run \
+    --rm -it \
+    --entrypoint=bash \
+    --env=DISPLAY \
+    --env=HOME \
+    --mount=type=tmpfs,destination=$HOME \
+    --net=host \
+    --user=$(id -u):$(id -g) \
+    --volume=$HOME/.Xauthority:/root/.Xauthority:rw \
+    --volume=$PWD:/mnt/$PWD \
+    --volume=/etc/group:/etc/group:ro \
+    --volume=/etc/passwd:/etc/passwd:ro \
+    --volume=/etc/shadow:/etc/shadow:ro \
+    --workdir=/mnt/$PWD \
+    qt:4.7.4
