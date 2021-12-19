@@ -16,6 +16,12 @@ const char MainWindow::COPYRIGHT_YEAR[] = "2021";
 // File that disables auto updates
 const char MainWindow::NO_UPDATE_FILE[] = "noUpdates";
 
+// Keys for local settings file identification
+static const char * SETTINGS_ORG = "ouuuuch.github.io";
+static const char * SETTINGS_APP = "GedTools";
+static const char * SETTINGS_KEY_RECENT_LOCATIONS = "recentLocations";
+static const int MAX_RECENT_LOCATIONS = 10;
+
 //=== Constructor/Destructor ===//
 
 /* Constructor
@@ -257,21 +263,71 @@ void MainWindow::viewTree() {
     delete treeModel;
 }
 
+/* helper for default location drop-down values */
+static void makeDefaultRecentLocations(QStringList & result) {
+    QString taiwan;
+    taiwan.resize(2);
+    taiwan[0] = QChar(0x81fa); // Tai2
+    taiwan[1] = QChar(0x7063); // Wan1
+    result.append(taiwan);
+    QString china;
+    china.resize(2);
+    china[0] = QChar(0x4e2d); // Zhong1
+    china[1] = QChar(0x570b); // Guo2
+    result.append(china);
+}
+
+/* helper to load recent default locations from local settings file */
+static void loadRecentLocations(QSettings & settings, QStringList & result) {
+    QVariant dataFromSettings = settings.value(SETTINGS_KEY_RECENT_LOCATIONS);
+    if (!dataFromSettings.isValid()) {
+        makeDefaultRecentLocations(result);
+    }
+    else {
+        result = dataFromSettings.toStringList();
+        if (result.isEmpty()) {
+            makeDefaultRecentLocations(result);
+        }
+    }
+}
+
+
+/* helper to save recent default locations to local settings file */
+static void saveRecentLocations(QSettings & settings, QString & defaultLocation, QStringList & recentLocations) {
+    // Save location in recent locations
+    int index = recentLocations.indexOf(defaultLocation);
+    if (index != 0) {
+        if (index > 0) {
+            recentLocations.move(index, 0);
+        }
+        else {
+            recentLocations.prepend(defaultLocation);
+        }
+        if (recentLocations.size() > MAX_RECENT_LOCATIONS) {
+            recentLocations = recentLocations.mid(0, MAX_RECENT_LOCATIONS);
+        }
+        settings.setValue(SETTINGS_KEY_RECENT_LOCATIONS, recentLocations);
+        settings.sync();
+    }
+}
+
 /* Estimate missing dates in the family tree */
 void MainWindow::estimateDates() {
     // Build the family trees first if necessary
     if (!_trees) createFamilyTrees();
-    // Prompt for a default location (Defaults to China)
-    QString defaultLocation;
-      defaultLocation.resize(2);
-      defaultLocation[0] = QChar(0x4e2d); // Zhong1
-      defaultLocation[1] = QChar(0x570b); // Guo2
+    // Load default location data (persisted across sessions)
+    QStringList recentLocations;
+    QSettings settings(QSettings::IniFormat, QSettings::UserScope, SETTINGS_ORG, SETTINGS_APP);
+    loadRecentLocations(settings, recentLocations);
+    // Prompt for a default location
     bool okPressed;
-    defaultLocation = QInputDialog::getText(this, tr("Enter Default Location"),
-      tr("Automatically use this location to\nfill in blank birth, marriage and death places:"),
-      QLineEdit::Normal, defaultLocation, &okPressed);
+    QString defaultLocation = QInputDialog::getItem(this,
+            tr("Enter Default Location"),
+            tr("Automatically use this location to\nfill in blank birth, marriage and death places:"),
+            recentLocations, 0, true, &okPressed);
     // Continue only if the user pressed OK
     if (okPressed) {
+        saveRecentLocations(settings, defaultLocation, recentLocations);
         // Estimate the dates
         const bool adoptOpt = _menuBar->usingAdoptedRelations();
         const bool deceasedOpt = _menuBar->usingDeceasedOver110();
