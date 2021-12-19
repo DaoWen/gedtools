@@ -10,7 +10,7 @@
 //=== Constants ===//
 
 // Program Version
-const char MainWindow::VERSION_NUMBER[] = "2021.11.28";
+const char MainWindow::VERSION_NUMBER[] = "2021.12.19";
 const char MainWindow::COPYRIGHT_YEAR[] = "2021";
 
 // Settings file

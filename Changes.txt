@@ -1,5 +1,10 @@
 GedTools - Version History
 
+2021.12.19
+* Fixed bug where individuals with no family links are skipped.
+* Added recently used value drop-down to default location dialog.
+* Added 1 character to the pinyin database.
+
 2021.11.28
 * Added 14 characters to the pinyin database
 * Fixed bug where full-width punctuation was changed to '?' in ROMN field

@@ -7,7 +7,7 @@
 
   ;Name and file
   Name "GedTools"
-  OutFile "GedTools-20211128-win32-installer.exe"
+  OutFile "GedTools-20211219-win32-installer.exe"
 
   ;Default installation folder
   InstallDir $PROGRAMFILES\GedTools
