@@ -124,7 +124,7 @@ MainMenuBar::MainMenuBar(MainWindow * mainWin) : QMenuBar(mainWin) {
     _enableUpdateAct = new QAction(tr("Enable &Automatic Update Checks"), this);
     _enableUpdateAct->setStatusTip(tr("Allow GedTools to automatically check for newer versions"));
     _enableUpdateAct->setCheckable(true);
-    _enableUpdateAct->setChecked(!QFile(mainWin->NO_UPDATE_FILE).exists());
+    _enableUpdateAct->setChecked(mainWin->autoUpdateEnabled());
     connect(_enableUpdateAct, SIGNAL(toggled(bool)), mainWin, SLOT(setAutoUpdate(bool)));
     _helpMenu->addAction(_enableUpdateAct);
     // About

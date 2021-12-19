@@ -13,12 +13,10 @@
 const char MainWindow::VERSION_NUMBER[] = "2021.11.28";
 const char MainWindow::COPYRIGHT_YEAR[] = "2021";
 
-// File that disables auto updates
-const char MainWindow::NO_UPDATE_FILE[] = "noUpdates";
-
-// Keys for local settings file identification
+// Settings file
 static const char * SETTINGS_ORG = "ouuuuch.github.io";
 static const char * SETTINGS_APP = "GedTools";
+static const char * SETTINGS_KEY_NO_UPDATES = "disableAutoUpdates";
 static const char * SETTINGS_KEY_RECENT_LOCATIONS = "recentLocations";
 static const int MAX_RECENT_LOCATIONS = 10;
 
@@ -28,6 +26,7 @@ static const int MAX_RECENT_LOCATIONS = 10;
  * Creates the window, menus, data display, etc.
  */
 MainWindow::MainWindow() : _gedFile(0), _indiModel(0), _filteredModel(0), _trees(0) {
+    _settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, SETTINGS_ORG, SETTINGS_APP);
     // Load Translation based on user's locale
     _appTranslator = new QTranslator();
     _appTranslator->load("lang/GedTools_" + QLocale::system().name());
@@ -50,7 +49,7 @@ MainWindow::MainWindow() : _gedFile(0), _indiModel(0), _filteredModel(0), _trees
     //_tableView->verticalHeader()->setStretchLastSection(true);
     // Create the status bar
     statusBar()->showMessage(tr("Open a GEDCOM file to begin."));
-    if (!QFile(NO_UPDATE_FILE).exists()) {
+    if (this->autoUpdateEnabled()) {
         checkForUpdates();
     }
     QStringList args = qApp->arguments();
@@ -74,6 +73,7 @@ MainWindow::~MainWindow() {
     delete _gedFile;
     delete _appTranslator;
     delete _qtTranslator;
+    delete _settings;
 }
 
 //=== Private Helper Methods ===//
@@ -159,6 +159,53 @@ void MainWindow::openFile(QString fileName) {
         catch (...) {
             QMessageBox::critical(this, tr("Error"), tr("Unable to open file:\n").append(fileName));
         }
+    }
+}
+
+/* helper for default location drop-down values */
+static void makeDefaultRecentLocations(QStringList & result) {
+    QString taiwan;
+    taiwan.resize(2);
+    taiwan[0] = QChar(0x81fa); // Tai2
+    taiwan[1] = QChar(0x7063); // Wan1
+    result.append(taiwan);
+    QString china;
+    china.resize(2);
+    china[0] = QChar(0x4e2d); // Zhong1
+    china[1] = QChar(0x570b); // Guo2
+    result.append(china);
+}
+
+/* Load recent default locations from local settings file */
+void MainWindow::loadRecentLocations(QStringList & result) {
+    QVariant dataFromSettings = _settings->value(SETTINGS_KEY_RECENT_LOCATIONS);
+    if (!dataFromSettings.isValid()) {
+        makeDefaultRecentLocations(result);
+    }
+    else {
+        result = dataFromSettings.toStringList();
+        if (result.isEmpty()) {
+            makeDefaultRecentLocations(result);
+        }
+    }
+}
+
+/* Save recent default locations to local settings file */
+void MainWindow::saveRecentLocations(QString & newLocation, QStringList & recentLocations) {
+    // Save location in recent locations
+    int index = recentLocations.indexOf(newLocation);
+    if (index != 0) {
+        if (index > 0) {
+            recentLocations.move(index, 0);
+        }
+        else {
+            recentLocations.prepend(newLocation);
+        }
+        if (recentLocations.size() > MAX_RECENT_LOCATIONS) {
+            recentLocations = recentLocations.mid(0, MAX_RECENT_LOCATIONS);
+        }
+        _settings->setValue(SETTINGS_KEY_RECENT_LOCATIONS, recentLocations);
+        _settings->sync();
     }
 }
 
@@ -263,62 +310,13 @@ void MainWindow::viewTree() {
     delete treeModel;
 }
 
-/* helper for default location drop-down values */
-static void makeDefaultRecentLocations(QStringList & result) {
-    QString taiwan;
-    taiwan.resize(2);
-    taiwan[0] = QChar(0x81fa); // Tai2
-    taiwan[1] = QChar(0x7063); // Wan1
-    result.append(taiwan);
-    QString china;
-    china.resize(2);
-    china[0] = QChar(0x4e2d); // Zhong1
-    china[1] = QChar(0x570b); // Guo2
-    result.append(china);
-}
-
-/* helper to load recent default locations from local settings file */
-static void loadRecentLocations(QSettings & settings, QStringList & result) {
-    QVariant dataFromSettings = settings.value(SETTINGS_KEY_RECENT_LOCATIONS);
-    if (!dataFromSettings.isValid()) {
-        makeDefaultRecentLocations(result);
-    }
-    else {
-        result = dataFromSettings.toStringList();
-        if (result.isEmpty()) {
-            makeDefaultRecentLocations(result);
-        }
-    }
-}
-
-
-/* helper to save recent default locations to local settings file */
-static void saveRecentLocations(QSettings & settings, QString & defaultLocation, QStringList & recentLocations) {
-    // Save location in recent locations
-    int index = recentLocations.indexOf(defaultLocation);
-    if (index != 0) {
-        if (index > 0) {
-            recentLocations.move(index, 0);
-        }
-        else {
-            recentLocations.prepend(defaultLocation);
-        }
-        if (recentLocations.size() > MAX_RECENT_LOCATIONS) {
-            recentLocations = recentLocations.mid(0, MAX_RECENT_LOCATIONS);
-        }
-        settings.setValue(SETTINGS_KEY_RECENT_LOCATIONS, recentLocations);
-        settings.sync();
-    }
-}
-
 /* Estimate missing dates in the family tree */
 void MainWindow::estimateDates() {
     // Build the family trees first if necessary
     if (!_trees) createFamilyTrees();
     // Load default location data (persisted across sessions)
     QStringList recentLocations;
-    QSettings settings(QSettings::IniFormat, QSettings::UserScope, SETTINGS_ORG, SETTINGS_APP);
-    loadRecentLocations(settings, recentLocations);
+    loadRecentLocations(recentLocations);
     // Prompt for a default location
     bool okPressed;
     QString defaultLocation = QInputDialog::getItem(this,
@@ -327,7 +325,7 @@ void MainWindow::estimateDates() {
             recentLocations, 0, true, &okPressed);
     // Continue only if the user pressed OK
     if (okPressed) {
-        saveRecentLocations(settings, defaultLocation, recentLocations);
+        saveRecentLocations(defaultLocation, recentLocations);
         // Estimate the dates
         const bool adoptOpt = _menuBar->usingAdoptedRelations();
         const bool deceasedOpt = _menuBar->usingDeceasedOver110();
@@ -349,9 +347,10 @@ void MainWindow::estimateDates() {
 
 /* Switch between GUI translations */
 void MainWindow::switchLanguage(QAction * source) {
+    QString languageCode = source->data().toString();
     // Set translators
-    _appTranslator->load("lang/GedTools_" + source->data().toString());
-    _qtTranslator->load("lang/qt_" + source->data().toString());
+    _appTranslator->load("lang/GedTools_" + languageCode);
+    _qtTranslator->load("lang/qt_" + languageCode);
     // Rebuild the menus and display area
     _menuBar = new MainMenuBar(this);
     setMenuBar(_menuBar);
@@ -375,18 +374,15 @@ void MainWindow::launchBugReport() {
     }
 }
 
+/* Automatic update predicate */
+bool MainWindow::autoUpdateEnabled() {
+    return !_settings->value(SETTINGS_KEY_NO_UPDATES).toBool();
+}
+
 /* Enable/Disable automatic update checks */
 void MainWindow::setAutoUpdate(bool enabled) {
-    // Delete the file "noUpdates" if enabled
-    if (enabled) {
-        QFile(NO_UPDATE_FILE).remove();
-    }
-    // Create the file "noUpdates" if enabled
-    else {
-        QFile xFile(NO_UPDATE_FILE);
-        xFile.open(QFile::WriteOnly);
-        xFile.close();
-    }
+    _settings->setValue(SETTINGS_KEY_NO_UPDATES, !enabled);
+    _settings->sync();
 }
 
 /* Display "About" dialog */

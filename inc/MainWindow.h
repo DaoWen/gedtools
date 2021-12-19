@@ -32,9 +32,6 @@ public:
     // Most recent copyright year
     static const char COPYRIGHT_YEAR[];
 
-    // File that disables auto updates
-    static const char NO_UPDATE_FILE[];
-
     //=== Constructor/Destructor ===//
 
     /* Constructor
@@ -78,6 +75,9 @@ private:
     // Table-style view to display the GEDCOM file data
     QTableView * _tableView;
 
+    // Cross-session persisted application settings
+    QSettings * _settings;
+
     //=== Private Helper Methods ===//
 
     /* Builds the GFamilyTree objects for this GEDCOM file
@@ -100,6 +100,12 @@ private:
 
     /* Open a GEDCOM file */
     void openFile(QString fileName);
+
+    /* Load recent default locations from local settings file */
+    void loadRecentLocations(QStringList & result);
+
+    /* Save recent default locations to local settings file */
+    void saveRecentLocations(QString & newLocation, QStringList & recentLocations);
 
 public slots:
 
@@ -134,6 +140,9 @@ public slots:
 
     /* Launch browser to view the GedTools bug report page */
     void launchBugReport();
+
+    /* Automatic update predicate */
+    bool autoUpdateEnabled();
 
     /* Enable/Disable automatic update checks */
     void setAutoUpdate(bool enabled);
